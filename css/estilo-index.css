@@ -1,0 +1,573 @@
+
+/* =========================================================
+   PATITAS FELICES — estilo-index.css
+   SOLO para index.html. Se carga DESPUÉS de styles.css para
+   sobrescribir/añadir estilos sin tocar el archivo compartido.
+   Reutiliza las variables de color definidas en :root de
+   styles.css (--beige, --rosa, --celeste, --morado, --texto,
+   --celeste-fuerte), así que no hace falta redefinirlas aquí.
+========================================================= */
+
+body {
+    background-color: #F8F3EA;
+}
+.valores {
+    background-color: #F8F3EA;
+}
+/* =========================================================
+   HEADER FLOTANDO SOBRE EL HERO (solo en index.html)
+========================================================= */
+
+.header-principal {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    background: transparent;
+
+    z-index: 50;
+}
+
+
+/* =========================================================
+   HERO CON IMAGEN A PANTALLA COMPLETA + CORTE DIFUMINADO
+========================================================= */
+
+.hero-corte {
+    position: relative;
+
+    min-height: 990px;
+
+    display: flex;
+    align-items: center;
+
+    overflow: hidden;
+}
+
+
+.hero-corte-imagen img {
+    width: 100%;
+    height: 115%;
+
+    object-fit: cover;
+    object-position: center 30%;
+
+    will-change: transform;
+    display: block;
+}
+
+
+/* cuña borrosa color beige que suaviza el filo del corte diagonal,
+   en vez de dejar la línea dura del clip-path */
+.hero-corte-imagen {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        black 0%,
+        black 55%,
+        rgba(0, 0, 0, 0.95) 65%,
+        rgba(0, 0, 0, 0.75) 73%,
+        rgba(0, 0, 0, 0.45) 82%,
+        rgba(0, 0, 0, 0.20) 90%,
+        transparent 100%
+    );
+
+    mask-image: linear-gradient(
+        to bottom,
+        black 0%,
+        black 55%,
+        rgba(0, 0, 0, 0.95) 65%,
+        rgba(0, 0, 0, 0.75) 73%,
+        rgba(0, 0, 0, 0.45) 82%,
+        rgba(0, 0, 0, 0.20) 90%,
+        transparent 100%
+    );
+}
+
+.hero-corte-imagen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background:
+        radial-gradient(
+            ellipse at bottom right,
+            rgba(245, 238, 225, 1) 0%,
+            rgba(245, 238, 225, 0.85) 15%,
+            rgba(245, 238, 225, 0.45) 30%,
+            transparent 50%
+        ),
+        linear-gradient(
+            100deg,
+            rgba(20, 20, 25, 0.75) 0%,
+            rgba(20, 20, 25, 0.55) 35%,
+            rgba(20, 20, 25, 0.35) 70%,
+            rgba(20, 20, 25, 0.30) 100%
+        );
+
+    pointer-events: none;
+}
+
+.hero-corte-contenido {
+    position: relative;
+    z-index: 2;
+
+    width: 92%;
+    max-width: 1180px;
+
+    margin: 0 auto;
+
+    /* espacio suficiente para que el texto no quede tapado
+       por el header flotante (ya no ocupa espacio en el flujo) */
+    padding: 155px 0 130px;
+}
+
+.hero-corte-texto {
+    max-width: 760px;
+    transform: translate(-120px, -60px);
+    color: var(--blanco);
+}
+@media (max-width: 900px) {
+    .hero-corte-texto {
+        transform: translate(-15px, -25px);
+    }
+}
+
+@media (max-width: 550px) {
+    .hero-corte-texto {
+        transform: none;
+    }
+}
+
+.hero-corte-texto h1 {
+    margin: 22px 0 20px;
+
+    font-size: clamp(2.8rem, 5vw, 4.2rem);
+    line-height: 1.05;
+
+    font-weight: 800;
+
+    color: var(--blanco);
+
+    white-space: nowrap;
+}
+
+.hero-corte-texto h1 span {
+    color: var(--rosa);
+}
+
+.hero-corte-texto h1 span {
+    color: var(--rosa);
+}
+
+.hero-corte-texto p {
+    margin-bottom: 36px;
+
+    color: rgba(255, 255, 255, 0.88);
+
+    font-size: 16px;
+    max-width: 85ch;
+}
+
+.hero-corte-texto .boton-principal {
+    background: linear-gradient(135deg, #FFD6E7, #FFC5DE);
+    color: var(--texto);
+
+    box-shadow: 0 5px 15px rgba(255, 182, 211, 0.22);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        background 0.3s ease;
+}
+
+.hero-corte-texto .boton-principal:hover {
+    background: linear-gradient(135deg, #FFC5DE, var(--morado));
+
+    color: var(--texto);
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 8px 20px rgba(255, 182, 211, 0.35);
+}
+
+.flecha-boton {
+    font-size: 25px;
+    font-weight: 900;
+    margin-left: 10px;
+    line-height: 1;
+
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+.boton-principal:hover .flecha-boton {
+    transform: translateX(5px);
+}
+.hero-corte-texto .boton-principal {
+    padding: 8px 18px;
+}
+.hero-corte-tarjetas + section {
+    margin-top: 170px;
+}
+
+/* =========================================================
+   TARJETAS FLOTANTES
+========================================================= */
+
+.hero-corte-tarjetas {
+    position: relative;
+    z-index: 1;
+
+    width: 72%;
+    max-width: 1020px;
+
+    margin: -180px auto 0;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 62px;
+}
+
+.tarjeta-flotante {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+
+    background-color: var(--blanco);
+
+    /* más altas */
+    min-height: 230px;
+
+    /* menos anchas */
+    padding: 20px 5px;
+
+    border-radius: 20px;
+
+    box-shadow: 0 14px 30px rgba(46, 46, 56, 0.14);
+
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tarjeta-flotante:hover {
+    transform: translateY(-6px);
+
+    box-shadow: 0 18px 36px rgba(46, 46, 56, 0.18);
+}
+
+/* FOTOS DE LAS TARJETAS */
+
+.tarjeta-flotante-imagen {
+    width: 90px;
+    height: 90px;
+
+    object-fit: contain;
+
+    margin-bottom: 8px;
+}
+
+.tarjeta-flotante:nth-child(1) .tarjeta-flotante-imagen {
+    width: 120px;
+    height: 90px;
+    transform: scale(1.15);
+}
+
+.tarjeta-flotante h3 {
+    font-size: 17px;
+    margin: 0;
+}
+
+.tarjeta-flotante p {
+    color: var(--gris-suave);
+    font-size: 14px;
+
+    margin: 0;
+
+    max-width: 220px;
+}
+
+/* =========================================================
+   FIGURA DECORATIVA DETRÁS DE "NUESTROS SERVICIOS"
+   (solo en index.html — no afecta a nosotros.html aunque
+   comparta la clase .valores)
+========================================================= */
+
+.valores {
+    position: relative;
+    overflow: hidden;
+}
+
+.valores-fondo {
+    position: absolute;
+    inset: 0;
+
+    z-index: 0;
+
+    pointer-events: none;
+}
+
+.valores-fondo span {
+    position: absolute;
+
+    border-radius: 50%;
+
+    filter: blur(70px);
+
+    opacity: 0.55;
+}
+
+.valores-fondo span:nth-child(1) {
+    width: 420px;
+    height: 420px;
+
+    top: -100px;
+    left: 4%;
+
+    background-color: var(--rosa);
+}
+
+.valores-fondo span:nth-child(2) {
+    width: 480px;
+    height: 480px;
+
+    top: 20px;
+    right: 6%;
+
+    background-color: var(--celeste);
+}
+
+.valores-fondo span:nth-child(3) {
+    width: 380px;
+    height: 380px;
+
+    bottom: -120px;
+    left: 38%;
+
+    background-color: var(--morado);
+}
+
+/* el título y las tarjetas quedan por encima de las manchas */
+.valores .titulo-seccion,
+.valores .grid-valores {
+    position: relative;
+    z-index: 1;
+}
+
+/* =========================================================
+   NUBE FESTONEADA DETRÁS DE "NUESTROS SERVICIOS"
+   (solo en index.html)
+========================================================= */
+
+.valores {
+    position: relative;
+}
+
+.valores-nube {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    width: min(1300px, 96%);
+    aspect-ratio: 900 / 420;
+
+    transform: translate(-50%, -50%);
+
+    z-index: 0;
+}
+
+
+.valores .titulo-seccion,
+.valores .grid-valores {
+    position: relative;
+    z-index: 1;
+}
+
+.valores .valor {
+    background-color: var(--blanco);
+}
+
+/* subrayado animado bajo el título */
+.valores .valor h3 {
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.valores .valor h3::after {
+    content: "";
+
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+
+    width: 0;
+    height: 3px;
+
+    background-color: var(--celeste-fuerte);
+    border-radius: 2px;
+
+    transition: width 0.3s ease, left 0.3s ease;
+}
+
+.valores .valor:hover h3::after {
+    width: 40px;
+    left: calc(50% - 20px);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+    .hero-corte {
+        min-height: 680px;
+    }
+
+    .hero-corte-contenido {
+        padding: 190px 0 100px;
+    }
+
+    .hero-corte-tarjetas {
+        grid-template-columns: 1fr;
+        margin-top: -100px;
+    }
+
+    .hero-corte-tarjetas + section {
+        margin-top: 100px;
+    }
+}
+
+@media (max-width: 550px) {
+    .hero-corte-contenido {
+        padding: 210px 0 80px;
+    }
+
+    .hero-corte-texto h1 {
+        font-size: 1.7rem;
+    }
+}
+
+/* =========================================================
+   ESTADÍSTICAS
+========================================================= */
+
+.estadisticas {
+    padding: 60px 0;
+}
+
+.grid-estadisticas {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+.estadistica {
+    text-align: center;
+    background-color: var(--blanco);
+    border-radius: 22px;
+    padding: 32px 16px;
+    box-shadow: 0 10px 26px rgba(46, 46, 56, 0.06);
+}
+
+.estadistica-icono {
+    display: block;
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.estadistica-numero {
+    display: block;
+    font-family: inherit;
+    font-weight: 800;
+    font-size: 2.4rem;
+    color: var(--celeste-fuerte);
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.estadistica p {
+    color: var(--gris-suave);
+    font-size: 14.5px;
+}
+
+@media (max-width: 900px) {
+    .grid-estadisticas {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* =========================================================
+   FAQ (acordeón)
+========================================================= */
+
+.faq {
+    padding: 70px 0;
+}
+
+.faq-lista {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    background-color: var(--blanco);
+    border-radius: 18px;
+    margin-bottom: 14px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(46, 46, 56, 0.05);
+}
+
+.faq-pregunta {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    padding: 20px 24px;
+
+    font-family: inherit;
+    font-size: 15.5px;
+    font-weight: bold;
+    color: var(--texto);
+    text-align: left;
+}
+
+.faq-icono {
+    flex-shrink: 0;
+    font-size: 20px;
+    color: var(--celeste-fuerte);
+    transition: transform 0.3s ease;
+}
+
+.faq-item.faq-item--abierto .faq-icono {
+    transform: rotate(45deg);
+}
+
+.faq-respuesta {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.faq-respuesta p {
+    padding: 0 24px 20px;
+    color: var(--gris-suave);
+    font-size: 14.5px;
+}
+
+.fondo-izquierdo,
+.fondo-derecho {
+    display: none;
+}

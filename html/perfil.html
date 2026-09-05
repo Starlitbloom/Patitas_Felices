@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mi perfil | Patitas Felices</title>
+
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/estilo-usuarios.css">
+</head>
+
+<body>
+
+    <header class="header-principal">
+
+        <div class="fondo-header fondo-izquierdo"></div>
+        <div class="fondo-header fondo-derecho"></div>
+
+        <div class="contenedor-header">
+
+            <a href="index.html" class="logo-enlace">
+                <img src="../img/logo-patitas.png" alt="Logo Veterinaria Patitas Felices" class="logo">
+            </a>
+
+            <nav>
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="nosotros.html">Nosotros</a></li>
+                    <li><a href="novedades.html">Novedades</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                    <li><a href="perfil.html" class="activo">Mi perfil</a></li>
+                    <li>
+                        <a href="solicitar-cita.html" class="btn-cita">
+                            <img src="../img/calendario.png" alt="" class="icono-calendario">
+                            <span>Solicitar cita</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+
+    </header>
+
+
+    <main class="seccion-formulario">
+        <div class="contenedor">
+
+            <div class="formulario-cabecera">
+                <span class="seccion-etiqueta">Tu cuenta</span>
+                <h1>Mi perfil</h1>
+                <p>Revisa y actualiza tus datos personales.</p>
+            </div>
+
+            <form class="tarjeta-formulario tarjeta-formulario--ancha" id="form-perfil" novalidate>
+
+                <div class="fila-campos">
+                    <div class="campo" id="campo-nombre">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre" name="nombre" maxlength="50">
+                    </div>
+                    <div class="campo" id="campo-apellidos">
+                        <label for="apellidos">Apellidos</label>
+                        <input type="text" id="apellidos" name="apellidos" maxlength="100">
+                    </div>
+                </div>
+
+                <div class="campo" id="campo-correo">
+                    <label for="correo">Correo</label>
+                    <input type="email" id="correo" name="correo" maxlength="100">
+                    <p class="campo__ayuda">Solo correos @duoc.cl, @profesor.duoc.cl o @gmail.com.</p>
+                    <p class="campo__error">Ingresa un correo válido de un dominio permitido.</p>
+                </div>
+
+                <div class="fila-campos">
+                    <div class="campo" id="campo-region">
+                        <label for="region">Región</label>
+                        <select id="region" name="region">
+                            <option value="">Selecciona la región</option>
+                        </select>
+                    </div>
+                    <div class="campo" id="campo-comuna">
+                        <label for="comuna">Comuna</label>
+                        <select id="comuna" name="comuna">
+                            <option value="">Primero elige una región</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="campo" id="campo-direccion">
+                    <label for="direccion">Dirección</label>
+                    <input type="text" id="direccion" name="direccion" maxlength="300">
+                    <p class="campo__error">La dirección es obligatoria (máx. 300 caracteres).</p>
+                </div>
+
+                <button type="submit" class="boton-principal">
+                    <span>Guardar cambios</span>
+                    <span class="flecha-boton" aria-hidden="true">⟶</span>
+                </button>
+
+            </form>
+
+            <div class="perfil-accesos">
+                <a href="mis-citas.html" class="perfil-acceso"><span>📅</span> Mis citas</a>
+                <a href="index.html" class="perfil-acceso"><span>🐾</span> Mis mascotas</a>
+            </div>
+
+        </div>
+    </main>
+
+
+    <footer class="footer-principal">
+
+        <div class="footer-linea"></div>
+
+        <div class="footer-contenido">
+
+            <div class="footer-marca">
+                <img src="../img/logo-patitas.png" alt="Logo Veterinaria Patitas Felices" class="footer-logo">
+                <p>Cuidamos la salud y bienestar de tu mascota con cariño, compromiso y atención cercana.</p>
+            </div>
+
+            <div class="footer-info">
+                <h3>Contacto</h3>
+                <p><span class="footer-icono">✉</span> contacto@patitasfelices.cl</p>
+                <p><span class="footer-icono">📍</span> Rancagua, Región de O'Higgins</p>
+            </div>
+
+            <div class="footer-info">
+                <h3>Horario</h3>
+                <p><span class="footer-icono">🕘</span> Lunes a viernes</p>
+                <p><span class="footer-icono">♡</span> 09:00 - 19:00 hrs</p>
+            </div>
+
+        </div>
+
+        <div class="footer-inferior">
+            <p>© 2026 Veterinaria Patitas Felices</p>
+            <p class="footer-frase">Cuidando cada huellita con cariño 🐾</p>
+        </div>
+
+    </footer>
+
+    <script src="../js/usuarios.js"></script>
+</body>
+</html>
