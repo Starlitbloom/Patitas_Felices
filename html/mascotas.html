@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestras Mascotas | Patitas Felices</title>
+
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/estilo-mascotas.css">
+
+</head>
+
+<body>
+
+    <header class="header-principal">
+
+        <div class="fondo-header fondo-izquierdo"></div>
+        <div class="fondo-header fondo-derecho"></div>
+
+        <div class="contenedor-header">
+
+            <a href="index.html" class="logo-enlace">
+                <img src="../img/logo-patitas.png" alt="Logo Veterinaria Patitas Felices" class="logo">
+            </a>
+
+            <nav>
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="nosotros.html">Nosotros</a></li>
+                    <li><a href="mascotas.html" class="activo">Mascotas</a></li>
+                    <li><a href="novedades.html">Novedades</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                    <li><a href="login.html">Iniciar sesión</a></li>
+                    <li>
+                        <a href="solicitar-cita.html" class="btn-cita">
+                            <img src="../img/calendario.png" alt="" class="icono-calendario">
+                            <span>Solicitar cita</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+    </header>
+
+    <main class="seccion-mascotas">
+        <section class="contenedor" aria-labelledby="titulo-mascotas">
+
+            <div class="titulo-seccion">
+                <span class="seccion-etiqueta">Nuestros pacientes</span>
+                <h2 id="titulo-mascotas">Mascotas registradas</h2>
+                <p>Conoce a los pacientes de Patitas Felices y accede a su ficha clínica, historial y vacunas.</p>
+            </div>
+
+            <div class="filtros-mascotas">
+                <button type="button" class="filtro-especie activo" data-especie="todas">Todas</button>
+                <button type="button" class="filtro-especie" data-especie="Perro">Perros</button>
+                <button type="button" class="filtro-especie" data-especie="Gato">Gatos</button>
+                <button type="button" class="filtro-especie filtro-favoritos" data-especie="favoritos">★ Favoritos</button>
+            </div>
+
+            <div class="grid-mascotas" id="grid-mascotas">
+                <!-- Las tarjetas se generan dinámicamente desde js/mascotas.js -->
+            </div>
+
+        </section>
+
+        <section class="contenedor seccion-video-cuidados" aria-labelledby="titulo-video-cuidados">
+            <div class="titulo-seccion">
+                <span class="seccion-etiqueta">Guía rápida</span>
+                <h2 id="titulo-video-cuidados">Cómo cuidamos a tu mascota</h2>
+                <p>Un breve video sobre nuestra rutina de control, vacunación y seguimiento clínico.</p>
+            </div>
+
+            <div class="video-embebido">
+                <iframe
+                    width="560"
+                    height="315"
+                    src="https://www.youtube.com/embed/8G7ACda1JhY"
+                    title="Cómo cuidamos a tu mascota - Veterinaria Patitas Felices"
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer-principal">
+
+        <div class="footer-linea"></div>
+
+        <div class="footer-contenido">
+
+            <div class="footer-marca">
+                <img src="../img/logo-patitas.png" alt="Logo Veterinaria Patitas Felices" class="footer-logo">
+                <p>Cuidamos la salud y bienestar de tu mascota con cariño, compromiso y atención cercana.</p>
+            </div>
+
+            <div class="footer-info">
+                <h3>Contacto</h3>
+                <p><span class="footer-icono">✉</span> contacto@patitasfelices.cl</p>
+                <p><span class="footer-icono">📍</span> Rancagua, Región de O'Higgins</p>
+            </div>
+
+            <div class="footer-info">
+                <h3>Horario</h3>
+                <p><span class="footer-icono">🕘</span> Lunes a viernes</p>
+                <p><span class="footer-icono">♡</span> 09:00 - 19:00 hrs</p>
+            </div>
+
+        </div>
+
+        <div class="footer-inferior">
+            <p>© 2026 Veterinaria Patitas Felices</p>
+            <p class="footer-frase">Cuidando cada huellita con cariño 🐾</p>
+        </div>
+
+    </footer>
+
+    <script src="../js/mascotas.js"></script>
+    
+</body>
+
+</html>
