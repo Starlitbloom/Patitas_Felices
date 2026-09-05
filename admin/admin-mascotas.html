@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin · Mascotas | Patitas Felices</title>
+
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/estilo-admin-mascotas.css">
+
+</head>
+
+<body class="admin-body">
+    <header class="admin-header">
+        <div class="admin-header-contenido">
+
+            <a href="../html/index.html" class="logo-enlace">
+                <img src="../img/logo-patitas.png" alt="Logo Veterinaria Patitas Felices" class="logo">
+            </a>
+
+            <span class="admin-badge">Panel administrativo</span>
+
+            <nav class="admin-nav">
+                <a href="admin-mascotas.html" class="activo">Mascotas</a>
+                <a href="usuarios.html">Usuarios</a>
+                <a href="admin-citas.html">Citas</a>
+                <a href="reportes.html">Reportes</a>
+            </nav>
+
+        </div>
+    </header>
+
+    <main class="seccion-admin">
+        <div class="contenedor">
+
+            <div class="admin-titulo">
+                <div>
+                    <h1>Mantenedor de mascotas</h1>
+                    <p>Administra los pacientes registrados en Patitas Felices.</p>
+                </div>
+                <button type="button" class="boton-nuevo" id="boton-nueva-mascota">+ Nueva mascota</button>
+            </div>
+
+            <div class="tabla-admin-contenedor">
+                <table class="tabla-admin">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Especie</th>
+                            <th>Raza</th>
+                            <th>Dueño/a</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpo-tabla-mascotas">
+                        <!-- Se genera dinámicamente desde js/admin-mascotas.js -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tarjeta-formulario-admin" id="tarjeta-formulario-mascota">
+                <h2 id="titulo-formulario-mascota">Registrar nueva mascota</h2>
+
+                <form id="form-mascota" novalidate>
+
+                    <div class="fila-campos">
+                        <div class="campo" id="campo-nombre-m">
+                            <label for="nombre">Nombre</label>
+                            <input type="text" id="nombre" name="nombre" maxlength="40">
+                            <p class="campo__error">El nombre es obligatorio (máx. 40 caracteres).</p>
+                        </div>
+                        <div class="campo" id="campo-especie-m">
+                            <label for="especie">Especie</label>
+                            <select id="especie" name="especie">
+                                <option value="">Selecciona la especie</option>
+                                <option value="Perro">Perro</option>
+                                <option value="Gato">Gato</option>
+                                <option value="Conejo">Conejo</option>
+                                <option value="Ave">Ave</option>
+                            </select>
+                            <p class="campo__error">Selecciona una especie.</p>
+                        </div>
+                    </div>
+
+                    <div class="fila-campos">
+                        <div class="campo" id="campo-raza-m">
+                            <label for="raza">Raza</label>
+                            <input type="text" id="raza" name="raza" maxlength="40">
+                            <p class="campo__error">La raza es obligatoria (máx. 40 caracteres).</p>
+                        </div>
+                        <div class="campo" id="campo-edad-m">
+                            <label for="edad">Edad</label>
+                            <input type="text" id="edad" name="edad" maxlength="20" placeholder="Ej: 2 años">
+                            <p class="campo__error">La edad es obligatoria (máx. 20 caracteres).</p>
+                        </div>
+                    </div>
+
+                    <div class="fila-campos">
+                        <div class="campo" id="campo-dueno-m">
+                            <label for="dueno">Dueño/a</label>
+                            <input type="text" id="dueno" name="dueno" maxlength="60">
+                            <p class="campo__error">El nombre del dueño/a es obligatorio (máx. 60 caracteres).</p>
+                        </div>
+                        <div class="campo" id="campo-estado-m">
+                            <label for="estado">Estado</label>
+                            <select id="estado" name="estado">
+                                <option value="">Selecciona un estado</option>
+                                <option value="al-dia">Control al día</option>
+                                <option value="tratamiento">En tratamiento</option>
+                                <option value="pendiente">Vacunas pendientes</option>
+                            </select>
+                            <p class="campo__error">Selecciona un estado.</p>
+                        </div>
+                    </div>
+
+                    <div class="acciones-formulario">
+                        <button type="submit" class="boton-nuevo">Guardar mascota</button>
+                        <button type="button" class="boton-cancelar" id="boton-cancelar-mascota">Cancelar</button>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="../js/mascotas.js"></script>
+    <script src="../js/admin-mascotas.js"></script>
+</body>
+
+</html>
