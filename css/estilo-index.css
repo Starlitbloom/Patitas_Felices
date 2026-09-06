@@ -875,6 +875,23 @@ body {
     position: relative;
     overflow: hidden;
 }
+
+.footer-principal .footer-marca p {
+    font-size: 15px;
+}
+
+.footer-principal .footer-info h3 {
+    font-size: 19px;
+}
+
+.footer-principal .footer-info p {
+    font-size: 15px;
+}
+
+.footer-principal .footer-inferior p {
+    font-size: 13px;
+}
+
 .footer-decoracion {
     position: absolute;
     border-radius: 50%;
@@ -934,6 +951,11 @@ body {
 .footer-social-icono:hover {
     background-color: var(--rosa);
     transform: translateY(-3px);
+}
+.footer-social-icono img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
 }
 
 .footer-info p a {
