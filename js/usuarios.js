@@ -3,10 +3,13 @@
    Validaciones de login, registro y perfil, según las reglas
    del caso (correo con dominio permitido, RUN con dígito
    verificador, contraseña 4-10 caract., región/comuna
-   dependientes).
+   dependientes) + persistencia con localStorage.
 ========================================================= */
 
 const DOMINIOS_PERMITIDOS = ['duoc.cl', 'profesor.duoc.cl', 'gmail.com'];
+
+const CLAVE_USUARIOS = 'patitasFelices_usuarios';
+const CLAVE_SESION = 'patitasFelices_sesion';
 
 const REGIONES = [
     {
@@ -22,6 +25,45 @@ const REGIONES = [
         comunas: ["Chillán", "Chillán Viejo", "San Carlos"]
     }
 ];
+
+/* =========================================================
+   ALMACENAMIENTO (localStorage)
+========================================================= */
+
+function obtenerUsuarios() {
+    try {
+        return JSON.parse(localStorage.getItem(CLAVE_USUARIOS)) || [];
+    } catch {
+        return [];
+    }
+}
+
+function guardarUsuarios(usuarios) {
+    localStorage.setItem(CLAVE_USUARIOS, JSON.stringify(usuarios));
+}
+
+function obtenerUsuarioPorCorreo(correo) {
+    const usuarios = obtenerUsuarios();
+    return usuarios.find((u) => u.correo.toLowerCase() === correo.toLowerCase()) || null;
+}
+
+function guardarSesion(usuario) {
+    // no guardamos la contraseña en la sesión activa
+    const { password, ...usuarioSinPassword } = usuario;
+    localStorage.setItem(CLAVE_SESION, JSON.stringify(usuarioSinPassword));
+}
+
+function obtenerSesion() {
+    try {
+        return JSON.parse(localStorage.getItem(CLAVE_SESION));
+    } catch {
+        return null;
+    }
+}
+
+function cerrarSesion() {
+    localStorage.removeItem(CLAVE_SESION);
+}
 
 /* --- Validadores --- */
 
@@ -98,15 +140,32 @@ function initFormLogin() {
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
-        const errorCorreo = validarCorreo(form.correo.value.trim());
-        const errorPassword = validarPassword(form.password.value);
+
+        const correo = form.correo.value.trim();
+        const password = form.password.value;
+
+        const errorCorreo = validarCorreo(correo);
+        const errorPassword = validarPassword(password);
 
         marcarCampo('campo-correo', errorCorreo);
         marcarCampo('campo-password', errorPassword);
 
-        if (!errorCorreo && !errorPassword) {
-            console.log('Login OK (simulado)');
+        if (errorCorreo || errorPassword) return;
+
+        const usuario = obtenerUsuarioPorCorreo(correo);
+
+        if (!usuario) {
+            marcarCampo('campo-correo', 'No existe una cuenta registrada con este correo.');
+            return;
         }
+
+        if (usuario.password !== password) {
+            marcarCampo('campo-password', 'Contraseña incorrecta.');
+            return;
+        }
+
+        guardarSesion(usuario);
+        window.location.href = 'perfil.html';
     });
 }
 
@@ -118,11 +177,13 @@ function initFormRegistro() {
     form.addEventListener('submit', (e) => {
         e.preventDefault();
 
+        const correo = form.correo.value.trim();
+
         const errores = {
             'campo-nombre': validarRequerido(form.nombre.value, 50, 'El nombre'),
             'campo-apellidos': validarRequerido(form.apellidos.value, 100, 'Los apellidos'),
             'campo-run': validarRun(form.run.value),
-            'campo-correo': validarCorreo(form.correo.value.trim()),
+            'campo-correo': validarCorreo(correo),
             'campo-password': validarPassword(form.password.value),
             'campo-password2': form.password.value !== form.password2.value ? 'Las contraseñas no coinciden.' : null,
             'campo-direccion': validarRequerido(form.direccion.value, 300, 'La dirección'),
@@ -131,9 +192,31 @@ function initFormRegistro() {
         Object.entries(errores).forEach(([id, msg]) => marcarCampo(id, msg));
 
         const hayErrores = Object.values(errores).some((e) => e !== null);
-        if (!hayErrores) {
-            console.log('Registro OK (simulado)');
+        if (hayErrores) return;
+
+        if (obtenerUsuarioPorCorreo(correo)) {
+            marcarCampo('campo-correo', 'Ya existe una cuenta registrada con este correo.');
+            return;
         }
+
+        const nuevoUsuario = {
+            nombre: form.nombre.value.trim(),
+            apellidos: form.apellidos.value.trim(),
+            run: form.run.value.trim(),
+            correo: correo,
+            password: form.password.value,
+            telefono: form.telefono.value.trim(),
+            region: form.region.value,
+            comuna: form.comuna.value,
+            direccion: form.direccion.value.trim(),
+        };
+
+        const usuarios = obtenerUsuarios();
+        usuarios.push(nuevoUsuario);
+        guardarUsuarios(usuarios);
+
+        guardarSesion(nuevoUsuario);
+        window.location.href = 'perfil.html';
     });
 }
 
@@ -141,6 +224,21 @@ function initFormRegistro() {
 function initFormPerfil() {
     const form = document.getElementById('form-perfil');
     if (!form) return;
+
+    const sesion = obtenerSesion();
+
+    if (!sesion) {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    // precarga los datos del usuario logueado
+    if (form.nombre) form.nombre.value = sesion.nombre || '';
+    if (form.apellidos) form.apellidos.value = sesion.apellidos || '';
+    if (form.correo) form.correo.value = sesion.correo || '';
+    if (form.telefono) form.telefono.value = sesion.telefono || '';
+    if (form.direccion) form.direccion.value = sesion.direccion || '';
+    if (form.region) form.region.value = sesion.region || '';
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -155,9 +253,28 @@ function initFormPerfil() {
         Object.entries(errores).forEach(([id, msg]) => marcarCampo(id, msg));
 
         const hayErrores = Object.values(errores).some((e) => e !== null);
-        if (!hayErrores) {
-            console.log('Perfil actualizado (simulado)');
+        if (hayErrores) return;
+
+        // actualiza el usuario en la lista guardada
+        const usuarios = obtenerUsuarios();
+        const indice = usuarios.findIndex((u) => u.correo.toLowerCase() === sesion.correo.toLowerCase());
+
+        if (indice !== -1) {
+            usuarios[indice] = {
+                ...usuarios[indice],
+                nombre: form.nombre.value.trim(),
+                apellidos: form.apellidos.value.trim(),
+                correo: form.correo.value.trim(),
+                telefono: form.telefono.value.trim(),
+                direccion: form.direccion.value.trim(),
+                region: form.region ? form.region.value : usuarios[indice].region,
+                comuna: form.comuna ? form.comuna.value : usuarios[indice].comuna,
+            };
+            guardarUsuarios(usuarios);
+            guardarSesion(usuarios[indice]);
         }
+
+        console.log('Perfil actualizado');
     });
 }
 

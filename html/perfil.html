@@ -53,16 +53,18 @@
                 <p>Revisa y actualiza tus datos personales.</p>
             </div>
 
-            <form class="tarjeta-formulario tarjeta-formulario--ancha" id="form-perfil" novalidate>
+            <form class="tarjeta-formulario tarjeta-formulario--ancha tarjeta-formulario--plana" id="form-perfil" novalidate>
 
                 <div class="fila-campos">
                     <div class="campo" id="campo-nombre">
                         <label for="nombre">Nombre</label>
                         <input type="text" id="nombre" name="nombre" maxlength="50">
+                        <p class="campo__error">El nombre es obligatorio (máx. 50 caracteres).</p>
                     </div>
                     <div class="campo" id="campo-apellidos">
                         <label for="apellidos">Apellidos</label>
                         <input type="text" id="apellidos" name="apellidos" maxlength="100">
+                        <p class="campo__error">Los apellidos son obligatorios (máx. 100 caracteres).</p>
                     </div>
                 </div>
 
@@ -71,6 +73,11 @@
                     <input type="email" id="correo" name="correo" maxlength="100">
                     <p class="campo__ayuda">Solo correos @duoc.cl, @profesor.duoc.cl o @gmail.com.</p>
                     <p class="campo__error">Ingresa un correo válido de un dominio permitido.</p>
+                </div>
+
+                <div class="campo">
+                    <label for="telefono">Teléfono (opcional)</label>
+                    <input type="tel" id="telefono" name="telefono">
                 </div>
 
                 <div class="fila-campos">
@@ -102,9 +109,17 @@
             </form>
 
             <div class="perfil-accesos">
-                <a href="mis-citas.html" class="perfil-acceso"><span>📅</span> Mis citas</a>
-                <a href="index.html" class="perfil-acceso"><span>🐾</span> Mis mascotas</a>
+                <a href="mis-mascotas.html" class="perfil-acceso">
+                    <span>🐾</span> Mis mascotas
+                </a>
+                <a href="mis-citas.html" class="perfil-acceso">
+                    <span>📅</span> Mis citas
+                </a>
             </div>
+
+            <p class="formulario-pie">
+                <a href="#" id="btn-cerrar-sesion">Cerrar sesión</a>
+            </p>
 
         </div>
     </main>
@@ -113,12 +128,28 @@
     <footer class="footer-principal">
 
         <div class="footer-linea"></div>
+        <div class="footer-decoracion footer-decoracion-1"></div>
+        <div class="footer-decoracion footer-decoracion-2"></div>
 
-        <div class="footer-contenido">
+        <div class="footer-contenido footer-contenido--index">
 
             <div class="footer-marca">
-                <img src="../img/logo-patitas.png" alt="Logo Veterinaria Patitas Felices" class="footer-logo">
+                <a href="index.html">
+                    <img src="../img/logo-patitas.png" alt="Logo Veterinaria Patitas Felices" class="footer-logo">
+                </a>
                 <p>Cuidamos la salud y bienestar de tu mascota con cariño, compromiso y atención cercana.</p>
+
+                <div class="footer-social">
+                    <a href="#" aria-label="Facebook" class="footer-social-icono">
+                        <img src="../img/logo-facebook.png" alt="Facebook">
+                    </a>
+                    <a href="#" aria-label="Instagram" class="footer-social-icono">
+                        <img src="../img/logo-instagram.png" alt="Instagram">
+                    </a>
+                    <a href="#" aria-label="WhatsApp" class="footer-social-icono">
+                        <img src="../img/logo-whatsapp.png" alt="WhatsApp">
+                    </a>
+                </div>
             </div>
 
             <div class="footer-info">

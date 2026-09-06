@@ -309,6 +309,19 @@
    LOGIN SPLIT — foto a un lado, formulario al otro
    (mismo lenguaje visual que el hero del index)
 ========================================================= */
+.login-split-formulario {
+    position: relative;
+    background-image: url(../img/fondo-login.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.tarjeta-formulario--plana,
+.formulario-pie {
+    position: relative;
+    z-index: 1;
+}
 
 .login-split {
     display: grid;
@@ -333,13 +346,12 @@
     inset: 0;
 
     background: linear-gradient(
-        160deg,
-        rgba(46, 46, 56, 0.75) 0%,
-        rgba(214, 236, 250, 0.35) 60%,
-        rgba(255, 214, 231, 0.25) 100%
+        180deg,
+        rgba(46, 46, 56, 0.274) 0%,
+        rgba(46, 46, 56, 0.13) 35%,
+        rgba(46, 46, 56, 0.75) 100%
     );
 }
-
 .login-split-texto {
     position: absolute;
     left: 40px;
@@ -356,13 +368,36 @@
 
 .login-split-texto h2 {
     color: var(--blanco);
-    font-size: 1.9rem;
+    font-size: 2.1rem;
     margin: 14px 0 10px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
 }
 
 .login-split-texto p {
-    color: rgba(255, 255, 255, 0.88);
-    max-width: 380px;
+    color: rgba(255, 255, 255, 0.92);
+    max-width: 580px;
+    font-size: 16.5px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.login-split-imagen::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 140px;
+
+    background: linear-gradient(
+        to bottom,
+        rgba(20, 20, 25, 0.55) 0%,
+        rgba(20, 20, 25, 0.28) 55%,
+        rgba(20, 20, 25, 0) 100%
+    );
+
+    z-index: 1;
+    pointer-events: none;
 }
 
 .login-split-formulario {
@@ -420,6 +455,18 @@
     margin: 8px auto 0;
     border: none;
 }
+.tarjeta-formulario--plana .boton-principal {
+    background-color: var(--rosa);
+    color: var(--texto);
+
+    border-radius: 50px;
+    padding: 13px 26px;
+
+    box-shadow: 0 6px 16px rgba(46, 46, 56, 0.25),
+                0 2px 6px rgba(255, 182, 211, 0.35);
+
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
 
 .tarjeta-formulario--plana .boton-principal:hover {
     background: linear-gradient(135deg, #FFC5DE, var(--celeste));
@@ -429,6 +476,54 @@
     box-shadow: 0 8px 20px rgba(255, 182, 211, 0.45);
 }
 
+.tarjeta-formulario--ancha.tarjeta-formulario--plana {
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+.seccion-formulario {
+    position: relative;
+    overflow: hidden;
+    background-image: url(../img/fondo-login.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.seccion-formulario .contenedor {
+    position: relative;
+    z-index: 1;
+}
+.seccion-formulario::before,
+.seccion-formulario::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.seccion-formulario::before {
+    width: 260px;
+    height: 260px;
+    top: -80px;
+    left: -60px;
+    background-color: var(--celeste);
+}
+
+.seccion-formulario::after {
+    width: 300px;
+    height: 300px;
+    bottom: -100px;
+    right: -70px;
+    background-color: var(--rosa);
+}
+
+.seccion-formulario .contenedor {
+    position: relative;
+    z-index: 1;
+}
 
 @media (max-width: 900px) {
     .login-split {
