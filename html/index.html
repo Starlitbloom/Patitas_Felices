@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/estilo-index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
@@ -46,6 +47,7 @@
 
     </header>
 
+    <div class="header-sombra" id="header-sombra"></div>
 
     <!-- =====================================================
          CONTENIDO
@@ -118,22 +120,6 @@
         <section class="valores" id="servicios">
             <div class="contenedor">
 
-                <svg class="valores-nube" viewBox="0 0 900 420" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-
-                    <defs>
-                        <pattern id="nubePatron" patternUnits="userSpaceOnUse" width="700" height="383">
-                            <image href="../img/fondo-patas.png" x="0" y="0" width="700" height="383" preserveAspectRatio="xMidYMid slice"/>
-                        </pattern>
-                    </defs>
-
-                    <rect x="42" y="42" width="816" height="336" fill="url(#nubePatron)"/>
-                    <circle cx="42" cy="42" r="42" fill="url(#nubePatron)"/><circle cx="106" cy="42" r="42" fill="url(#nubePatron)"/><circle cx="170" cy="42" r="42" fill="url(#nubePatron)"/><circle cx="234" cy="42" r="42" fill="url(#nubePatron)"/><circle cx="298" cy="42" r="42" fill="url(#nubePatron)"/><circle cx="362" cy="42" r="42" fill="url(#nubePatron)"/><circle cx="426" cy="42" r="42" fill="url(#nubePatron)"/><circle cx="490" cy="42" r="42" fill="url(#nubePatron)"/><circle cx="554" cy="42" r="42" fill="url(#nubePatron)"/><circle cx="618" cy="42" r="42" fill="url(#nubePatron)"/><circle cx="682" cy="42" r="42" fill="url(#nubePatron)"/><circle cx="746" cy="42" r="42" fill="url(#nubePatron)"/><circle cx="810" cy="42" r="42" fill="url(#nubePatron)"/><circle cx="858" cy="42" r="42" fill="url(#nubePatron)"/>
-                    <circle cx="858" cy="98" r="42" fill="url(#nubePatron)"/><circle cx="858" cy="154" r="42" fill="url(#nubePatron)"/><circle cx="858" cy="210" r="42" fill="url(#nubePatron)"/><circle cx="858" cy="266" r="42" fill="url(#nubePatron)"/><circle cx="858" cy="322" r="42" fill="url(#nubePatron)"/><circle cx="858" cy="378" r="42" fill="url(#nubePatron)"/>
-                    <circle cx="810" cy="378" r="42" fill="url(#nubePatron)"/><circle cx="746" cy="378" r="42" fill="url(#nubePatron)"/><circle cx="682" cy="378" r="42" fill="url(#nubePatron)"/><circle cx="618" cy="378" r="42" fill="url(#nubePatron)"/><circle cx="554" cy="378" r="42" fill="url(#nubePatron)"/><circle cx="490" cy="378" r="42" fill="url(#nubePatron)"/><circle cx="426" cy="378" r="42" fill="url(#nubePatron)"/><circle cx="362" cy="378" r="42" fill="url(#nubePatron)"/><circle cx="298" cy="378" r="42" fill="url(#nubePatron)"/><circle cx="234" cy="378" r="42" fill="url(#nubePatron)"/><circle cx="170" cy="378" r="42" fill="url(#nubePatron)"/><circle cx="106" cy="378" r="42" fill="url(#nubePatron)"/><circle cx="42" cy="378" r="42" fill="url(#nubePatron)"/>
-                    <circle cx="42" cy="322" r="42" fill="url(#nubePatron)"/><circle cx="42" cy="266" r="42" fill="url(#nubePatron)"/><circle cx="42" cy="210" r="42" fill="url(#nubePatron)"/><circle cx="42" cy="154" r="42" fill="url(#nubePatron)"/><circle cx="42" cy="98" r="42" fill="url(#nubePatron)"/>
-                </svg>
-
-
                 <div class="titulo-seccion">
                     <span class="seccion-etiqueta">Lo que ofrecemos</span>
                     <h2>Nuestros servicios</h2>
@@ -176,28 +162,34 @@
         ================================================== -->
         <section class="estadisticas">
             <div class="contenedor">
+
+                <div class="titulo-seccion">
+                    <span class="seccion-etiqueta">Confianza que se nota</span>
+                    <h2>Patitas Felices en números</h2>
+                </div>
+
                 <div class="grid-estadisticas">
 
                     <div class="estadistica">
-                        <span class="estadistica-icono">📅</span>
+                        <span class="estadistica-icono-circulo">📅</span>
                         <span class="estadistica-numero" data-hasta="15" data-sufijo="+">0</span>
                         <p>Años de experiencia</p>
                     </div>
 
                     <div class="estadistica">
-                        <span class="estadistica-icono">🐾</span>
+                        <span class="estadistica-icono-circulo">🐾</span>
                         <span class="estadistica-numero" data-hasta="25" data-sufijo="">0</span>
                         <p>Pacientes atendidos al día</p>
                     </div>
 
                     <div class="estadistica">
-                        <span class="estadistica-icono">👩‍⚕️</span>
+                        <span class="estadistica-icono-circulo">👩‍⚕️</span>
                         <span class="estadistica-numero" data-hasta="3" data-sufijo="">0</span>
                         <p>Médicos veterinarios</p>
                     </div>
 
                     <div class="estadistica">
-                        <span class="estadistica-icono">♡</span>
+                        <span class="estadistica-icono-circulo">♡</span>
                         <span class="estadistica-numero" data-hasta="100" data-sufijo="%">0</span>
                         <p>Atención con cariño</p>
                     </div>
@@ -208,7 +200,7 @@
 
 
         <!-- =================================================
-             NOVEDADES (teaser simple hacia novedades.html)
+            NOVEDADES (teaser simple hacia novedades.html)
         ================================================== -->
         <section class="quienes-somos">
             <div class="quienes-contenido">
@@ -220,7 +212,37 @@
                         Campañas de vacunación, consejos de cuidado y novedades
                         de la clínica para que siempre estés informado.
                     </p>
-                    <div class="hero-botones">
+
+                    <div class="quienes-destacados">
+                        <span class="destacado">♡ Salud</span>
+                        <span class="destacado">♡ Bienestar</span>
+                        <span class="destacado">♡ Prevención</span>
+                        <span class="destacado">♡ Consejos</span>
+                    </div>
+
+                    <div class="quienes-mini-lista">
+
+                        <a href="novedades.html" class="quienes-mini-item">
+                            <span class="quienes-mini-icono">💉</span>
+                            <div class="quienes-mini-texto">
+                                <h4>Campaña de vacunación de invierno</h4>
+                                <span>15 de junio</span>
+                            </div>
+                            <span class="quienes-mini-flecha">→</span>
+                        </a>
+
+                        <a href="novedades.html" class="quienes-mini-item">
+                            <span class="quienes-mini-icono">☀️</span>
+                            <div class="quienes-mini-texto">
+                                <h4>5 consejos para el calor en verano</h4>
+                                <span>2 de enero</span>
+                            </div>
+                            <span class="quienes-mini-flecha">→</span>
+                        </a>
+
+                    </div>
+
+                    <div class="hero-botones" style="margin-top: 24px;">
                         <a href="novedades.html" class="boton-principal">
                             Ver todas las novedades
                             <span aria-hidden="true">→</span>
@@ -234,6 +256,9 @@
                     <div class="carrusel-nosotros">
                         <img src="../img/atencion-perrito.jfif" alt="Veterinaria atendiendo a un perro" class="imagen-nosotros imagen-nosotros-1">
                         <img src="../img/equipo.png" alt="Equipo veterinario junto a un perro" class="imagen-nosotros imagen-nosotros-2">
+                    </div>
+                    <div class="quienes-badge">
+                        <span>🐾</span> Actualizado cada semana
                     </div>
                 </div>
 
@@ -256,7 +281,8 @@
 
                     <div class="faq-item">
                         <button class="faq-pregunta">
-                            ¿Cómo agendo una hora para mi mascota?
+                            <span class="faq-icono-tema">📅</span>
+                            <span class="faq-pregunta-texto">¿Cómo agendo una hora para mi mascota?</span>
                             <span class="faq-icono">＋</span>
                         </button>
                         <div class="faq-respuesta">
@@ -266,7 +292,8 @@
 
                     <div class="faq-item">
                         <button class="faq-pregunta">
-                            ¿Qué especies atienden además de perros y gatos?
+                            <span class="faq-icono-tema">🐾</span>
+                            <span class="faq-pregunta-texto">¿Qué especies atienden además de perros y gatos?</span>
                             <span class="faq-icono">＋</span>
                         </button>
                         <div class="faq-respuesta">
@@ -276,7 +303,8 @@
 
                     <div class="faq-item">
                         <button class="faq-pregunta">
-                            ¿Puedo ver el historial clínico de mi mascota en línea?
+                            <span class="faq-icono-tema">📋</span>
+                            <span class="faq-pregunta-texto">¿Puedo ver el historial clínico de mi mascota en línea?</span>
                             <span class="faq-icono">＋</span>
                         </button>
                         <div class="faq-respuesta">
@@ -286,7 +314,8 @@
 
                     <div class="faq-item">
                         <button class="faq-pregunta">
-                            ¿Qué pasa si no puedo asistir a mi hora?
+                            <span class="faq-icono-tema">🔄</span>
+                            <span class="faq-pregunta-texto">¿Qué pasa si no puedo asistir a mi hora?</span>
                             <span class="faq-icono">＋</span>
                         </button>
                         <div class="faq-respuesta">
@@ -349,12 +378,20 @@
     <footer class="footer-principal">
 
         <div class="footer-linea"></div>
+        <div class="footer-decoracion footer-decoracion-1"></div>
+        <div class="footer-decoracion footer-decoracion-2"></div>
 
-        <div class="footer-contenido">
+        <div class="footer-contenido footer-contenido--index">
 
             <div class="footer-marca">
                 <img src="../img/logo-patitas.png" alt="Logo Veterinaria Patitas Felices" class="footer-logo">
                 <p>Cuidamos la salud y bienestar de tu mascota con cariño, compromiso y atención cercana.</p>
+
+                <div class="footer-social">
+                    <a href="#" aria-label="Facebook" class="footer-social-icono">📘</a>
+                    <a href="#" aria-label="Instagram" class="footer-social-icono">📷</a>
+                    <a href="#" aria-label="WhatsApp" class="footer-social-icono">💬</a>
+                </div>
             </div>
 
             <div class="footer-info">

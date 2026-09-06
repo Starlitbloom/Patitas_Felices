@@ -6,6 +6,22 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+    /* --- Sombra del header al hacer scroll --- */
+    const headerSombra = document.getElementById('header-sombra');
+
+    if (headerSombra) {
+        function actualizarSombraHeader() {
+            if (window.scrollY > 40) {
+                headerSombra.classList.add('visible');
+            } else {
+                headerSombra.classList.remove('visible');
+            }
+        }
+
+        window.addEventListener('scroll', actualizarSombraHeader, { passive: true });
+        actualizarSombraHeader();
+    }
+
     /* --- Contadores animados al entrar en pantalla --- */
     const numeros = document.querySelectorAll('.estadistica-numero');
 
@@ -13,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const observador = new IntersectionObserver((entradas) => {
             entradas.forEach((entrada) => {
                 if (entrada.isIntersecting) {
+                    entrada.target.closest('.estadistica').classList.add('estadistica--visible');
                     animarNumero(entrada.target);
                     observador.unobserve(entrada.target);
                 }
@@ -21,6 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         numeros.forEach((el) => observador.observe(el));
     }
+
+    
 
     function animarNumero(el) {
         const hasta = parseInt(el.dataset.hasta, 10);

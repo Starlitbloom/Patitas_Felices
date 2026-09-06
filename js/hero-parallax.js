@@ -1,21 +1,26 @@
 /* =========================================================
    PATITAS FELICES — hero-parallax.js
-   Efecto parallax: la imagen del hero se mueve más lento
-   que el resto de la página al hacer scroll. Solo para index.html.
+   Parallax del fondo del hero
 ========================================================= */
 
-document.addEventListener('DOMContentLoaded', () => {
-    const imagenHero = document.querySelector('.hero-corte-imagen img');
+document.addEventListener("DOMContentLoaded", function () {
 
-    if (!imagenHero) return;
+    const imagen = document.querySelector(".hero-corte-imagen img");
 
-    const velocidad = 0.35;
-
-    function moverParallax() {
-        const scroll = window.scrollY;
-        imagenHero.style.transform = `translateY(${scroll * velocidad}px) scale(1.15)`;
+    if (!imagen) {
+        console.log("NO SE ENCONTRÓ LA IMAGEN");
+        return;
     }
 
-    window.addEventListener('scroll', moverParallax, { passive: true });
-    moverParallax();
+    console.log("PARALLAX ACTIVADO");
+
+    window.addEventListener("scroll", function () {
+
+        const scroll = window.scrollY;
+
+        // Movimiento MUY exagerado para comprobar que funciona
+        imagen.style.transform = `translateY(${scroll * -0.5}px)`;
+
+    });
+
 });
