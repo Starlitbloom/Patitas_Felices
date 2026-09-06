@@ -8,10 +8,10 @@
 
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/estilo-admin-mascotas.css">
-
 </head>
 
 <body class="admin-body">
+
     <header class="admin-header">
         <div class="admin-header-contenido">
 
@@ -31,12 +31,13 @@
         </div>
     </header>
 
+
     <main class="seccion-admin">
-        <section class="contenedor" aria-labelledby="titulo-admin-mascotas">
+        <div class="contenedor">
 
             <div class="admin-titulo">
                 <div>
-                    <h1 id="titulo-admin-mascotas">Mantenedor de mascotas</h1>
+                    <h1>Mantenedor de mascotas</h1>
                     <p>Administra los pacientes registrados en Patitas Felices.</p>
                 </div>
                 <button type="button" class="boton-nuevo" id="boton-nueva-mascota">+ Nueva mascota</button>
@@ -68,7 +69,7 @@
                     <div class="fila-campos">
                         <div class="campo" id="campo-nombre-m">
                             <label for="nombre">Nombre</label>
-                            <input type="text" id="nombre" name="nombre" maxlength="40" autocomplete="off">
+                            <input type="text" id="nombre" name="nombre" maxlength="40">
                             <p class="campo__error">El nombre es obligatorio (máx. 40 caracteres).</p>
                         </div>
                         <div class="campo" id="campo-especie-m">
@@ -87,12 +88,12 @@
                     <div class="fila-campos">
                         <div class="campo" id="campo-raza-m">
                             <label for="raza">Raza</label>
-                            <input type="text" id="raza" name="raza" maxlength="40" autocomplete="off">
+                            <input type="text" id="raza" name="raza" maxlength="40">
                             <p class="campo__error">La raza es obligatoria (máx. 40 caracteres).</p>
                         </div>
                         <div class="campo" id="campo-edad-m">
                             <label for="edad">Edad</label>
-                            <input type="text" id="edad" name="edad" maxlength="20" placeholder="Ej: 2 años" autocomplete="off">
+                            <input type="text" id="edad" name="edad" maxlength="20" placeholder="Ej: 2 años">
                             <p class="campo__error">La edad es obligatoria (máx. 20 caracteres).</p>
                         </div>
                     </div>
@@ -100,7 +101,7 @@
                     <div class="fila-campos">
                         <div class="campo" id="campo-dueno-m">
                             <label for="dueno">Dueño/a</label>
-                            <input type="text" id="dueno" name="dueno" maxlength="60" autocomplete="name">
+                            <input type="text" id="dueno" name="dueno" maxlength="60">
                             <p class="campo__error">El nombre del dueño/a es obligatorio (máx. 60 caracteres).</p>
                         </div>
                         <div class="campo" id="campo-estado-m">
@@ -117,7 +118,7 @@
 
                     <div class="campo" id="campo-imagen-m">
                         <label for="imagen">URL de la foto</label>
-                        <input type="text" id="imagen" name="imagen" maxlength="200" placeholder="Ej: ../img/nombre-mascota.jpg" autocomplete="off">
+                        <input type="text" id="imagen" name="imagen" maxlength="200" placeholder="Ej: ../img/nombre-mascota.jpg">
                         <p class="campo__ayuda">Ruta o enlace de la imagen. Si la dejas vacía, se usará una foto genérica.</p>
                     </div>
 
@@ -129,7 +130,7 @@
                 </form>
             </div>
 
-        </section>
+        </div>
     </main>
 
     <script src="../js/mascotas.js"></script>

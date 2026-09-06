@@ -1,10 +1,5 @@
 /* =========================================================
    PATITAS FELICES — admin-mascotas.js
-   Mantenedor administrativo de mascotas/pacientes:
-   listado, creación, edición y eliminación (en memoria,
-   sin conexión a base de datos, según lo solicitado para
-   esta evaluación). Depende de los datos de mascotas.js
-   (arreglo "mascotas"), por lo que se carga después de él.
 ========================================================= */
 
 let idEnEdicion = null;
@@ -93,6 +88,7 @@ function mostrarFormulario(mascota) {
         form.edad.value = mascota.edad;
         form.dueno.value = mascota.dueno;
         form.estado.value = mascota.estado;
+        form.imagen.value = mascota.imagen || "";
     } else {
         idEnEdicion = null;
         titulo.textContent = "Registrar nueva mascota";
@@ -145,6 +141,7 @@ function initFormularioMascota() {
                 mascota.dueno = form.dueno.value.trim();
                 mascota.estado = form.estado.value;
                 mascota.estadoTexto = textoEstado(form.estado.value);
+                mascota.imagen = form.imagen.value.trim() || "../img/cuidado.png";
             }
         } else {
             const nuevoId = form.nombre.value.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "-") + "-" + Date.now();
@@ -157,7 +154,7 @@ function initFormularioMascota() {
                 sexo: "No especificado",
                 peso: "No especificado",
                 dueno: form.dueno.value.trim(),
-                imagen: "../img/cuidado.png",
+                imagen: form.imagen.value.trim() ||"../img/cuidado.png",
                 estado: form.estado.value,
                 estadoTexto: textoEstado(form.estado.value),
                 descripcion: "Ficha creada desde el mantenedor administrativo."
