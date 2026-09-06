@@ -36,7 +36,7 @@
 
             <div class="admin-titulo">
                 <div>
-                    <h1>Mantenedor de mascotas</h1>
+                    <h1 id="titulo-admin-mascotas">Mantenedor de mascotas</h1>
                     <p>Administra los pacientes registrados en Patitas Felices.</p>
                 </div>
                 <button type="button" class="boton-nuevo" id="boton-nueva-mascota">+ Nueva mascota</button>
@@ -68,7 +68,7 @@
                     <div class="fila-campos">
                         <div class="campo" id="campo-nombre-m">
                             <label for="nombre">Nombre</label>
-                            <input type="text" id="nombre" name="nombre" maxlength="40">
+                            <input type="text" id="nombre" name="nombre" maxlength="40" autocomplete="off">
                             <p class="campo__error">El nombre es obligatorio (máx. 40 caracteres).</p>
                         </div>
                         <div class="campo" id="campo-especie-m">
@@ -87,12 +87,12 @@
                     <div class="fila-campos">
                         <div class="campo" id="campo-raza-m">
                             <label for="raza">Raza</label>
-                            <input type="text" id="raza" name="raza" maxlength="40">
+                            <input type="text" id="raza" name="raza" maxlength="40" autocomplete="off">
                             <p class="campo__error">La raza es obligatoria (máx. 40 caracteres).</p>
                         </div>
                         <div class="campo" id="campo-edad-m">
                             <label for="edad">Edad</label>
-                            <input type="text" id="edad" name="edad" maxlength="20" placeholder="Ej: 2 años">
+                            <input type="text" id="edad" name="edad" maxlength="20" placeholder="Ej: 2 años" autocomplete="off">
                             <p class="campo__error">La edad es obligatoria (máx. 20 caracteres).</p>
                         </div>
                     </div>
@@ -100,7 +100,7 @@
                     <div class="fila-campos">
                         <div class="campo" id="campo-dueno-m">
                             <label for="dueno">Dueño/a</label>
-                            <input type="text" id="dueno" name="dueno" maxlength="60">
+                            <input type="text" id="dueno" name="dueno" maxlength="60" autocomplete="name">
                             <p class="campo__error">El nombre del dueño/a es obligatorio (máx. 60 caracteres).</p>
                         </div>
                         <div class="campo" id="campo-estado-m">
