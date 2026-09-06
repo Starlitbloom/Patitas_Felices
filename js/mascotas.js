@@ -16,7 +16,7 @@ const mascotas = [
         sexo: "Macho",
         peso: "28 kg",
         dueno: "Constanza Herrera",
-        imagen: "../img/perro2.jfif",
+        imagen: "../img/golden.jpg",
         estado: "al-dia",
         estadoTexto: "Control al día",
         descripcion: "Rocky es un perro tranquilo y juguetón. Mantiene sus controles y vacunas al día, sin antecedentes de alergias conocidas."
@@ -31,7 +31,7 @@ const mascotas = [
         sexo: "Hembra",
         peso: "4 kg",
         dueno: "Diego Soto",
-        imagen: "../img/gato-amarillo.jfif",
+        imagen: "../img/gataeuropea.jpg",
         estado: "pendiente",
         estadoTexto: "Vacunas pendientes",
         descripcion: "Luna es una gata independiente y curiosa. Le falta aplicarse el refuerzo anual de su calendario de vacunación."
@@ -46,7 +46,7 @@ const mascotas = [
         sexo: "Macho",
         peso: "32 kg",
         dueno: "Javiera Muñoz",
-        imagen: "../img/perro3.webp",
+        imagen: "../img/labrador.jpg",
         estado: "tratamiento",
         estadoTexto: "En tratamiento",
         descripcion: "Max se encuentra en tratamiento por una dermatitis leve. Requiere control de seguimiento en las próximas semanas."
@@ -61,10 +61,40 @@ const mascotas = [
         sexo: "Hembra",
         peso: "3.2 kg",
         dueno: "Tomás Reyes",
-        imagen: "../img/gato-carino.png",
+        imagen: "../img/gatopersa.jpg",
         estado: "al-dia",
         estadoTexto: "Control al día",
         descripcion: "Michi es una gatita joven y sana. Al ser de raza persa, se recomienda vigilar su cuidado respiratorio y ocular."
+    },
+
+    {
+        id: "bella",
+        nombre: "Bella",
+        especie: "Conejo",
+        raza: "Toy enano",
+        edad: "3 meses ",
+        sexo: "Hembra",
+        peso: "1.1 kg",
+        dueno: "Mara Gonzalez",
+        imagen: "../img/conejo.jpg",
+        estado: "al-dia",
+        estadoTexto: "Control al día",
+        descripcion: "Bella es una coneja joven y sana. Al ser de raza toy enano, se recomienda vigilar su cuidado dental y digestivo."
+    },
+
+    {
+        id: "nicanor",
+        nombre: "Nicanor",
+        especie: "Ave",
+        raza: "Cacatua",
+        edad: "1 año",
+        sexo: "Macho",
+        peso: "800 gr",
+        dueno: "Sofía Martínez",
+        imagen: "../img/Cacatua.jpg",
+        estado: "al-dia",
+        estadoTexto: "Control al día",
+        descripcion: "Nicanor es un loro curioso y activo. No requiere vacunas dentro del protocolo actual de la clínica; se recomienda control veterinario aviar cada 6 meses."
     }
 
 ];
@@ -78,7 +108,7 @@ const historiales = {
 
     rocky: [
         { fecha: "12 agosto 2026", motivo: "Control anual", diagnostico: "Paciente sano, sin hallazgos relevantes.", tratamiento: "Sin medicación. Se indica Condrovet forte (condroitín + glucosamina) como suplemento articular preventivo.", veterinario: "Dra. Paula Vidal" },
-        { fecha: "03 marzo 2026", motivo: "Vómitos ocasionales", diagnostico: "Gastritis leve, probablemente alimentaria.", tratamiento: "Omeprazol 10mg vet cada 24h por 5 días y dieta blanda por 3 días.", veterinario: "Dr. Ignacio Rojas" }
+        { fecha: "03 marzo 2026", motivo: "Vómitos ocasionales", diagnostico: "Gastritis leve, probablemente alimentaria.", tratamiento: "Omeprazol 10mg vet cada 24h por 5 días y dieta blanda por 3 días.", veterinario: "Dr. Sebastian Jimenez" }
     ],
 
     luna: [
@@ -87,11 +117,19 @@ const historiales = {
 
     max: [
         { fecha: "28 agosto 2026", motivo: "Picazón y enrojecimiento en la piel", diagnostico: "Dermatitis alérgica leve.", tratamiento: "Apoquel 16mg (oclacitinib) una vez al día y shampoo Malaseb dos veces por semana durante 10 días.", veterinario: "Dr. Ignacio Rojas" },
-        { fecha: "14 agosto 2026", motivo: "Chequeo previo a tratamiento", diagnostico: "Confirmación de irritación cutánea en zona abdominal.", tratamiento: "Se deriva a control dermatológico y se solicita hemograma completo.", veterinario: "Dra. Paula Vidal" }
+        { fecha: "14 agosto 2026", motivo: "Chequeo previo a tratamiento", diagnostico: "Confirmación de irritación cutánea en zona abdominal.", tratamiento: "Se deriva a control dermatológico y se solicita hemograma completo.", veterinario: "Dra. Marta López" }
     ],
 
     michi: [
-        { fecha: "02 junio 2026", motivo: "Primer control post adopción", diagnostico: "Cachorra sana, buen desarrollo.", tratamiento: "Inicio de plan de vacunación con Nobivac Rabies y desparasitación interna felina.", veterinario: "Dra. Paula Vidal" }
+        { fecha: "02 junio 2026", motivo: "Primer control post adopción", diagnostico: "Cachorra sana, buen desarrollo.", tratamiento: "Inicio de plan de vacunación con Nobivac Rabies y desparasitación interna felina.", veterinario: "Dr. Eduardo Caceres" }
+    ],
+
+    Bella: [
+        { fecha: "18 Agosto 2026", motivo: "Control dental de rutina", diagnostico: "Sin sobrecrecimiento dentario, buen estado general.", tratamiento: "Se recomienda dieta rica en fibra (heno) para desgaste natural de dientes.", veterinario: "Dra. Marta López" }
+    ],
+
+    Nicanor: [
+        { fecha: "05 Agosto 2026", motivo: "Chequeo aviar general", diagnostico: "Ave activa, plumaje en buen estado, sin signos de enfermedad respiratoria.", tratamiento: "SSe indica suplemento vitamínico y control en 6 meses.", veterinario: "Dr. Sebastian Jimenez" }
     ]
 
 };
@@ -119,7 +157,9 @@ const vacunasPorMascota = {
 
     michi: [
         { vacuna: "Vacuna bivalente felina (VA003)", fecha: "02 junio 2026", proximoRefuerzo: "02 diciembre 2026", estado: "proxima" }
-    ]
+    ],
+
+
 
 };
 
