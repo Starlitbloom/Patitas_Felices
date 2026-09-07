@@ -11,7 +11,10 @@
     <link rel="stylesheet" href="../css/estilo-solicitar-cita.css">
 
     <style>
-        /* Selector de servicio dentro del paso 3 */
+        /* =========================================================
+           SELECTOR DE SERVICIO
+        ========================================================= */
+
         .ayuda-servicio-cita {
             margin: 5px 0 14px;
             color: #6F6F78;
@@ -34,19 +37,29 @@
         .selector-servicio-cita select {
             width: 100%;
             padding: 13px 15px;
+
             border: 1px solid #E3DDEA;
             border-radius: 14px;
+
             background-color: #FFFFFF;
             color: #2E2E38;
+
             font-family: inherit;
             font-size: 13px;
+
             outline: none;
-            transition: border-color .25s ease, box-shadow .25s ease;
+
+            transition:
+                border-color .25s ease,
+                box-shadow .25s ease;
         }
 
         .selector-servicio-cita select:focus {
             border-color: #B99AD9;
-            box-shadow: 0 0 0 3px rgba(230, 214, 247, .55);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(230, 214, 247, .55);
         }
 
         .selector-servicio-cita select.campo-error {
@@ -61,6 +74,7 @@
     <!-- ======================================================
          HEADER
     ======================================================= -->
+
     <header class="header-principal">
 
         <div class="fondo-header fondo-izquierdo"></div>
@@ -68,7 +82,10 @@
 
         <div class="contenedor-header">
 
-            <a href="../index.html" class="logo-enlace">
+            <a
+                href="index.html"
+                class="logo-enlace"
+            >
                 <img
                     src="../img/logo-patitas.png"
                     alt="Logo Veterinaria Patitas Felices"
@@ -76,28 +93,39 @@
                 >
             </a>
 
+
             <nav aria-label="Navegación principal">
 
                 <ul>
 
                     <li>
-                        <a href="../index.html">Inicio</a>
+                        <a href="index.html">
+                            Inicio
+                        </a>
                     </li>
 
                     <li>
-                        <a href="nosotros.html">Nosotros</a>
+                        <a href="nosotros.html">
+                            Nosotros
+                        </a>
                     </li>
 
                     <li>
-                        <a href="novedades.html">Novedades</a>
+                        <a href="novedades.html">
+                            Novedades
+                        </a>
                     </li>
 
                     <li>
-                        <a href="contacto.html">Contacto</a>
+                        <a href="contacto.html">
+                            Contacto
+                        </a>
                     </li>
 
                     <li>
-                        <a href="mis-citas.html">Mis citas</a>
+                        <a href="mis-citas.html">
+                            Mis citas
+                        </a>
                     </li>
 
                     <li>
@@ -113,7 +141,9 @@
                                 class="icono-calendario"
                             >
 
-                            Solicitar cita
+                            <span>
+                                Solicitar cita
+                            </span>
 
                         </a>
 
@@ -131,12 +161,16 @@
     <!-- ======================================================
          HERO
     ======================================================= -->
+
     <section class="hero-cita">
 
         <div class="decoracion-cita decoracion-cita-1"></div>
         <div class="decoracion-cita decoracion-cita-2"></div>
 
         <div class="contenedor hero-cita-contenido">
+
+
+            <!-- TEXTO -->
 
             <div class="hero-cita-texto">
 
@@ -154,43 +188,57 @@
                     y selecciona el día y horario que prefieras.
                 </p>
 
+
                 <div class="hero-cita-beneficios">
 
-                    <span>♡ Atención cercana</span>
+                    <span>
+                        ♡ Atención cercana
+                    </span>
 
-                    <span>✦ Proceso sencillo</span>
+                    <span>
+                        ✦ Proceso sencillo
+                    </span>
 
-                    <span>✓ Confirmación de tu solicitud</span>
+                    <span>
+                        ✓ Confirmación de tu solicitud
+                    </span>
 
                 </div>
 
             </div>
 
 
+            <!-- IMAGEN -->
+
             <div class="hero-cita-imagen">
 
-    <img
-        src="../img/mascotas-hero-cita.png"
-        alt="Perros y gatos de Veterinaria Patitas Felices"
-        class="imagen-hero-mascotas"
-    >
+                <img
+                    src="../img/mascotas-hero-cita.png"
+                    alt="Perros y gatos de Veterinaria Patitas Felices"
+                    class="imagen-hero-mascotas"
+                >
 
-</div>
+            </div>
 
         </div>
 
     </section>
 
 
+
     <!-- ======================================================
          FORMULARIO
     ======================================================= -->
+
     <main class="seccion-solicitar-cita">
 
         <div class="contenedor">
 
 
-            <!-- ENCABEZADO -->
+            <!-- ==================================================
+                 ENCABEZADO
+            =================================================== -->
+
             <div class="encabezado-formulario-cita">
 
                 <span>
@@ -209,18 +257,32 @@
             </div>
 
 
+
             <!-- ==================================================
                  INDICADOR DE PASOS
             =================================================== -->
+
             <div class="indicador-pasos">
 
+
+                <!-- PASO 1 -->
+
                 <div class="paso-indicador">
 
-                    <span>1</span>
+                    <span>
+                        1
+                    </span>
 
                     <div>
-                        <strong>Tus datos</strong>
-                        <small>Información de contacto</small>
+
+                        <strong>
+                            Tus datos
+                        </strong>
+
+                        <small>
+                            Información de contacto
+                        </small>
+
                     </div>
 
                 </div>
@@ -229,13 +291,24 @@
                 <div class="linea-paso"></div>
 
 
+                <!-- PASO 2 -->
+
                 <div class="paso-indicador">
 
-                    <span class="paso-rosa">2</span>
+                    <span class="paso-rosa">
+                        2
+                    </span>
 
                     <div>
-                        <strong>Tu mascota</strong>
-                        <small>Cuéntanos sobre ella</small>
+
+                        <strong>
+                            Tu mascota
+                        </strong>
+
+                        <small>
+                            Cuéntanos sobre ella
+                        </small>
+
                     </div>
 
                 </div>
@@ -244,13 +317,24 @@
                 <div class="linea-paso"></div>
 
 
+                <!-- PASO 3 -->
+
                 <div class="paso-indicador">
 
-                    <span class="paso-morado">3</span>
+                    <span class="paso-morado">
+                        3
+                    </span>
 
                     <div>
-                        <strong>La cita</strong>
-                        <small>Fecha y atención</small>
+
+                        <strong>
+                            La cita
+                        </strong>
+
+                        <small>
+                            Fecha y atención
+                        </small>
+
                     </div>
 
                 </div>
@@ -258,34 +342,43 @@
             </div>
 
 
+
             <!-- ==================================================
-                 AVISO INICIO SESIÓN
+                 AVISO CUENTA
             =================================================== -->
+
             <div class="aviso-sesion">
 
                 <div class="aviso-sesion-icono">
                     🔒
                 </div>
 
+
                 <div class="aviso-sesion-texto">
 
                     <strong>
-                        Gestiona tus citas desde tu cuenta
+                        Tu solicitud quedará vinculada a tu cuenta
                     </strong>
 
                     <p>
-                        Próximamente podrás iniciar sesión para consultar
-                        y administrar tus solicitudes desde “Mis citas”.
+                        Cuando registres la cita podrás consultar
+                        su estado desde la sección “Mis citas”.
                     </p>
 
                 </div>
 
+
                 <span class="aviso-proximamente">
-                    Próximamente
+                    Sesión activa
                 </span>
 
             </div>
 
+
+
+            <!-- ==================================================
+                 FORMULARIO
+            =================================================== -->
 
             <form
                 id="formularioCita"
@@ -296,14 +389,18 @@
 
                 <!-- ==================================================
                      PASO 1
+                     DATOS DEL DUEÑO
                 =================================================== -->
+
                 <section class="bloque-formulario bloque-celeste">
+
 
                     <div class="titulo-bloque">
 
                         <span class="numero-paso">
                             1
                         </span>
+
 
                         <div>
 
@@ -320,7 +417,11 @@
                     </div>
 
 
+
                     <div class="grid-campos">
+
+
+                        <!-- NOMBRE -->
 
                         <div class="grupo-campo">
 
@@ -343,6 +444,9 @@
                         </div>
 
 
+
+                        <!-- CORREO -->
+
                         <div class="grupo-campo">
 
                             <label for="correoCita">
@@ -352,6 +456,7 @@
                             <input
                                 type="email"
                                 id="correoCita"
+                                maxlength="100"
                                 placeholder="Ej: correo@ejemplo.cl"
                             >
 
@@ -362,6 +467,9 @@
 
                         </div>
 
+
+
+                        <!-- TELÉFONO -->
 
                         <div class="grupo-campo">
 
@@ -387,16 +495,21 @@
                 </section>
 
 
+
                 <!-- ==================================================
                      PASO 2
+                     DATOS DE LA MASCOTA
                 =================================================== -->
+
                 <section class="bloque-formulario bloque-rosa">
+
 
                     <div class="titulo-bloque">
 
                         <span class="numero-paso numero-paso-rosa">
                             2
                         </span>
+
 
                         <div>
 
@@ -413,7 +526,11 @@
                     </div>
 
 
+
+                    <!-- NOMBRE Y EDAD -->
+
                     <div class="grid-mascota">
+
 
                         <div class="grupo-campo">
 
@@ -434,6 +551,7 @@
                             ></small>
 
                         </div>
+
 
 
                         <div class="grupo-campo">
@@ -460,130 +578,143 @@
                     </div>
 
 
-                   <!-- ==================================================
-     TIPO DE MASCOTA
-=================================================== -->
-<div class="grupo-opciones">
 
-    <label class="titulo-opciones">
-        Tipo de mascota *
-    </label>
+                    <!-- ==================================================
+                         TIPO DE MASCOTA
+                    =================================================== -->
 
+                    <div class="grupo-opciones">
 
-    <div class="opciones-mascota">
-
-        <!-- PERRO -->
-        <label class="tarjeta-opcion">
-
-            <input
-                type="radio"
-                name="tipoMascota"
-                value="Perro"
-            >
-
-            <div class="contenedor-icono-mascota icono-perro">
-
-                <img
-                    src="../img/icono-perro.png"
-                    alt="Perro"
-                    class="imagen-tipo-mascota"
-                >
-
-            </div>
-
-            <strong>
-                Perro
-            </strong>
-
-            <small>
-                Nuestro mejor amigo
-            </small>
-
-        </label>
+                        <label class="titulo-opciones">
+                            Tipo de mascota *
+                        </label>
 
 
-        <!-- GATO -->
-        <label class="tarjeta-opcion">
-
-            <input
-                type="radio"
-                name="tipoMascota"
-                value="Gato"
-            >
-
-            <div class="contenedor-icono-mascota icono-gato">
-
-                <img
-                    src="../img/icono-gato.png"
-                    alt="Gato"
-                    class="imagen-tipo-mascota"
-                >
-
-            </div>
-
-            <strong>
-                Gato
-            </strong>
-
-            <small>
-                Curioso y especial
-            </small>
-
-        </label>
+                        <div class="opciones-mascota">
 
 
-        <!-- OTRO -->
-        <label class="tarjeta-opcion">
+                            <!-- PERRO -->
 
-            <input
-                type="radio"
-                name="tipoMascota"
-                value="Otro"
-            >
+                            <label class="tarjeta-opcion">
 
-            <div class="contenedor-icono-mascota icono-otro">
+                                <input
+                                    type="radio"
+                                    name="tipoMascota"
+                                    value="Perro"
+                                >
 
-                <img
-                    src="../img/icono-otro.png"
-                    alt="Conejo y ave"
-                    class="imagen-tipo-mascota"
-                >
+                                <div class="contenedor-icono-mascota icono-perro">
 
-            </div>
+                                    <img
+                                        src="../img/icono-perro.png"
+                                        alt="Perro"
+                                        class="imagen-tipo-mascota"
+                                    >
 
-            <strong>
-                Otro
-            </strong>
+                                </div>
 
-            <small>
-                Otra mascota
-            </small>
+                                <strong>
+                                    Perro
+                                </strong>
 
-        </label>
+                                <small>
+                                    Nuestro mejor amigo
+                                </small>
 
-    </div>
+                            </label>
 
 
-    <small
-        id="errorTipoMascota"
-        class="mensaje-error"
-    ></small>
 
-</div>
+                            <!-- GATO -->
+
+                            <label class="tarjeta-opcion">
+
+                                <input
+                                    type="radio"
+                                    name="tipoMascota"
+                                    value="Gato"
+                                >
+
+                                <div class="contenedor-icono-mascota icono-gato">
+
+                                    <img
+                                        src="../img/icono-gato.png"
+                                        alt="Gato"
+                                        class="imagen-tipo-mascota"
+                                    >
+
+                                </div>
+
+                                <strong>
+                                    Gato
+                                </strong>
+
+                                <small>
+                                    Curioso y especial
+                                </small>
+
+                            </label>
+
+
+
+                            <!-- OTRO -->
+
+                            <label class="tarjeta-opcion">
+
+                                <input
+                                    type="radio"
+                                    name="tipoMascota"
+                                    value="Otro"
+                                >
+
+                                <div class="contenedor-icono-mascota icono-otro">
+
+                                    <img
+                                        src="../img/icono-otro.png"
+                                        alt="Conejo y ave"
+                                        class="imagen-tipo-mascota"
+                                    >
+
+                                </div>
+
+                                <strong>
+                                    Otro
+                                </strong>
+
+                                <small>
+                                    Otra mascota
+                                </small>
+
+                            </label>
+
+                        </div>
+
+
+                        <small
+                            id="errorTipoMascota"
+                            class="mensaje-error"
+                        ></small>
+
+                    </div>
 
                 </section>
 
 
+
                 <!-- ==================================================
                      PASO 3
+                     INFORMACIÓN DE LA CITA
                 =================================================== -->
+
                 <section class="bloque-formulario bloque-morado">
+
 
                     <div class="titulo-bloque">
 
                         <span class="numero-paso numero-paso-morado">
                             3
                         </span>
+
 
                         <div>
 
@@ -600,16 +731,23 @@
                     </div>
 
 
-                    <!-- SERVICIOS -->
+
+                    <!-- ==================================================
+                         SERVICIO
+                    =================================================== -->
+
                     <div class="grupo-opciones">
 
                         <label class="titulo-opciones">
                             ¿Qué atención necesitas? *
                         </label>
 
+
                         <p class="ayuda-servicio-cita">
-                            Selecciona el servicio que quieres solicitar para tu mascota.
+                            Selecciona el servicio que quieres solicitar
+                            para tu mascota.
                         </p>
+
 
                         <div class="selector-servicio-cita">
 
@@ -617,59 +755,186 @@
                                 Servicio *
                             </label>
 
+
                             <select id="servicioCita">
-                                <option value="">Selecciona un servicio</option>
+
+                                <option value="">
+                                    Selecciona un servicio
+                                </option>
+
+
+                                <!-- CONSULTAS -->
 
                                 <optgroup label="Consultas">
-                                    <option value="Consulta general">Consulta general</option>
-                                    <option value="Consulta urgencia">Consulta urgencia</option>
-                                    <option value="Control postoperatorio">Control postoperatorio</option>
-                                    <option value="Consulta ave / conejo">Consulta ave / conejo</option>
-                                    <option value="Segunda opinión médica">Segunda opinión médica</option>
+
+                                    <option value="Consulta general">
+                                        Consulta general
+                                    </option>
+
+                                    <option value="Consulta urgencia">
+                                        Consulta urgencia
+                                    </option>
+
+                                    <option value="Control postoperatorio">
+                                        Control postoperatorio
+                                    </option>
+
+                                    <option value="Consulta ave / conejo">
+                                        Consulta ave / conejo
+                                    </option>
+
+                                    <option value="Segunda opinión médica">
+                                        Segunda opinión médica
+                                    </option>
+
                                 </optgroup>
+
+
+
+                                <!-- VACUNACIÓN -->
 
                                 <optgroup label="Vacunación">
-                                    <option value="Vacuna antirrábica canina">Vacuna antirrábica canina</option>
-                                    <option value="Vacuna séxtuple canina">Vacuna séxtuple canina</option>
-                                    <option value="Vacuna bivalente felina">Vacuna bivalente felina</option>
-                                    <option value="Vacuna triple felina">Vacuna triple felina</option>
-                                    <option value="Vacuna Bordetella canina">Vacuna Bordetella canina</option>
-                                    <option value="Vacuna antirrábica felina">Vacuna antirrábica felina</option>
+
+                                    <option value="Vacuna antirrábica canina">
+                                        Vacuna antirrábica canina
+                                    </option>
+
+                                    <option value="Vacuna séxtuple canina">
+                                        Vacuna séxtuple canina
+                                    </option>
+
+                                    <option value="Vacuna bivalente felina">
+                                        Vacuna bivalente felina
+                                    </option>
+
+                                    <option value="Vacuna triple felina">
+                                        Vacuna triple felina
+                                    </option>
+
+                                    <option value="Vacuna Bordetella canina">
+                                        Vacuna Bordetella canina
+                                    </option>
+
+                                    <option value="Vacuna antirrábica felina">
+                                        Vacuna antirrábica felina
+                                    </option>
+
                                 </optgroup>
+
+
+
+                                <!-- CIRUGÍA -->
 
                                 <optgroup label="Cirugía">
-                                    <option value="Esterilización hembra canina">Esterilización hembra canina</option>
-                                    <option value="Esterilización macho canino">Esterilización macho canino</option>
-                                    <option value="Esterilización hembra felina">Esterilización hembra felina</option>
-                                    <option value="Esterilización macho felino">Esterilización macho felino</option>
-                                    <option value="Extirpación de tumor cutáneo">Extirpación de tumor cutáneo</option>
-                                    <option value="Cesárea de urgencia">Cesárea de urgencia</option>
+
+                                    <option value="Esterilización hembra canina">
+                                        Esterilización hembra canina
+                                    </option>
+
+                                    <option value="Esterilización macho canino">
+                                        Esterilización macho canino
+                                    </option>
+
+                                    <option value="Esterilización hembra felina">
+                                        Esterilización hembra felina
+                                    </option>
+
+                                    <option value="Esterilización macho felino">
+                                        Esterilización macho felino
+                                    </option>
+
+                                    <option value="Extirpación de tumor cutáneo">
+                                        Extirpación de tumor cutáneo
+                                    </option>
+
+                                    <option value="Cesárea de urgencia">
+                                        Cesárea de urgencia
+                                    </option>
+
                                 </optgroup>
+
+
+
+                                <!-- DESPARASITACIÓN -->
 
                                 <optgroup label="Desparasitación">
-                                    <option value="Desparasitación interna pequeños">Desparasitación interna pequeños</option>
-                                    <option value="Desparasitación interna medianos">Desparasitación interna medianos</option>
-                                    <option value="Desparasitación interna grandes">Desparasitación interna grandes</option>
-                                    <option value="Desparasitación interna felina">Desparasitación interna felina</option>
-                                    <option value="Desparasitación externa">Desparasitación externa</option>
+
+                                    <option value="Desparasitación interna pequeños">
+                                        Desparasitación interna pequeños
+                                    </option>
+
+                                    <option value="Desparasitación interna medianos">
+                                        Desparasitación interna medianos
+                                    </option>
+
+                                    <option value="Desparasitación interna grandes">
+                                        Desparasitación interna grandes
+                                    </option>
+
+                                    <option value="Desparasitación interna felina">
+                                        Desparasitación interna felina
+                                    </option>
+
+                                    <option value="Desparasitación externa">
+                                        Desparasitación externa
+                                    </option>
+
                                 </optgroup>
+
+
+
+                                <!-- EXÁMENES -->
 
                                 <optgroup label="Exámenes">
-                                    <option value="Hemograma completo">Hemograma completo</option>
-                                    <option value="Perfil bioquímico completo">Perfil bioquímico completo</option>
-                                    <option value="Radiografía">Radiografía</option>
-                                    <option value="Ecografía abdominal">Ecografía abdominal</option>
-                                    <option value="Test de leishmaniasis">Test de leishmaniasis</option>
+
+                                    <option value="Hemograma completo">
+                                        Hemograma completo
+                                    </option>
+
+                                    <option value="Perfil bioquímico completo">
+                                        Perfil bioquímico completo
+                                    </option>
+
+                                    <option value="Radiografía">
+                                        Radiografía
+                                    </option>
+
+                                    <option value="Ecografía abdominal">
+                                        Ecografía abdominal
+                                    </option>
+
+                                    <option value="Test de leishmaniasis">
+                                        Test de leishmaniasis
+                                    </option>
+
                                 </optgroup>
 
+
+
+                                <!-- OTROS -->
+
                                 <optgroup label="Otros">
-                                    <option value="Corte de uñas">Corte de uñas</option>
-                                    <option value="Limpieza dental">Limpieza dental</option>
-                                    <option value="Microchip identificación">Microchip identificación</option>
-                                    <option value="Hospitalización">Hospitalización</option>
+
+                                    <option value="Corte de uñas">
+                                        Corte de uñas
+                                    </option>
+
+                                    <option value="Limpieza dental">
+                                        Limpieza dental
+                                    </option>
+
+                                    <option value="Microchip identificación">
+                                        Microchip identificación
+                                    </option>
+
+                                    <option value="Hospitalización">
+                                        Hospitalización
+                                    </option>
+
                                 </optgroup>
 
                             </select>
+
 
                             <small
                                 id="errorServicioCita"
@@ -680,8 +945,16 @@
 
                     </div>
 
-                    <!-- FECHA Y HORA -->
+
+
+                    <!-- ==================================================
+                         FECHA Y HORA
+                    =================================================== -->
+
                     <div class="grid-fecha">
+
+
+                        <!-- FECHA -->
 
                         <div class="grupo-campo">
 
@@ -701,6 +974,9 @@
 
                         </div>
 
+
+
+                        <!-- HORA -->
 
                         <div class="grupo-campo">
 
@@ -748,6 +1024,7 @@
 
                             </select>
 
+
                             <small
                                 id="errorHoraCita"
                                 class="mensaje-error"
@@ -758,7 +1035,11 @@
                     </div>
 
 
-                    <!-- MOTIVO -->
+
+                    <!-- ==================================================
+                         MOTIVO
+                    =================================================== -->
+
                     <div class="grupo-campo motivo-consulta">
 
                         <label for="motivoCita">
@@ -770,6 +1051,7 @@
                             maxlength="500"
                             placeholder="Puedes contarnos síntomas, dudas o información que consideres importante."
                         ></textarea>
+
 
                         <div class="detalle-textarea">
 
@@ -788,10 +1070,13 @@
                 </section>
 
 
+
                 <!-- ==================================================
                      CONFIRMACIÓN FINAL
                 =================================================== -->
+
                 <section class="bloque-confirmacion">
+
 
                     <div class="confirmacion-superior">
 
@@ -824,6 +1109,9 @@
                     </div>
 
 
+
+                    <!-- CHECK -->
+
                     <div class="confirmacion-formulario">
 
                         <label class="check-confirmacion">
@@ -840,6 +1128,7 @@
 
                         </label>
 
+
                         <small
                             id="errorConfirmarDatos"
                             class="mensaje-error"
@@ -847,6 +1136,9 @@
 
                     </div>
 
+
+
+                    <!-- BOTÓN -->
 
                     <div class="acciones-formulario-cita">
 
@@ -863,6 +1155,7 @@
 
                         </button>
 
+
                         <p>
                             Tu solicitud quedará registrada como
                             <strong>Pendiente</strong>.
@@ -871,6 +1164,11 @@
                     </div>
 
 
+
+                    <!-- ==================================================
+                         MENSAJE DE ÉXITO
+                    =================================================== -->
+
                     <div
                         id="mensajeExitoCita"
                         class="mensaje-exito-cita"
@@ -878,20 +1176,39 @@
                         aria-live="polite"
                     >
 
-                        <span class="icono-exito-cita">
+                        <div class="mensaje-exito-icono">
                             ✓
-                        </span>
+                        </div>
 
-                        <div>
 
-                            <strong>
-                                ¡Solicitud registrada!
-                            </strong>
+                        <div class="mensaje-exito-contenido">
+
+                            <h3>
+                                ¡Solicitud enviada!
+                            </h3>
 
                             <p>
-                                Tu cita fue guardada correctamente.
-                                Puedes revisarla en “Mis citas”.
+                                Tu cita fue registrada correctamente
+                                y quedó en estado
+                                <strong>Pendiente</strong>.
                             </p>
+
+                            <p class="mensaje-exito-ayuda">
+                                Puedes revisar el estado de tu solicitud
+                                cuando quieras.
+                            </p>
+
+
+                            <a
+                                href="mis-citas.html"
+                                class="boton-ver-mis-citas"
+                            >
+                                Ver mis citas
+
+                                <span>
+                                    →
+                                </span>
+                            </a>
 
                         </div>
 
@@ -906,12 +1223,15 @@
     </main>
 
 
+
     <!-- ======================================================
          AYUDA
     ======================================================= -->
+
     <section class="seccion-ayuda-cita">
 
         <div class="contenedor ayuda-cita-contenido">
+
 
             <div>
 
@@ -931,6 +1251,7 @@
             </div>
 
 
+
             <div class="ayuda-cita-imagen">
 
                 <img
@@ -939,6 +1260,7 @@
                 >
 
             </div>
+
 
 
             <a
@@ -959,14 +1281,20 @@
     </section>
 
 
+
     <!-- ======================================================
          FOOTER
     ======================================================= -->
+
     <footer class="footer-principal">
 
         <div class="footer-linea"></div>
 
+
         <div class="footer-contenido">
+
+
+            <!-- MARCA -->
 
             <div class="footer-marca">
 
@@ -984,6 +1312,9 @@
             </div>
 
 
+
+            <!-- CONTACTO -->
+
             <div class="footer-info">
 
                 <h3>
@@ -991,17 +1322,26 @@
                 </h3>
 
                 <p>
-                    <span class="footer-icono">✉</span>
+                    <span class="footer-icono">
+                        ✉
+                    </span>
+
                     contacto@patitasfelices.cl
                 </p>
 
                 <p>
-                    <span class="footer-icono">☎</span>
+                    <span class="footer-icono">
+                        ☎
+                    </span>
+
                     +56 9 1234 5678
                 </p>
 
             </div>
 
+
+
+            <!-- UBICACIÓN -->
 
             <div class="footer-info">
 
@@ -1010,18 +1350,25 @@
                 </h3>
 
                 <p>
-                    <span class="footer-icono">⌖</span>
+                    <span class="footer-icono">
+                        ⌖
+                    </span>
+
                     Rancagua, Región de O'Higgins
                 </p>
 
                 <p>
-                    <span class="footer-icono">◷</span>
+                    <span class="footer-icono">
+                        ◷
+                    </span>
+
                     Lun - Sáb: 09:00 a 19:00
                 </p>
 
             </div>
 
         </div>
+
 
 
         <div class="footer-inferior">
@@ -1038,6 +1385,11 @@
 
     </footer>
 
+
+
+    <!-- ======================================================
+         JAVASCRIPT
+    ======================================================= -->
 
     <script src="../js/citas.js"></script>
 

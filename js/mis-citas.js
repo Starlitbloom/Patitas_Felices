@@ -1,9 +1,17 @@
 /* =========================================================
    PATITAS FELICES
    MIS CITAS
+   CONECTADO CON USUARIO / SESIÓN
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
+
+    /* =====================================================
+       CLAVES LOCALSTORAGE
+    ===================================================== */
+
+    const CLAVE_SESION = "patitasFelices_sesion";
+    const CLAVE_CITAS = "patitasFelices_citas";
 
 
     /* =====================================================
@@ -21,16 +29,67 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
+       OBTENER SESIÓN
+    ===================================================== */
+
+    function obtenerSesion() {
+
+        try {
+
+            return JSON.parse(
+                localStorage.getItem(CLAVE_SESION)
+            );
+
+        } catch (error) {
+
+            console.error(
+                "No se pudo leer la sesión.",
+                error
+            );
+
+            return null;
+        }
+    }
+
+
+    const sesion =
+        obtenerSesion();
+
+
+    /* =====================================================
+       PROTEGER PÁGINA
+    ===================================================== */
+
+    if (!sesion) {
+
+        window.location.href =
+            "login.html";
+
+        return;
+    }
+
+
+    /* =====================================================
        OBTENER CITAS
     ===================================================== */
 
     function obtenerCitas() {
 
-        return JSON.parse(
-            localStorage.getItem(
-                "patitasFelicesCitas"
-            )
-        ) || [];
+        try {
+
+            return JSON.parse(
+                localStorage.getItem(CLAVE_CITAS)
+            ) || [];
+
+        } catch (error) {
+
+            console.error(
+                "No se pudieron cargar las citas.",
+                error
+            );
+
+            return [];
+        }
     }
 
 
@@ -41,8 +100,27 @@ document.addEventListener("DOMContentLoaded", () => {
     function guardarCitas(citas) {
 
         localStorage.setItem(
-            "patitasFelicesCitas",
+            CLAVE_CITAS,
             JSON.stringify(citas)
+        );
+    }
+
+
+    /* =====================================================
+       OBTENER CITAS DEL USUARIO
+    ===================================================== */
+
+    function obtenerCitasUsuario() {
+
+        const citas =
+            obtenerCitas();
+
+
+        return citas.filter(
+            cita =>
+                cita.correoUsuario &&
+                cita.correoUsuario.toLowerCase() ===
+                sesion.correo.toLowerCase()
         );
     }
 
@@ -87,13 +165,45 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
+       FECHA DE HOY
+    ===================================================== */
+
+    function obtenerFechaHoy() {
+
+        const hoy =
+            new Date();
+
+
+        const anio =
+            hoy.getFullYear();
+
+        const mes =
+            String(
+                hoy.getMonth() + 1
+            ).padStart(2, "0");
+
+        const dia =
+            String(
+                hoy.getDate()
+            ).padStart(2, "0");
+
+
+        return `${anio}-${mes}-${dia}`;
+    }
+
+
+    /* =====================================================
        CLASE DEL ESTADO
     ===================================================== */
 
     function obtenerClaseEstado(estado) {
 
         const valor =
-            estado.toLowerCase();
+            String(
+                estado || "Pendiente"
+            )
+                .trim()
+                .toLowerCase();
 
 
         if (valor === "confirmada") {
@@ -111,22 +221,88 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
-       ICONO DE MASCOTA
+       IMAGEN SEGÚN TIPO DE MASCOTA
     ===================================================== */
 
-    function obtenerIconoMascota(tipo) {
+    function obtenerImagenMascota(tipo) {
 
-        if (tipo === "Perro") {
-            return "🐶";
+        const tipoNormalizado =
+            String(
+                tipo || ""
+            )
+                .trim()
+                .toLowerCase();
+
+
+        /* PERRO */
+
+        if (
+            tipoNormalizado === "perro" ||
+            tipoNormalizado === "perra" ||
+            tipoNormalizado === "canino" ||
+            tipoNormalizado === "canina"
+        ) {
+
+            return "../img/icono-perro.png";
         }
 
 
-        if (tipo === "Gato") {
-            return "🐱";
+        /* GATO */
+
+        if (
+            tipoNormalizado === "gato" ||
+            tipoNormalizado === "gata" ||
+            tipoNormalizado === "felino" ||
+            tipoNormalizado === "felina"
+        ) {
+
+            return "../img/icono-gato.png";
         }
 
 
-        return "♡";
+        /* OTRO */
+
+        return "../img/icono-otro.png";
+    }
+
+
+    /* =====================================================
+       NOMBRE TIPO MASCOTA
+    ===================================================== */
+
+    function obtenerNombreTipoMascota(tipo) {
+
+        const tipoNormalizado =
+            String(
+                tipo || ""
+            )
+                .trim()
+                .toLowerCase();
+
+
+        if (
+            tipoNormalizado === "perro" ||
+            tipoNormalizado === "perra" ||
+            tipoNormalizado === "canino" ||
+            tipoNormalizado === "canina"
+        ) {
+
+            return "Perro";
+        }
+
+
+        if (
+            tipoNormalizado === "gato" ||
+            tipoNormalizado === "gata" ||
+            tipoNormalizado === "felino" ||
+            tipoNormalizado === "felina"
+        ) {
+
+            return "Gato";
+        }
+
+
+        return "Otro";
     }
 
 
@@ -137,19 +313,20 @@ document.addEventListener("DOMContentLoaded", () => {
     function mostrarCitas() {
 
         const citas =
-            obtenerCitas();
+            obtenerCitasUsuario();
 
 
-        contenedorCitas.innerHTML = "";
+        contenedorCitas.innerHTML =
+            "";
 
 
         totalCitas.textContent =
             citas.length;
 
 
-        /* -------------------------------------------------
-           NO HAY CITAS
-        ------------------------------------------------- */
+        /* =================================================
+           SIN CITAS
+        ================================================= */
 
         if (citas.length === 0) {
 
@@ -163,6 +340,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
+        /* =================================================
+           CON CITAS
+        ================================================= */
+
         sinCitas.style.display =
             "none";
 
@@ -170,26 +351,25 @@ document.addEventListener("DOMContentLoaded", () => {
             "grid";
 
 
-        /* -------------------------------------------------
-           ORDENAR MÁS RECIENTES PRIMERO
-        ------------------------------------------------- */
-
         const citasOrdenadas =
             [...citas].sort(
                 (a, b) =>
-                    b.id - a.id
+                    Number(b.id || 0) -
+                    Number(a.id || 0)
             );
 
 
-        /* -------------------------------------------------
-           CREAR TARJETAS
-        ------------------------------------------------- */
-
         citasOrdenadas.forEach(
-            (cita) => {
+            cita => {
+
+                /* =================================================
+                   CREAR TARJETA
+                ================================================= */
 
                 const tarjeta =
-                    document.createElement("article");
+                    document.createElement(
+                        "article"
+                    );
 
 
                 tarjeta.classList.add(
@@ -197,24 +377,61 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
 
 
+                /* =================================================
+                   DATOS DE LA CITA
+                ================================================= */
+
+                const estado =
+                    cita.estado || "Pendiente";
+
+
                 const claseEstado =
                     obtenerClaseEstado(
-                        cita.estado || "Pendiente"
+                        estado
                     );
 
 
-                const iconoMascota =
-                    obtenerIconoMascota(
+                const imagenMascota =
+                    obtenerImagenMascota(
                         cita.tipoMascota
                     );
+
+
+                const nombreTipoMascota =
+                    obtenerNombreTipoMascota(
+                        cita.tipoMascota
+                    );
+
+
+                /* =================================================
+                   IMAGEN DE FONDO DE LA TARJETA
+                ================================================= */
+
+                tarjeta.style.setProperty(
+                    "--imagen-mascota",
+                    `url("${imagenMascota}")`
+                );
 
 
                 const motivo =
                     cita.motivo &&
                     cita.motivo.trim() !== ""
+
                         ? cita.motivo
+
                         : "Sin información adicional.";
 
+
+                const nombreDueno =
+                    cita.dueno ||
+                    cita.propietario ||
+                    sesion.nombre ||
+                    "Usuario";
+
+
+                /* =================================================
+                   CONTENIDO DE LA TARJETA
+                ================================================= */
 
                 tarjeta.innerHTML = `
 
@@ -223,17 +440,24 @@ document.addEventListener("DOMContentLoaded", () => {
                         <div class="cita-mascota">
 
                             <div class="icono-mascota-cita">
-                                ${iconoMascota}
+
+                                <img
+                                    src="${imagenMascota}"
+                                    alt="Ilustración de ${nombreTipoMascota}"
+                                    class="imagen-icono-mascota"
+                                >
+
                             </div>
 
-                            <div>
+
+                            <div class="informacion-mascota-cita">
 
                                 <h3>
-                                    ${cita.mascota}
+                                    ${cita.mascota || "Mascota"}
                                 </h3>
 
                                 <span>
-                                    ${cita.tipoMascota}
+                                    ${nombreTipoMascota}
                                 </span>
 
                             </div>
@@ -241,20 +465,14 @@ document.addEventListener("DOMContentLoaded", () => {
                         </div>
 
 
-                        <span
-                            class="
-                                estado-cita
-                                ${claseEstado}
-                            "
-                        >
-                            ${cita.estado || "Pendiente"}
+                        <span class="estado-cita ${claseEstado}">
+                            ${estado}
                         </span>
 
                     </div>
 
 
                     <div class="datos-cita">
-
 
                         <div class="dato-cita">
 
@@ -263,7 +481,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             </span>
 
                             <strong>
-                                ${cita.servicio}
+                                ${cita.servicio || "Sin servicio"}
                             </strong>
 
                         </div>
@@ -289,7 +507,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             </span>
 
                             <strong>
-                                ${cita.hora}
+                                ${cita.hora || "Por confirmar"}
                             </strong>
 
                         </div>
@@ -298,15 +516,14 @@ document.addEventListener("DOMContentLoaded", () => {
                         <div class="dato-cita">
 
                             <span>
-                                Dueño
+                                Propietario
                             </span>
 
                             <strong>
-                                ${cita.dueno}
+                                ${nombreDueno}
                             </strong>
 
                         </div>
-
 
                     </div>
 
@@ -325,21 +542,101 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
                     ${
-                        cita.estado === "Pendiente"
+                        String(estado).toLowerCase() === "pendiente"
 
                             ? `
 
-                            <div class="acciones-cita">
-
-                                <button
-                                    type="button"
-                                    class="boton-cancelar-cita"
-                                    data-id="${cita.id}"
+                                <div
+                                    class="formulario-editar-cita"
+                                    id="editar-cita-${cita.id}"
+                                    style="display: none;"
                                 >
-                                    Cancelar cita
-                                </button>
 
-                            </div>
+                                    <div class="campo-editar-cita">
+
+                                        <label
+                                            for="nuevaFecha-${cita.id}"
+                                        >
+                                            Nueva fecha
+                                        </label>
+
+                                        <input
+                                            type="date"
+                                            id="nuevaFecha-${cita.id}"
+                                            value="${cita.fecha || ""}"
+                                            min="${obtenerFechaHoy()}"
+                                        >
+
+                                    </div>
+
+
+                                    <div class="campo-editar-cita">
+
+                                        <label
+                                            for="nuevaHora-${cita.id}"
+                                        >
+                                            Nueva hora
+                                        </label>
+
+                                        <input
+                                            type="time"
+                                            id="nuevaHora-${cita.id}"
+                                            value="${cita.hora || ""}"
+                                        >
+
+                                    </div>
+
+
+                                    <p
+                                        class="mensaje-error-edicion"
+                                        id="errorEdicion-${cita.id}"
+                                    ></p>
+
+
+                                    <div class="acciones-edicion-cita">
+
+                                        <button
+                                            type="button"
+                                            class="boton-guardar-cambios"
+                                            data-id="${cita.id}"
+                                        >
+                                            Guardar cambios
+                                        </button>
+
+
+                                        <button
+                                            type="button"
+                                            class="boton-cerrar-edicion"
+                                            data-id="${cita.id}"
+                                        >
+                                            Volver
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="acciones-cita">
+
+                                    <button
+                                        type="button"
+                                        class="boton-modificar-cita"
+                                        data-id="${cita.id}"
+                                    >
+                                        Modificar fecha y hora
+                                    </button>
+
+
+                                    <button
+                                        type="button"
+                                        class="boton-cancelar-cita"
+                                        data-id="${cita.id}"
+                                    >
+                                        Cancelar cita
+                                    </button>
+
+                                </div>
 
                             `
 
@@ -356,15 +653,166 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
 
+        /* =================================================
+           ACTIVAR BOTONES
+        ================================================= */
+
+        agregarEventosModificar();
+        agregarEventosGuardarCambios();
+        agregarEventosCerrarEdicion();
         agregarEventosCancelar();
     }
 
 
     /* =====================================================
-       CANCELAR CITA
+       ABRIR EDICIÓN
     ===================================================== */
 
-    function cancelarCita(id) {
+    function abrirEdicion(id) {
+
+        const formularioEdicion =
+            document.getElementById(
+                `editar-cita-${id}`
+            );
+
+
+        if (!formularioEdicion) {
+            return;
+        }
+
+
+        formularioEdicion.style.display =
+            "grid";
+    }
+
+
+    /* =====================================================
+       CERRAR EDICIÓN
+    ===================================================== */
+
+    function cerrarEdicion(id) {
+
+        const formularioEdicion =
+            document.getElementById(
+                `editar-cita-${id}`
+            );
+
+
+        const mensajeError =
+            document.getElementById(
+                `errorEdicion-${id}`
+            );
+
+
+        if (formularioEdicion) {
+
+            formularioEdicion.style.display =
+                "none";
+        }
+
+
+        if (mensajeError) {
+
+            mensajeError.textContent =
+                "";
+        }
+    }
+
+
+    /* =====================================================
+       MODIFICAR CITA
+    ===================================================== */
+
+    function modificarCita(id) {
+
+        const inputFecha =
+            document.getElementById(
+                `nuevaFecha-${id}`
+            );
+
+
+        const inputHora =
+            document.getElementById(
+                `nuevaHora-${id}`
+            );
+
+
+        const mensajeError =
+            document.getElementById(
+                `errorEdicion-${id}`
+            );
+
+
+        if (
+            !inputFecha ||
+            !inputHora
+        ) {
+
+            return;
+        }
+
+
+        const nuevaFecha =
+            inputFecha.value;
+
+
+        const nuevaHora =
+            inputHora.value;
+
+
+        /* =================================================
+           VALIDAR FECHA
+        ================================================= */
+
+        if (nuevaFecha === "") {
+
+            if (mensajeError) {
+
+                mensajeError.textContent =
+                    "Selecciona una nueva fecha.";
+            }
+
+            return;
+        }
+
+
+        if (
+            nuevaFecha <
+            obtenerFechaHoy()
+        ) {
+
+            if (mensajeError) {
+
+                mensajeError.textContent =
+                    "La fecha no puede ser anterior a hoy.";
+            }
+
+            return;
+        }
+
+
+        /* =================================================
+           VALIDAR HORA
+        ================================================= */
+
+        if (nuevaHora === "") {
+
+            if (mensajeError) {
+
+                mensajeError.textContent =
+                    "Selecciona una nueva hora.";
+            }
+
+            return;
+        }
+
+
+        if (mensajeError) {
+
+            mensajeError.textContent =
+                "";
+        }
+
 
         const citas =
             obtenerCitas();
@@ -372,18 +820,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const citasActualizadas =
             citas.map(
-                (cita) => {
+                cita => {
 
                     if (
                         Number(cita.id) ===
                         Number(id)
                     ) {
 
-                        return {
-                            ...cita,
-                            estado:
-                                "Cancelada"
-                        };
+                        const perteneceUsuario =
+                            cita.correoUsuario &&
+                            cita.correoUsuario.toLowerCase() ===
+                            sesion.correo.toLowerCase();
+
+
+                        const estaPendiente =
+                            String(
+                                cita.estado || "Pendiente"
+                            )
+                                .toLowerCase() ===
+                            "pendiente";
+
+
+                        if (
+                            perteneceUsuario &&
+                            estaPendiente
+                        ) {
+
+                            return {
+
+                                ...cita,
+
+                                fecha:
+                                    nuevaFecha,
+
+                                hora:
+                                    nuevaHora,
+
+                                fechaModificacion:
+                                    new Date().toISOString()
+
+                            };
+                        }
                     }
 
 
@@ -402,7 +879,167 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
-       EVENTOS BOTONES CANCELAR
+       CANCELAR CITA
+    ===================================================== */
+
+    function cancelarCita(id) {
+
+        const citas =
+            obtenerCitas();
+
+
+        const citasActualizadas =
+            citas.map(
+                cita => {
+
+                    if (
+                        Number(cita.id) ===
+                        Number(id)
+                    ) {
+
+                        const perteneceUsuario =
+                            cita.correoUsuario &&
+                            cita.correoUsuario.toLowerCase() ===
+                            sesion.correo.toLowerCase();
+
+
+                        const estaPendiente =
+                            String(
+                                cita.estado || "Pendiente"
+                            )
+                                .toLowerCase() ===
+                            "pendiente";
+
+
+                        if (
+                            perteneceUsuario &&
+                            estaPendiente
+                        ) {
+
+                            return {
+
+                                ...cita,
+
+                                estado:
+                                    "Cancelada",
+
+                                fechaModificacion:
+                                    new Date().toISOString()
+
+                            };
+                        }
+                    }
+
+
+                    return cita;
+                }
+            );
+
+
+        guardarCitas(
+            citasActualizadas
+        );
+
+
+        mostrarCitas();
+    }
+
+
+    /* =====================================================
+       EVENTOS MODIFICAR
+    ===================================================== */
+
+    function agregarEventosModificar() {
+
+        const botones =
+            document.querySelectorAll(
+                ".boton-modificar-cita"
+            );
+
+
+        botones.forEach(
+            boton => {
+
+                boton.addEventListener(
+                    "click",
+                    () => {
+
+                        const id =
+                            boton.dataset.id;
+
+
+                        abrirEdicion(id);
+                    }
+                );
+            }
+        );
+    }
+
+
+    /* =====================================================
+       EVENTOS GUARDAR CAMBIOS
+    ===================================================== */
+
+    function agregarEventosGuardarCambios() {
+
+        const botones =
+            document.querySelectorAll(
+                ".boton-guardar-cambios"
+            );
+
+
+        botones.forEach(
+            boton => {
+
+                boton.addEventListener(
+                    "click",
+                    () => {
+
+                        const id =
+                            boton.dataset.id;
+
+
+                        modificarCita(id);
+                    }
+                );
+            }
+        );
+    }
+
+
+    /* =====================================================
+       EVENTOS CERRAR EDICIÓN
+    ===================================================== */
+
+    function agregarEventosCerrarEdicion() {
+
+        const botones =
+            document.querySelectorAll(
+                ".boton-cerrar-edicion"
+            );
+
+
+        botones.forEach(
+            boton => {
+
+                boton.addEventListener(
+                    "click",
+                    () => {
+
+                        const id =
+                            boton.dataset.id;
+
+
+                        cerrarEdicion(id);
+                    }
+                );
+            }
+        );
+    }
+
+
+    /* =====================================================
+       EVENTOS CANCELAR
     ===================================================== */
 
     function agregarEventosCancelar() {
@@ -414,7 +1051,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         botones.forEach(
-            (boton) => {
+            boton => {
 
                 boton.addEventListener(
                     "click",
@@ -444,7 +1081,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
-       INICIAR
+       CARGAR CITAS
     ===================================================== */
 
     mostrarCitas();

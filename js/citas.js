@@ -1,9 +1,60 @@
 /* =========================================================
    PATITAS FELICES
    SOLICITAR CITA
+   CONECTADO CON USUARIO / SESIÓN
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
+
+    /* =====================================================
+       CLAVES LOCALSTORAGE
+    ===================================================== */
+
+    const CLAVE_SESION = "patitasFelices_sesion";
+    const CLAVE_CITAS = "patitasFelices_citas";
+
+
+    /* =====================================================
+       OBTENER SESIÓN
+    ===================================================== */
+
+    function obtenerSesion() {
+
+        try {
+
+            return JSON.parse(
+                localStorage.getItem(CLAVE_SESION)
+            );
+
+        } catch (error) {
+
+            console.error(
+                "No se pudo leer la sesión.",
+                error
+            );
+
+            return null;
+        }
+    }
+
+
+    const sesion = obtenerSesion();
+
+
+    /* =====================================================
+       PROTEGER PÁGINA
+    ===================================================== */
+
+    if (!sesion) {
+
+        window.location.href = "login.html";
+        return;
+    }
+
+
+    /* =====================================================
+       FORMULARIO
+    ===================================================== */
 
     const formulario =
         document.getElementById("formularioCita");
@@ -104,6 +155,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
+       CARGAR DATOS DEL USUARIO
+    ===================================================== */
+
+    function cargarDatosUsuario() {
+
+        const nombreCompleto =
+            `${sesion.nombre || ""} ${sesion.apellidos || ""}`
+                .trim();
+
+
+        if (nombreDueno) {
+            nombreDueno.value = nombreCompleto;
+        }
+
+
+        if (correoCita) {
+            correoCita.value = sesion.correo || "";
+        }
+
+
+        if (telefonoCita) {
+            telefonoCita.value = sesion.telefono || "";
+        }
+    }
+
+
+    cargarDatosUsuario();
+
+
+    /* =====================================================
        FECHA MÍNIMA
     ===================================================== */
 
@@ -122,15 +203,18 @@ document.addEventListener("DOMContentLoaded", () => {
             hoy.getDate()
         ).padStart(2, "0");
 
+
     const fechaMinima =
         `${anio}-${mes}-${dia}`;
 
-    fechaCita.min =
-        fechaMinima;
+
+    if (fechaCita) {
+        fechaCita.min = fechaMinima;
+    }
 
 
     /* =====================================================
-       FUNCIONES AUXILIARES
+       FUNCIONES DE ERROR
     ===================================================== */
 
     function mostrarError(
@@ -140,11 +224,19 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
 
         if (campo) {
-            campo.classList.add("campo-error");
+
+            campo.classList.add(
+                "campo-error"
+            );
         }
 
-        elementoError.textContent =
-            mensaje;
+
+        if (elementoError) {
+
+            elementoError.textContent =
+                mensaje;
+        }
+
 
         return false;
     }
@@ -156,12 +248,60 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
 
         if (campo) {
-            campo.classList.remove("campo-error");
+
+            campo.classList.remove(
+                "campo-error"
+            );
         }
 
-        elementoError.textContent = "";
+
+        if (elementoError) {
+
+            elementoError.textContent = "";
+        }
+
 
         return true;
+    }
+
+
+    /* =====================================================
+       LIMPIAR TODOS LOS ERRORES
+    ===================================================== */
+
+    function limpiarTodosLosErrores() {
+
+        formulario
+            .querySelectorAll(".campo-error")
+            .forEach((campo) => {
+
+                campo.classList.remove(
+                    "campo-error"
+                );
+            });
+
+
+        formulario
+            .querySelectorAll(".mensaje-error")
+            .forEach((mensaje) => {
+
+                mensaje.textContent = "";
+            });
+
+
+        if (errorTipoMascota) {
+            errorTipoMascota.textContent = "";
+        }
+
+
+        if (errorServicioCita) {
+            errorServicioCita.textContent = "";
+        }
+
+
+        if (errorConfirmarDatos) {
+            errorConfirmarDatos.textContent = "";
+        }
     }
 
 
@@ -183,8 +323,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function obtenerServicio() {
 
-        return document.getElementById(
-            "servicioCita"
+        if (
+            servicioCita &&
+            servicioCita.tagName === "SELECT"
+        ) {
+
+            return servicioCita;
+        }
+
+
+        return document.querySelector(
+            'input[name="servicioCita"]:checked'
         );
     }
 
@@ -197,6 +346,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const valor =
             nombreDueno.value.trim();
+
 
         if (valor === "") {
 
@@ -244,6 +394,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const valor =
             correoCita.value.trim();
 
+
         if (valor === "") {
 
             return mostrarError(
@@ -280,6 +431,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const valor =
             telefonoCita.value.trim();
 
+
         if (valor === "") {
 
             return mostrarError(
@@ -308,13 +460,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
-       VALIDAR NOMBRE DE LA MASCOTA
+       VALIDAR NOMBRE MASCOTA
     ===================================================== */
 
     function validarNombreMascota() {
 
         const valor =
             nombreMascota.value.trim();
+
 
         if (valor === "") {
 
@@ -354,24 +507,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
-       VALIDAR TIPO DE MASCOTA
+       VALIDAR TIPO MASCOTA
     ===================================================== */
 
     function validarTipoMascota() {
 
-        const tipo =
+        const tipoMascota =
             obtenerTipoMascota();
 
-        if (!tipo) {
 
-            errorTipoMascota.textContent =
-                "Selecciona el tipo de mascota.";
+        if (!tipoMascota) {
+
+            if (errorTipoMascota) {
+
+                errorTipoMascota.textContent =
+                    "Selecciona el tipo de mascota.";
+            }
+
 
             return false;
         }
 
 
-        errorTipoMascota.textContent = "";
+        if (errorTipoMascota) {
+            errorTipoMascota.textContent = "";
+        }
+
 
         return true;
     }
@@ -436,18 +597,39 @@ document.addEventListener("DOMContentLoaded", () => {
             servicio.value === ""
         ) {
 
-            return mostrarError(
-                servicio,
-                errorServicioCita,
-                "Selecciona el servicio que quieres solicitar."
+            if (errorServicioCita) {
+
+                errorServicioCita.textContent =
+                    "Selecciona el tipo de atención.";
+            }
+
+
+            if (servicioCita) {
+
+                servicioCita.classList.add(
+                    "campo-error"
+                );
+            }
+
+
+            return false;
+        }
+
+
+        if (errorServicioCita) {
+            errorServicioCita.textContent = "";
+        }
+
+
+        if (servicioCita) {
+
+            servicioCita.classList.remove(
+                "campo-error"
             );
         }
 
 
-        return limpiarError(
-            servicio,
-            errorServicioCita
-        );
+        return true;
     }
 
 
@@ -519,88 +701,121 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!confirmarDatos.checked) {
 
-            errorConfirmarDatos.textContent =
-                "Debes confirmar que los datos son correctos.";
+            if (errorConfirmarDatos) {
+
+                errorConfirmarDatos.textContent =
+                    "Debes confirmar que los datos son correctos.";
+            }
+
 
             return false;
         }
 
 
-        errorConfirmarDatos.textContent = "";
+        if (errorConfirmarDatos) {
+            errorConfirmarDatos.textContent = "";
+        }
+
 
         return true;
     }
 
 
     /* =====================================================
-       CONTADOR DEL MOTIVO
+       CONTADOR MOTIVO
     ===================================================== */
 
-    motivoCita.addEventListener(
-        "input",
-        () => {
+    if (
+        motivoCita &&
+        contadorMotivo
+    ) {
 
-            contadorMotivo.textContent =
-                `${motivoCita.value.length} / 500`;
-        }
-    );
+        motivoCita.addEventListener(
+            "input",
+            () => {
+
+                contadorMotivo.textContent =
+                    `${motivoCita.value.length} / 500`;
+            }
+        );
+    }
 
 
     /* =====================================================
        VALIDACIONES EN TIEMPO REAL
     ===================================================== */
 
-    nombreDueno.addEventListener(
-        "input",
-        validarNombreDueno
-    );
+    if (nombreDueno) {
+
+        nombreDueno.addEventListener(
+            "input",
+            validarNombreDueno
+        );
+    }
 
 
-    correoCita.addEventListener(
-        "input",
-        validarCorreo
-    );
+    if (correoCita) {
+
+        correoCita.addEventListener(
+            "input",
+            validarCorreo
+        );
+    }
 
 
-    telefonoCita.addEventListener(
-        "input",
-        validarTelefono
-    );
+    if (telefonoCita) {
+
+        telefonoCita.addEventListener(
+            "input",
+            validarTelefono
+        );
+    }
 
 
-    nombreMascota.addEventListener(
-        "input",
-        validarNombreMascota
-    );
+    if (nombreMascota) {
+
+        nombreMascota.addEventListener(
+            "input",
+            validarNombreMascota
+        );
+    }
 
 
-    edadMascota.addEventListener(
-        "input",
-        validarEdadMascota
-    );
+    if (edadMascota) {
+
+        edadMascota.addEventListener(
+            "input",
+            validarEdadMascota
+        );
+    }
 
 
-    fechaCita.addEventListener(
-        "change",
-        validarFecha
-    );
+    if (fechaCita) {
+
+        fechaCita.addEventListener(
+            "change",
+            validarFecha
+        );
+    }
 
 
-    horaCita.addEventListener(
-        "change",
-        validarHora
-    );
+    if (horaCita) {
+
+        horaCita.addEventListener(
+            "change",
+            validarHora
+        );
+    }
 
 
-    confirmarDatos.addEventListener(
-        "change",
-        validarConfirmacion
-    );
+    if (confirmarDatos) {
 
+        confirmarDatos.addEventListener(
+            "change",
+            validarConfirmacion
+        );
+    }
 
-    /* =====================================================
-       VALIDAR TIPO DE MASCOTA AL SELECCIONAR
-    ===================================================== */
 
     document
         .querySelectorAll(
@@ -615,28 +830,47 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
 
+    if (servicioCita) {
+
+        servicioCita.addEventListener(
+            "change",
+            validarServicio
+        );
+    }
+
+
     /* =====================================================
-       VALIDAR SERVICIO AL SELECCIONAR
+       OBTENER CITAS
     ===================================================== */
 
-    servicioCita.addEventListener(
-        "change",
-        validarServicio
-    );
+    function obtenerCitas() {
+
+        try {
+
+            return JSON.parse(
+                localStorage.getItem(CLAVE_CITAS)
+            ) || [];
+
+        } catch (error) {
+
+            console.error(
+                "No se pudieron cargar las citas.",
+                error
+            );
+
+            return [];
+        }
+    }
 
 
     /* =====================================================
-       GUARDAR CITA EN LOCALSTORAGE
+       GUARDAR CITA
     ===================================================== */
 
     function guardarCita() {
 
         const citasGuardadas =
-            JSON.parse(
-                localStorage.getItem(
-                    "patitasFelicesCitas"
-                )
-            ) || [];
+            obtenerCitas();
 
 
         const tipoMascota =
@@ -646,12 +880,26 @@ document.addEventListener("DOMContentLoaded", () => {
             obtenerServicio();
 
 
+        const nombreCompletoUsuario =
+            `${sesion.nombre || ""} ${sesion.apellidos || ""}`
+                .trim();
+
+
         const nuevaCita = {
 
             id:
                 Date.now(),
 
+            correoUsuario:
+                sesion.correo,
+
+            nombreUsuario:
+                nombreCompletoUsuario,
+
             dueno:
+                nombreDueno.value.trim(),
+
+            propietario:
                 nombreDueno.value.trim(),
 
             correo:
@@ -697,7 +945,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         localStorage.setItem(
-            "patitasFelicesCitas",
+            CLAVE_CITAS,
             JSON.stringify(
                 citasGuardadas
             )
@@ -716,9 +964,26 @@ document.addEventListener("DOMContentLoaded", () => {
             evento.preventDefault();
 
 
-            /* ---------------------------------------------
-               EJECUTAR TODAS LAS VALIDACIONES
-            --------------------------------------------- */
+            /* =================================================
+               COMPROBAR SESIÓN
+            ================================================= */
+
+            const sesionActual =
+                obtenerSesion();
+
+
+            if (!sesionActual) {
+
+                window.location.href =
+                    "login.html";
+
+                return;
+            }
+
+
+            /* =================================================
+               VALIDAR CAMPOS
+            ================================================= */
 
             const validaciones = [
 
@@ -751,76 +1016,62 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
 
 
-            /* ---------------------------------------------
+            /* =================================================
                SI HAY ERRORES
-            --------------------------------------------- */
+            ================================================= */
 
             if (!formularioValido) {
-
-                const primerError =
-                    formulario.querySelector(
-                        ".campo-error"
-                    );
-
-
-                if (primerError) {
-
-                    primerError.focus();
-                }
-
 
                 return;
             }
 
 
-            /* ---------------------------------------------
-               GUARDAR SOLICITUD
-            --------------------------------------------- */
+            /* =================================================
+               GUARDAR CITA
+            ================================================= */
 
             guardarCita();
 
 
-            /* ---------------------------------------------
-               LIMPIAR FORMULARIO
-            --------------------------------------------- */
+            /* =================================================
+               LIMPIAR CUALQUIER ERROR
+            ================================================= */
 
-            formulario.reset();
-
-
-            contadorMotivo.textContent =
-                "0 / 500";
+            limpiarTodosLosErrores();
 
 
-            /* ---------------------------------------------
+            /* =================================================
                MOSTRAR MENSAJE DE ÉXITO
-            --------------------------------------------- */
+            ================================================= */
 
-            mensajeExitoCita.classList.add(
-                "mostrar"
-            );
+            if (mensajeExitoCita) {
 
-
-            mensajeExitoCita.scrollIntoView({
-
-                behavior:
-                    "smooth",
-
-                block:
-                    "center"
-            });
-
-
-            /* ---------------------------------------------
-               OCULTAR MENSAJE DESPUÉS DE 6 SEGUNDOS
-            --------------------------------------------- */
-
-            setTimeout(() => {
-
-                mensajeExitoCita.classList.remove(
+                mensajeExitoCita.classList.add(
                     "mostrar"
                 );
+            }
 
-            }, 6000);
+
+            /* =================================================
+               DESACTIVAR BOTÓN
+            ================================================= */
+
+            const botonEnviar =
+                formulario.querySelector(
+                    ".boton-solicitar-cita"
+                );
+
+
+            if (botonEnviar) {
+
+                botonEnviar.disabled = true;
+
+                botonEnviar.innerHTML =
+                    `
+                        Solicitud enviada
+                        <span>✓</span>
+                    `;
+            }
         }
     );
 

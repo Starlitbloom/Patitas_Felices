@@ -4,6 +4,7 @@
 <head>
 
     <meta charset="UTF-8">
+
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
@@ -23,6 +24,7 @@
 
 </head>
 
+
 <body>
 
 
@@ -40,7 +42,7 @@
 
 
             <a
-                href="../index.html"
+                href="index.html"
                 class="logo-enlace"
             >
 
@@ -58,11 +60,10 @@
                 <ul>
 
                     <li>
-                        <a href="../index.html">
+                        <a href="index.html">
                             Inicio
                         </a>
                     </li>
-
 
                     <li>
                         <a href="nosotros.html">
@@ -70,13 +71,11 @@
                         </a>
                     </li>
 
-
                     <li>
                         <a href="novedades.html">
                             Novedades
                         </a>
                     </li>
-
 
                     <li>
                         <a href="contacto.html">
@@ -84,16 +83,16 @@
                         </a>
                     </li>
 
-
                     <li>
+
                         <a
                             href="mis-citas.html"
                             class="activo"
                         >
                             Mis citas
                         </a>
-                    </li>
 
+                    </li>
 
                     <li>
 
@@ -125,17 +124,24 @@
 
 
     <!-- ======================================================
-         HERO
+         HERO MIS CITAS
     ======================================================= -->
 
     <section class="hero-mis-citas">
 
-        <div class="decoracion-mis-citas decoracion-uno"></div>
-        <div class="decoracion-mis-citas decoracion-dos"></div>
+        <div
+            class="decoracion-mis-citas decoracion-uno"
+        ></div>
+
+        <div
+            class="decoracion-mis-citas decoracion-dos"
+        ></div>
 
 
         <div class="contenedor hero-mis-citas-contenido">
 
+
+            <!-- TEXTO -->
 
             <div class="hero-mis-citas-texto">
 
@@ -143,34 +149,42 @@
                     Tus solicitudes
                 </span>
 
+
                 <h1>
                     Revisa tus
                     <span>citas veterinarias</span>
                 </h1>
+
 
                 <p>
                     Consulta tus solicitudes, revisa su estado
                     y mantén organizada la atención de tu mascota.
                 </p>
 
+
                 <a
                     href="solicitar-cita.html"
                     class="boton-nueva-cita"
                 >
+
                     Solicitar nueva cita
+
                     <span>→</span>
+
                 </a>
 
             </div>
 
 
+
+            <!-- ILUSTRACIÓN -->
+
             <div class="hero-mis-citas-imagen">
 
-                <div class="circulo-hero-mis-citas"></div>
-
                 <img
-                    src="../img/calendario.png"
-                    alt="Calendario de citas veterinarias"
+                    src="../img/mis-citas-mascotas.png"
+                    alt="Perro y gato junto a un calendario de citas veterinarias"
+                    class="imagen-mis-citas"
                 >
 
             </div>
@@ -191,9 +205,12 @@
         <div class="contenedor">
 
 
-            <!-- ENCABEZADO -->
+            <!-- ==================================================
+                 ENCABEZADO
+            =================================================== -->
 
             <div class="encabezado-citas">
+
 
                 <div>
 
@@ -213,6 +230,7 @@
                 </div>
 
 
+
                 <div class="contador-citas">
 
                     <strong id="totalCitas">
@@ -224,6 +242,7 @@
                     </span>
 
                 </div>
+
 
             </div>
 
@@ -238,7 +257,7 @@
                 class="contenedor-citas"
             >
 
-                <!-- Las citas se crean con JavaScript -->
+                <!-- Las citas se generan con JavaScript -->
 
             </section>
 
@@ -253,30 +272,40 @@
                 class="sin-citas"
             >
 
+
                 <div class="icono-sin-citas">
                     ♡
                 </div>
+
 
                 <span>
                     Tu agenda está vacía
                 </span>
 
+
                 <h2>
                     Aún no tienes citas registradas
                 </h2>
 
+
                 <p>
                     Cuando solicites una atención para tu mascota,
-                    aparecerá aquí junto con su fecha, horario y estado.
+                    aparecerá aquí junto con su fecha,
+                    horario y estado.
                 </p>
+
 
                 <a
                     href="solicitar-cita.html"
                     class="boton-sin-citas"
                 >
+
                     Solicitar mi primera cita
+
                     <span>→</span>
+
                 </a>
+
 
             </section>
 
@@ -295,10 +324,11 @@
 
         <div class="contenedor">
 
+
             <div class="tarjeta-ayuda-mis-citas">
 
 
-                <div>
+                <div class="texto-ayuda-mis-citas">
 
                     <span class="etiqueta-ayuda">
                         ¿Tienes alguna duda?
@@ -309,23 +339,29 @@
                     </h2>
 
                     <p>
-                        Si necesitas modificar información o tienes
-                        dudas sobre una solicitud, puedes contactarnos.
+                        Si necesitas modificar información
+                        o tienes dudas sobre una solicitud,
+                        puedes contactarnos.
                     </p>
 
                 </div>
+
 
 
                 <a
                     href="contacto.html"
                     class="boton-ayuda"
                 >
+
                     Ir a contacto
+
                     <span>→</span>
+
                 </a>
 
 
             </div>
+
 
         </div>
 
@@ -361,6 +397,7 @@
             </div>
 
 
+
             <div class="footer-info">
 
                 <h3>
@@ -378,6 +415,7 @@
                 </p>
 
             </div>
+
 
 
             <div class="footer-info">
@@ -402,6 +440,7 @@
         </div>
 
 
+
         <div class="footer-inferior">
 
             <p>
@@ -414,11 +453,17 @@
 
         </div>
 
+
     </footer>
 
 
 
+    <!-- ======================================================
+         JAVASCRIPT
+    ======================================================= -->
+
     <script src="../js/mis-citas.js"></script>
+
 
 </body>
 

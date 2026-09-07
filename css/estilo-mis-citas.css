@@ -43,7 +43,8 @@ body {
     position: relative;
     overflow: hidden;
 
-    padding: 75px 0;
+    min-height: auto;
+    padding: 40px 0 45px;
 
     background:
         linear-gradient(
@@ -58,22 +59,29 @@ body {
     position: relative;
     z-index: 2;
 
+    min-height: 390px;
+
     display: grid;
-    grid-template-columns: 1.1fr .9fr;
+    grid-template-columns: 1fr 1fr;
 
     align-items: center;
 
-    gap: 70px;
+    gap: 35px;
 }
 
+
+/* =========================================================
+   TEXTO HERO
+========================================================= */
+
 .hero-mis-citas-texto {
-    max-width: 650px;
+    max-width: 590px;
 }
 
 .etiqueta-mis-citas {
     display: inline-block;
 
-    margin-bottom: 16px;
+    margin-bottom: 14px;
     padding: 8px 16px;
 
     border-radius: 999px;
@@ -85,28 +93,35 @@ body {
 }
 
 .hero-mis-citas h1 {
-    margin: 0 0 20px;
+    margin: 0 0 18px;
 
-    font-size: clamp(42px, 5vw, 60px);
+    font-size: clamp(42px, 4.5vw, 58px);
     line-height: 1.08;
 
     letter-spacing: -2px;
 }
 
 .hero-mis-citas h1 span {
+    display: block;
+
     color: var(--azul);
 }
 
 .hero-mis-citas-texto p {
-    max-width: 580px;
+    max-width: 560px;
 
-    margin: 0 0 28px;
+    margin: 0 0 25px;
 
     color: var(--gris);
 
-    font-size: 17px;
+    font-size: 16px;
     line-height: 1.7;
 }
+
+
+/* =========================================================
+   BOTÓN NUEVA CITA
+========================================================= */
 
 .boton-nueva-cita {
     display: inline-flex;
@@ -131,7 +146,13 @@ body {
         0 8px 20px
         rgba(255, 182, 211, .22);
 
-    transition: .25s ease;
+    transition:
+        transform .25s ease,
+        background-color .25s ease;
+}
+
+.boton-nueva-cita span {
+    transition: transform .25s ease;
 }
 
 .boton-nueva-cita:hover {
@@ -140,51 +161,54 @@ body {
     background-color: #FFC3DC;
 }
 
+.boton-nueva-cita:hover span {
+    transform: translateX(4px);
+}
+
+
+/* =========================================================
+   ILUSTRACIÓN HERO MIS CITAS
+========================================================= */
+
 .hero-mis-citas-imagen {
     position: relative;
 
-    min-height: 330px;
+    width: 100%;
+    min-height: 0;
 
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+
+    overflow: visible;
 }
 
-.circulo-hero-mis-citas {
-    position: absolute;
+.imagen-mis-citas {
+    display: block;
 
-    width: 310px;
-    height: 310px;
-
-    border-radius: 50%;
-
-    background:
-        linear-gradient(
-            135deg,
-            var(--celeste),
-            var(--morado)
-        );
-}
-
-.hero-mis-citas-imagen img {
-    position: relative;
-    z-index: 2;
-
-    width: 240px;
-    max-height: 260px;
+    width: 420px;
+    max-width: 100%;
+    height: auto;
+    max-height: 390px;
 
     object-fit: contain;
 
     filter:
         drop-shadow(
-            0 18px 25px
-            rgba(46, 46, 56, .12)
+            0 15px 25px
+            rgba(46, 46, 56, .08)
         );
+
+    transition: transform .3s ease;
+}
+
+.imagen-mis-citas:hover {
+    transform: translateY(-4px);
 }
 
 
 /* =========================================================
-   DECORACIONES
+   DECORACIONES HERO
 ========================================================= */
 
 .decoracion-mis-citas {
@@ -208,8 +232,8 @@ body {
     width: 260px;
     height: 260px;
 
-    bottom: -130px;
     right: -100px;
+    bottom: -130px;
 
     background-color:
         rgba(255, 214, 231, .7);
@@ -217,7 +241,7 @@ body {
 
 
 /* =========================================================
-   SECCIÓN CITAS
+   SECCIÓN MIS CITAS
 ========================================================= */
 
 .seccion-mis-citas {
@@ -232,6 +256,11 @@ body {
             #FAF7FF
         );
 }
+
+
+/* =========================================================
+   ENCABEZADO CITAS
+========================================================= */
 
 .encabezado-citas {
     margin-bottom: 35px;
@@ -272,6 +301,11 @@ body {
     line-height: 1.7;
 }
 
+
+/* =========================================================
+   CONTADOR
+========================================================= */
+
 .contador-citas {
     min-width: 110px;
 
@@ -306,19 +340,25 @@ body {
 
 
 /* =========================================================
-   TARJETAS CITAS
+   CONTENEDOR DE CITAS
 ========================================================= */
 
 .contenedor-citas {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+
+    grid-template-columns:
+        repeat(2, 1fr);
 
     gap: 22px;
 }
 
+
+/* =========================================================
+   TARJETA CITA
+========================================================= */
+
 .tarjeta-cita {
     position: relative;
-
     overflow: hidden;
 
     padding: 26px;
@@ -332,8 +372,45 @@ body {
         0 12px 30px
         rgba(46, 46, 56, .06);
 
-    transition: .25s ease;
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
 }
+
+
+/* Imagen grande y suave de fondo */
+
+.tarjeta-cita::after {
+    content: "";
+
+    position: absolute;
+
+    inset: -8px;
+
+    background-image:
+        linear-gradient(
+            rgba(255, 255, 255, .58),
+            rgba(255, 255, 255, .68)
+        ),
+        var(--imagen-mascota);
+
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+
+    filter: blur(1.5px);
+
+    transform: scale(1.05);
+
+    opacity: .88;
+
+    z-index: 0;
+
+    pointer-events: none;
+}
+
+
+/* Línea pastel superior */
 
 .tarjeta-cita::before {
     content: "";
@@ -353,7 +430,19 @@ body {
             var(--rosa),
             var(--morado)
         );
+
+    z-index: 3;
 }
+
+
+/* Todo el contenido queda sobre la imagen */
+
+.tarjeta-cita > * {
+    position: relative;
+
+    z-index: 2;
+}
+
 
 .tarjeta-cita:hover {
     transform: translateY(-3px);
@@ -362,6 +451,11 @@ body {
         0 16px 35px
         rgba(46, 46, 56, .09);
 }
+
+
+/* =========================================================
+   CABECERA CITA
+========================================================= */
 
 .cita-superior {
     margin-bottom: 22px;
@@ -381,8 +475,8 @@ body {
 }
 
 .icono-mascota-cita {
-    width: 52px;
-    height: 52px;
+    width: 64px;
+    height: 64px;
 
     display: flex;
     justify-content: center;
@@ -390,11 +484,51 @@ body {
 
     flex-shrink: 0;
 
-    border-radius: 18px;
+    overflow: hidden;
 
-    background-color: var(--rosa);
+    border: 3px solid
+        rgba(255, 255, 255, .9);
 
-    font-size: 22px;
+    border-radius: 21px;
+
+    background-color: var(--blanco);
+
+    box-shadow:
+        0 7px 18px
+        rgba(46, 46, 56, .10);
+}
+
+
+.imagen-icono-mascota {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    border-radius: 17px;
+}
+
+
+.informacion-mascota-cita {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+.informacion-mascota-cita h3 {
+    margin: 0 0 5px;
+
+    font-size: 18px;
+}
+
+
+.informacion-mascota-cita span {
+    color: var(--gris);
+
+    font-size: 11px;
 }
 
 .cita-mascota h3 {
@@ -443,20 +577,33 @@ body {
 
 
 /* =========================================================
-   DATOS CITA
+   DATOS DE LA CITA
 ========================================================= */
 
 .datos-cita {
     padding: 18px;
 
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+
+    grid-template-columns:
+        repeat(2, 1fr);
 
     gap: 15px;
 
+    border: 1px solid
+        rgba(255, 255, 255, .65);
+
     border-radius: 18px;
 
-    background-color: #FBFAFC;
+    background-color:
+        rgba(255, 255, 255, .82);
+
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+
+    box-shadow:
+        0 5px 15px
+        rgba(46, 46, 56, .025);
 }
 
 .dato-cita span {
@@ -476,13 +623,26 @@ body {
     font-size: 12px;
 }
 
+
+/* =========================================================
+   MOTIVO CITA
+========================================================= */
+
 .motivo-cita {
     margin-top: 17px;
+
     padding: 14px 16px;
+
+    border: 1px solid
+        rgba(255, 255, 255, .60);
 
     border-radius: 16px;
 
-    background-color: #FFF9FC;
+    background-color:
+        rgba(255, 248, 252, .84);
+
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
 }
 
 .motivo-cita span {
@@ -509,7 +669,7 @@ body {
 
 
 /* =========================================================
-   ACCIONES
+   ACCIONES CITA
 ========================================================= */
 
 .acciones-cita {
@@ -517,7 +677,55 @@ body {
 
     display: flex;
     justify-content: flex-end;
+    align-items: center;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
 }
+
+
+/* =========================================================
+   BOTÓN MODIFICAR
+========================================================= */
+
+.boton-modificar-cita {
+    padding: 10px 17px;
+
+    border: none;
+    border-radius: 999px;
+
+    background-color: #EEF8FE;
+
+    color: #568DB5;
+
+    font-family: inherit;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform .25s ease,
+        background-color .25s ease,
+        box-shadow .25s ease;
+}
+
+.boton-modificar-cita:hover {
+    transform: translateY(-2px);
+
+    background-color: var(--celeste);
+
+    box-shadow:
+        0 7px 16px
+        rgba(114, 169, 208, .16);
+}
+
+
+/* =========================================================
+   BOTÓN CANCELAR
+========================================================= */
 
 .boton-cancelar-cita {
     padding: 10px 17px;
@@ -536,13 +744,265 @@ body {
 
     cursor: pointer;
 
-    transition: .25s ease;
+    transition:
+        transform .25s ease,
+        background-color .25s ease,
+        box-shadow .25s ease;
 }
 
 .boton-cancelar-cita:hover {
     transform: translateY(-2px);
 
     background-color: #FFE0E8;
+
+    box-shadow:
+        0 7px 16px
+        rgba(180, 85, 105, .10);
+}
+
+
+/* =========================================================
+   FORMULARIO EDITAR CITA
+========================================================= */
+
+.formulario-editar-cita {
+    position: relative;
+
+    width: 100%;
+
+    margin-top: 20px;
+    padding: 22px;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 16px;
+
+    border: 1px solid #E5EAF0;
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #F7FCFF,
+            #FFF9FC
+        );
+
+    box-shadow:
+        inset 0 0 0 1px
+        rgba(255, 255, 255, .6);
+}
+
+.formulario-editar-cita::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 22px;
+    right: 22px;
+
+    height: 3px;
+
+    border-radius:
+        0 0 999px 999px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--celeste),
+            var(--rosa),
+            var(--morado)
+        );
+}
+
+
+/* =========================================================
+   CAMPOS EDICIÓN
+========================================================= */
+
+.campo-editar-cita {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.campo-editar-cita label {
+    color: var(--texto);
+
+    font-size: 10px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: .4px;
+}
+
+.campo-editar-cita input {
+    width: 100%;
+
+    padding: 12px 14px;
+
+    border: 1px solid #DEDDE5;
+    border-radius: 13px;
+
+    outline: none;
+
+    background-color: var(--blanco);
+
+    color: var(--texto);
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    transition:
+        border-color .25s ease,
+        box-shadow .25s ease,
+        background-color .25s ease;
+}
+
+.campo-editar-cita input:hover {
+    border-color: #C9DCE8;
+}
+
+.campo-editar-cita input:focus {
+    border-color: var(--azul);
+
+    background-color: #FFFFFF;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(214, 236, 250, .7);
+}
+
+
+/* =========================================================
+   MENSAJE DE ERROR
+========================================================= */
+
+.mensaje-error-edicion {
+    min-height: 15px;
+
+    margin: -2px 0 0;
+
+    grid-column: 1 / -1;
+
+    color: #B45569;
+
+    font-size: 10px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   ACCIONES EDICIÓN
+========================================================= */
+
+.acciones-edicion-cita {
+    grid-column: 1 / -1;
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    gap: 9px;
+
+    margin-top: 2px;
+}
+
+
+/* =========================================================
+   BOTÓN GUARDAR CAMBIOS
+========================================================= */
+
+.boton-guardar-cambios {
+    padding: 10px 17px;
+
+    border: none;
+    border-radius: 999px;
+
+    background-color: var(--celeste);
+
+    color: var(--texto);
+
+    font-family: inherit;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 6px 15px
+        rgba(114, 169, 208, .12);
+
+    transition:
+        transform .25s ease,
+        background-color .25s ease,
+        box-shadow .25s ease;
+}
+
+.boton-guardar-cambios:hover {
+    transform: translateY(-2px);
+
+    background-color: #C5E4F7;
+
+    box-shadow:
+        0 8px 18px
+        rgba(114, 169, 208, .18);
+}
+
+
+/* =========================================================
+   BOTÓN VOLVER
+========================================================= */
+
+.boton-cerrar-edicion {
+    padding: 10px 17px;
+
+    border: 1px solid #E4DFE8;
+    border-radius: 999px;
+
+    background-color: var(--blanco);
+
+    color: var(--gris);
+
+    font-family: inherit;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform .25s ease,
+        background-color .25s ease,
+        border-color .25s ease;
+}
+
+.boton-cerrar-edicion:hover {
+    transform: translateY(-2px);
+
+    border-color: #D8CCE4;
+
+    background-color: #FAF7FF;
+}
+
+
+/* =========================================================
+   FOCUS
+========================================================= */
+
+.boton-modificar-cita:focus-visible,
+.boton-cancelar-cita:focus-visible,
+.boton-guardar-cambios:focus-visible,
+.boton-cerrar-edicion:focus-visible {
+    outline: 3px solid
+        rgba(114, 169, 208, .28);
+
+    outline-offset: 2px;
 }
 
 
@@ -620,6 +1080,11 @@ body {
     line-height: 1.7;
 }
 
+
+/* =========================================================
+   BOTÓN SIN CITAS
+========================================================= */
+
 .boton-sin-citas {
     display: inline-flex;
     align-items: center;
@@ -639,7 +1104,9 @@ body {
     font-size: 11px;
     font-weight: 700;
 
-    transition: .25s ease;
+    transition:
+        transform .25s ease,
+        background-color .25s ease;
 }
 
 .boton-sin-citas:hover {
@@ -734,7 +1201,9 @@ body {
     font-size: 11px;
     font-weight: 700;
 
-    transition: .25s ease;
+    transition:
+        transform .25s ease,
+        background-color .25s ease;
 }
 
 .boton-ayuda:hover {
@@ -750,8 +1219,16 @@ body {
 
 @media (max-width: 900px) {
 
+    .hero-mis-citas {
+        padding: 40px 0;
+    }
+
     .hero-mis-citas-contenido {
+        min-height: auto;
+
         grid-template-columns: 1fr;
+
+        gap: 25px;
 
         text-align: center;
     }
@@ -760,8 +1237,26 @@ body {
         margin: auto;
     }
 
+    .hero-mis-citas-texto p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero-mis-citas-imagen {
+        min-height: 290px;
+    }
+
+    .imagen-mis-citas {
+        width: 330px;
+        max-height: 310px;
+    }
+
     .contenedor-citas {
         grid-template-columns: 1fr;
+    }
+
+    .formulario-editar-cita {
+        padding: 20px;
     }
 
     .tarjeta-ayuda-mis-citas {
@@ -769,6 +1264,7 @@ body {
 
         text-align: center;
     }
+
 }
 
 
@@ -778,25 +1274,47 @@ body {
 
 @media (max-width: 650px) {
 
+    .icono-mascota-cita {
+        width: 58px;
+        height: 58px;
+
+        border-radius: 19px;
+    }
+
+    .imagen-icono-mascota {
+        border-radius: 15px;
+    }
+
+
     .hero-mis-citas {
-        padding: 55px 0;
+        padding: 35px 0;
+    }
+
+    .hero-mis-citas-contenido {
+        min-height: auto;
+
+        gap: 20px;
     }
 
     .hero-mis-citas h1 {
         font-size: 38px;
+
+        letter-spacing: -1px;
+    }
+
+    .hero-mis-citas-texto p {
+        font-size: 14px;
     }
 
     .hero-mis-citas-imagen {
-        min-height: 260px;
+        min-height: 240px;
     }
 
-    .circulo-hero-mis-citas {
-        width: 220px;
-        height: 220px;
-    }
-
-    .hero-mis-citas-imagen img {
-        width: 170px;
+    .imagen-mis-citas {
+        width: 280px;
+        max-width: 90%;
+        height: auto;
+        max-height: 270px;
     }
 
     .seccion-mis-citas {
@@ -805,6 +1323,7 @@ body {
 
     .encabezado-citas {
         flex-direction: column;
+
         align-items: flex-start;
     }
 
@@ -812,6 +1331,7 @@ body {
         width: 100%;
 
         flex-direction: row;
+
         justify-content: center;
 
         gap: 6px;
@@ -834,11 +1354,58 @@ body {
     }
 
     .acciones-cita {
-        justify-content: stretch;
+        display: grid;
+
+        grid-template-columns: 1fr;
+
+        gap: 9px;
     }
 
+    .boton-modificar-cita,
     .boton-cancelar-cita {
         width: 100%;
+
+        padding: 12px 16px;
+    }
+
+    .formulario-editar-cita {
+        padding: 19px 16px;
+
+        grid-template-columns: 1fr;
+
+        gap: 14px;
+
+        border-radius: 18px;
+    }
+
+    .formulario-editar-cita::before {
+        left: 16px;
+        right: 16px;
+    }
+
+    .campo-editar-cita {
+        grid-column: 1 / -1;
+    }
+
+    .campo-editar-cita input {
+        padding: 12px 13px;
+
+        font-size: 12px;
+    }
+
+    .acciones-edicion-cita {
+        display: grid;
+
+        grid-template-columns: 1fr;
+
+        gap: 8px;
+    }
+
+    .boton-guardar-cambios,
+    .boton-cerrar-edicion {
+        width: 100%;
+
+        padding: 12px 16px;
     }
 
     .sin-citas {
@@ -848,4 +1415,5 @@ body {
     .tarjeta-ayuda-mis-citas {
         padding: 30px 23px;
     }
+
 }
