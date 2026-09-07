@@ -1121,7 +1121,7 @@ body {
 ========================================================= */
 
 .ayuda-mis-citas {
-    padding: 55px 0;
+    padding: 65px 0;
 
     background:
         linear-gradient(
@@ -1131,64 +1131,230 @@ body {
         );
 }
 
-.tarjeta-ayuda-mis-citas {
-    padding: 35px 42px;
 
-    display: flex;
-    justify-content: space-between;
+/* =========================================================
+   TARJETA PRINCIPAL AYUDA
+========================================================= */
+
+.tarjeta-ayuda-mis-citas {
+    position: relative;
+    overflow: hidden;
+
+    min-height: 245px;
+
+    padding: 35px 48px;
+
+    display: grid;
+
+    grid-template-columns:
+        1.35fr .65fr .55fr;
+
     align-items: center;
 
-    gap: 35px;
+    gap: 38px;
 
-    border-radius: 28px;
+    border-radius: 32px;
 
     background-color:
-        rgba(255, 255, 255, .9);
+        rgba(255, 255, 255, .92);
 
     box-shadow:
-        0 12px 30px
-        rgba(46, 46, 56, .07);
+        0 15px 35px
+        rgba(46, 46, 56, .08);
+}
+
+
+/* =========================================================
+   TEXTO AYUDA
+========================================================= */
+
+.texto-ayuda-mis-citas {
+    position: relative;
+    z-index: 2;
 }
 
 .tarjeta-ayuda-mis-citas h2 {
-    margin: 6px 0 8px;
+    margin: 9px 0 10px;
 
-    font-size: 27px;
+    color: var(--texto);
+
+    font-size: 30px;
+    line-height: 1.2;
 }
 
 .tarjeta-ayuda-mis-citas p {
-    max-width: 600px;
+    max-width: 520px;
 
     margin: 0;
 
     color: var(--gris);
 
-    font-size: 12px;
-    line-height: 1.6;
+    font-size: 13px;
+    line-height: 1.7;
 }
+
+
+/* =========================================================
+   ETIQUETA AYUDA
+========================================================= */
 
 .etiqueta-ayuda {
     display: inline-block;
 
-    padding: 6px 12px;
+    padding: 7px 14px;
 
     border-radius: 999px;
 
     background-color: var(--celeste);
 
+    color: var(--texto);
+
     font-size: 10px;
     font-weight: 700;
+}
+
+
+/* =========================================================
+   BENEFICIOS AYUDA
+========================================================= */
+
+.beneficios-ayuda-citas {
+    margin-top: 19px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+}
+
+.beneficios-ayuda-citas span {
+    padding: 8px 13px;
+
+    border: 1px solid
+        rgba(230, 214, 247, .8);
+
+    border-radius: 999px;
+
+    background-color:
+        rgba(255, 255, 255, .85);
+
+    color: var(--gris);
+
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.beneficios-ayuda-citas span:first-child {
+    background-color: #FFF4F8;
+}
+
+.beneficios-ayuda-citas span:last-child {
+    background-color: #F6F0FC;
+}
+
+
+/* =========================================================
+   ILUSTRACIÓN AYUDA
+========================================================= */
+
+.imagen-ayuda-citas {
+    position: relative;
+
+    min-height: 190px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.imagen-ayuda-citas img {
+    position: relative;
+    z-index: 2;
+
+    display: block;
+
+    width: 220px;
+    max-width: 100%;
+    max-height: 190px;
+
+    object-fit: contain;
+
+    filter:
+        drop-shadow(
+            0 12px 20px
+            rgba(46, 46, 56, .08)
+        );
+
+    transition: transform .3s ease;
+}
+
+.imagen-ayuda-citas:hover img {
+    transform: translateY(-4px);
+}
+
+
+/* =========================================================
+   CÍRCULOS DECORATIVOS AYUDA
+========================================================= */
+
+.circulo-ayuda {
+    position: absolute;
+
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+.circulo-ayuda-rosa {
+    width: 135px;
+    height: 135px;
+
+    top: 16px;
+    left: 8px;
+
+    background-color:
+        rgba(255, 214, 231, .65);
+}
+
+.circulo-ayuda-celeste {
+    width: 105px;
+    height: 105px;
+
+    right: 2px;
+    bottom: 10px;
+
+    background-color:
+        rgba(214, 236, 250, .75);
+}
+
+
+/* =========================================================
+   ACCIÓN AYUDA
+========================================================= */
+
+.accion-ayuda-citas {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 10px;
 }
 
 .boton-ayuda {
     flex-shrink: 0;
 
-    padding: 13px 22px;
+    padding: 14px 23px;
 
     display: inline-flex;
     align-items: center;
+    justify-content: center;
 
-    gap: 8px;
+    gap: 9px;
 
     border-radius: 999px;
 
@@ -1201,15 +1367,41 @@ body {
     font-size: 11px;
     font-weight: 700;
 
+    box-shadow:
+        0 8px 18px
+        rgba(114, 169, 208, .12);
+
     transition:
         transform .25s ease,
-        background-color .25s ease;
+        background-color .25s ease,
+        box-shadow .25s ease;
+}
+
+.boton-ayuda span {
+    transition: transform .25s ease;
 }
 
 .boton-ayuda:hover {
     transform: translateY(-2px);
 
     background-color: #C8E5F7;
+
+    box-shadow:
+        0 10px 22px
+        rgba(114, 169, 208, .18);
+}
+
+.boton-ayuda:hover span {
+    transform: translateX(4px);
+}
+
+.accion-ayuda-citas small {
+    color: var(--gris);
+
+    font-size: 9px;
+    font-weight: 600;
+
+    text-align: center;
 }
 
 
@@ -1416,4 +1608,264 @@ body {
         padding: 30px 23px;
     }
 
+}
+
+/* =========================================================
+   RESPONSIVE FINAL - AYUDA MIS CITAS
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .tarjeta-ayuda-mis-citas {
+        min-height: auto;
+
+        padding: 35px 32px;
+
+        display: grid;
+
+        grid-template-columns:
+            1fr 1fr;
+
+        align-items: center;
+
+        gap: 25px;
+
+        text-align: left;
+    }
+
+    .texto-ayuda-mis-citas {
+        width: 100%;
+    }
+
+    .imagen-ayuda-citas {
+        min-height: 175px;
+    }
+
+    .imagen-ayuda-citas img {
+        width: 190px;
+        max-height: 170px;
+    }
+
+    .accion-ayuda-citas {
+        grid-column: 1 / -1;
+
+        width: 100%;
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .ayuda-mis-citas {
+        padding: 45px 0;
+    }
+
+    .tarjeta-ayuda-mis-citas {
+        min-height: auto;
+
+        padding: 32px 22px;
+
+        display: grid;
+
+        grid-template-columns: 1fr;
+
+        gap: 22px;
+
+        text-align: center;
+
+        border-radius: 27px;
+    }
+
+    .texto-ayuda-mis-citas {
+        width: 100%;
+    }
+
+    .tarjeta-ayuda-mis-citas h2 {
+        font-size: 26px;
+    }
+
+    .tarjeta-ayuda-mis-citas p {
+        margin-left: auto;
+        margin-right: auto;
+
+        font-size: 12px;
+    }
+
+    .beneficios-ayuda-citas {
+        justify-content: center;
+    }
+
+    .imagen-ayuda-citas {
+        min-height: 150px;
+    }
+
+    .imagen-ayuda-citas img {
+        width: 175px;
+        max-height: 150px;
+    }
+
+    .accion-ayuda-citas {
+        grid-column: auto;
+
+        width: 100%;
+    }
+
+    .boton-ayuda {
+        width: 100%;
+    }
+
+}
+
+/* =========================================================
+   FOOTER — decoración, redes sociales y 4ta columna
+   (solo en index.html)
+========================================================= */
+
+.footer-principal {
+    background-image:
+        url(../img/footer.jpg);
+
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    background-blend-mode: multiply;
+
+    position: relative;
+    overflow: hidden;
+}
+
+.footer-principal .footer-marca p {
+    font-size: 15px;
+}
+
+.footer-principal .footer-info h3 {
+    font-size: 19px;
+}
+
+.footer-principal .footer-info p {
+    font-size: 15px;
+}
+
+.footer-principal .footer-inferior p {
+    font-size: 13px;
+}
+
+.footer-decoracion {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.10;
+}
+
+.footer-decoracion-1 {
+    width: 260px;
+    height: 260px;
+    top: -100px;
+    left: -60px;
+    background-color: var(--celeste);
+}
+
+.footer-decoracion-2 {
+    width: 300px;
+    height: 300px;
+    bottom: -140px;
+    right: -80px;
+    background-color: var(--rosa);
+}
+
+
+.footer-contenido--index {
+    align-items: start;
+    padding-top: 8px;
+}
+
+.footer-info h3 {
+    margin-bottom: 14px;
+}
+
+.footer-social {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.footer-social-icono {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+
+    font-size: 17px;
+    text-decoration: none;
+
+    transition: background-color 0.25s ease, transform 0.25s ease;
+}
+
+.footer-social-icono:hover {
+    background-color: var(--rosa);
+    transform: translateY(-3px);
+}
+.footer-social-icono img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+
+.footer-info p a {
+    color: #DCDCE2;
+    text-decoration: none;
+    transition: color 0.2s ease, padding-left 0.2s ease;
+}
+
+.footer-info p a:hover {
+    color: var(--rosa);
+    padding-left: 4px;
+}
+
+.footer-principal .footer-marca p,
+.footer-principal .footer-info h3,
+.footer-principal .footer-info p,
+.footer-principal .footer-inferior p,
+.footer-principal .footer-frase {
+    color: var(--texto) !important;
+}
+
+.footer-principal .footer-info p a {
+    color: var(--texto) !important;
+}
+
+.footer-principal .footer-info p a:hover {
+    color: var(--celeste-fuerte) !important;
+}
+
+.footer-principal .footer-inferior {
+    border-top: 1px solid rgba(46, 46, 56, 0.15);
+}
+
+.footer-principal .footer-social-icono {
+    background-color: rgba(46, 46, 56, 0.08);
+    color: var(--texto);
+}
+
+@media (max-width: 900px) {
+    .footer-contenido--index {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 550px) {
+    .footer-contenido--index {
+        grid-template-columns: 1fr;
+    }
+}
+
+.fondo-izquierdo,
+.fondo-derecho {
+    display: none;
 }
