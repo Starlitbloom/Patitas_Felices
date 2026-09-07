@@ -44,81 +44,177 @@
     </header>
 
 
-    <main class="seccion-formulario">
+    <main class="perfil-pagina">
         <div class="contenedor">
 
-            <div class="formulario-cabecera">
-                <span class="seccion-etiqueta">Tu cuenta</span>
-                <h1>Mi perfil</h1>
-                <p>Revisa y actualiza tus datos personales.</p>
+            <!-- =========================================
+                 CABECERA: portada + avatar + nombre
+            ========================================== -->
+            <div class="perfil-header-imagen">
+                <img src="../img/fondo-perfil.png" alt="Fondo para el perfil">
+            </div>
+            
+            <div class="perfil-header">
+                <div class="perfil-header-tarjeta">
+                    <div class="perfil-avatar" id="perfil-avatar-contenedor">
+                        <img id="perfil-avatar-imagen" src="" alt="Foto de perfil" style="display: none;">
+                        <span id="perfil-avatar-emoji">🐾</span>
+                        <div class="perfil-avatar-overlay">
+                            <span>📷</span>
+                        </div>
+                        <input type="file" id="input-avatar" accept="image/*" hidden>
+                    </div>
+                    <h1 id="perfil-nombre-display">Cargando...</h1>
+
+                    <div class="perfil-header-franja">
+                        <span class="perfil-dato">
+                            <span class="perfil-dato-icono">✉</span>
+                            <span id="perfil-correo-display"></span>
+                        </span>
+                        <span class="perfil-dato">
+                            <span class="perfil-dato-icono">📍</span>
+                            <span id="perfil-comuna-display">Sin comuna registrada</span>
+                        </span>
+                    </div>
+                </div>
             </div>
 
-            <form class="tarjeta-formulario tarjeta-formulario--ancha tarjeta-formulario--plana" id="form-perfil" novalidate>
+            <!-- =========================================
+                 GRID: Sobre (editable) + Mascotas
+            ========================================== -->
+            <div class="perfil-grid">
 
-                <div class="fila-campos">
-                    <div class="campo" id="campo-nombre">
-                        <label for="nombre">Nombre</label>
-                        <input type="text" id="nombre" name="nombre" maxlength="50">
-                        <p class="campo__error">El nombre es obligatorio (máx. 50 caracteres).</p>
+                <div class="perfil-card perfil-card--editable" id="tarjeta-sobre">
+                    <button type="button" class="perfil-card-editar" id="btn-editar-perfil" aria-label="Editar información">
+                        <span>✏️</span> Editar
+                    </button>
+
+                    <h2><span>👤</span> Sobre</h2>
+
+                    <!-- VISTA DE SOLO LECTURA -->
+                    <div class="perfil-sobre-vista" id="perfil-sobre-vista">
+                        <div class="perfil-dato-fila">
+                            <span class="perfil-dato-fila-label">Nombre</span>
+                            <span class="perfil-dato-fila-valor" id="vista-nombre">—</span>
+                        </div>
+                        <div class="perfil-dato-fila">
+                            <span class="perfil-dato-fila-label">Apellidos</span>
+                            <span class="perfil-dato-fila-valor" id="vista-apellidos">—</span>
+                        </div>
+                        <div class="perfil-dato-fila">
+                            <span class="perfil-dato-fila-label">Correo</span>
+                            <span class="perfil-dato-fila-valor" id="vista-correo">—</span>
+                        </div>
+                        <div class="perfil-dato-fila">
+                            <span class="perfil-dato-fila-label">Teléfono</span>
+                            <span class="perfil-dato-fila-valor" id="vista-telefono">—</span>
+                        </div>
+                        <div class="perfil-dato-fila">
+                            <span class="perfil-dato-fila-label">Región</span>
+                            <span class="perfil-dato-fila-valor" id="vista-region">—</span>
+                        </div>
+                        <div class="perfil-dato-fila">
+                            <span class="perfil-dato-fila-label">Comuna</span>
+                            <span class="perfil-dato-fila-valor" id="vista-comuna">—</span>
+                        </div>
+                        <div class="perfil-dato-fila">
+                            <span class="perfil-dato-fila-label">Dirección</span>
+                            <span class="perfil-dato-fila-valor" id="vista-direccion">—</span>
+                        </div>
                     </div>
-                    <div class="campo" id="campo-apellidos">
-                        <label for="apellidos">Apellidos</label>
-                        <input type="text" id="apellidos" name="apellidos" maxlength="100">
-                        <p class="campo__error">Los apellidos son obligatorios (máx. 100 caracteres).</p>
+
+                    <!-- FORMULARIO EDITABLE -->
+                    <form id="form-perfil" class="perfil-sobre-formulario" novalidate>
+
+                        <div class="fila-campos">
+                            <div class="campo" id="campo-nombre">
+                                <label for="nombre">Nombre</label>
+                                <input type="text" id="nombre" name="nombre" maxlength="50">
+                                <p class="campo__error">El nombre es obligatorio (máx. 50 caracteres).</p>
+                            </div>
+                            <div class="campo" id="campo-apellidos">
+                                <label for="apellidos">Apellidos</label>
+                                <input type="text" id="apellidos" name="apellidos" maxlength="100">
+                                <p class="campo__error">Los apellidos son obligatorios (máx. 100 caracteres).</p>
+                            </div>
+                        </div>
+
+                        <div class="campo" id="campo-correo">
+                            <label for="correo">Correo</label>
+                            <input type="email" id="correo" name="correo" maxlength="100">
+                            <p class="campo__ayuda">Solo correos @duoc.cl, @profesor.duoc.cl o @gmail.com.</p>
+                            <p class="campo__error">Ingresa un correo válido de un dominio permitido.</p>
+                        </div>
+
+                        <div class="campo">
+                            <label for="telefono">Teléfono (opcional)</label>
+                            <input type="tel" id="telefono" name="telefono">
+                        </div>
+
+                        <div class="fila-campos">
+                            <div class="campo" id="campo-region">
+                                <label for="region">Región</label>
+                                <select id="region" name="region">
+                                    <option value="">Selecciona la región</option>
+                                </select>
+                            </div>
+                            <div class="campo" id="campo-comuna">
+                                <label for="comuna">Comuna</label>
+                                <select id="comuna" name="comuna">
+                                    <option value="">Primero elige una región</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="campo" id="campo-direccion">
+                            <label for="direccion">Dirección</label>
+                            <input type="text" id="direccion" name="direccion" maxlength="300">
+                            <p class="campo__error">La dirección es obligatoria (máx. 300 caracteres).</p>
+                        </div>
+
+                        <div class="campo" id="campo-password-vista">
+                            <label for="password-actual-vista">Contraseña</label>
+                            <input type="password" id="password-actual-vista" name="password-actual-vista" maxlength="10">
+                            <p class="campo__error">La contraseña debe tener entre 4 y 10 caracteres.</p>
+                        </div>
+
+                        <button type="submit" class="boton-principal">
+                            <span>Guardar cambios</span>
+                            <span class="flecha-boton" aria-hidden="true">⟶</span>
+                        </button>
+
+                    </form>
+
+                </div>
+
+                <div class="perfil-card">
+                    <h2><span>🐾</span> Mis mascotas</h2>
+
+                    <div id="perfil-mascotas-lista" class="perfil-lista-vacia">
+                        <p>Aún no tienes mascotas registradas.</p>
+                        <a href="mis-mascotas.html" class="perfil-card-link">Agregar mascota →</a>
                     </div>
                 </div>
 
-                <div class="campo" id="campo-correo">
-                    <label for="correo">Correo</label>
-                    <input type="email" id="correo" name="correo" maxlength="100">
-                    <p class="campo__ayuda">Solo correos @duoc.cl, @profesor.duoc.cl o @gmail.com.</p>
-                    <p class="campo__error">Ingresa un correo válido de un dominio permitido.</p>
-                </div>
+            </div>
 
-                <div class="campo">
-                    <label for="telefono">Teléfono (opcional)</label>
-                    <input type="tel" id="telefono" name="telefono">
-                </div>
+            <!-- =========================================
+                 ANCHO: Mis citas
+            ========================================== -->
+            <div class="perfil-card perfil-card--ancha">
+                <h2><span>📅</span> Mis citas</h2>
 
-                <div class="fila-campos">
-                    <div class="campo" id="campo-region">
-                        <label for="region">Región</label>
-                        <select id="region" name="region">
-                            <option value="">Selecciona la región</option>
-                        </select>
-                    </div>
-                    <div class="campo" id="campo-comuna">
-                        <label for="comuna">Comuna</label>
-                        <select id="comuna" name="comuna">
-                            <option value="">Primero elige una región</option>
-                        </select>
-                    </div>
+                <div id="perfil-citas-lista" class="perfil-lista-vacia">
+                    <p>Aún no tienes citas agendadas.</p>
+                    <a href="solicitar-cita.html" class="perfil-card-link">Solicitar una cita →</a>
                 </div>
+            </div>
 
-                <div class="campo" id="campo-direccion">
-                    <label for="direccion">Dirección</label>
-                    <input type="text" id="direccion" name="direccion" maxlength="300">
-                    <p class="campo__error">La dirección es obligatoria (máx. 300 caracteres).</p>
-                </div>
-
-                <button type="submit" class="boton-principal">
-                    <span>Guardar cambios</span>
+            <p class="perfil-cerrar-sesion-wrap">
+                <a href="#" id="btn-cerrar-sesion" class="boton-principal">
+                    <span>Cerrar sesión</span>
                     <span class="flecha-boton" aria-hidden="true">⟶</span>
-                </button>
-
-            </form>
-
-            <div class="perfil-accesos">
-                <a href="mis-mascotas.html" class="perfil-acceso">
-                    <span>🐾</span> Mis mascotas
                 </a>
-                <a href="mis-citas.html" class="perfil-acceso">
-                    <span>📅</span> Mis citas
-                </a>
-            </div>
-
-            <p class="formulario-pie">
-                <a href="#" id="btn-cerrar-sesion">Cerrar sesión</a>
             </p>
 
         </div>

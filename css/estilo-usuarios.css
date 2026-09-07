@@ -11,7 +11,18 @@
 }
 
 .seccion-formulario {
+    position: relative;
+    overflow: hidden;
+    background-image: url(../img/fondo-login.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     padding: 70px 0 110px;
+}
+
+.seccion-formulario .contenedor {
+    position: relative;
+    z-index: 1;
 }
 
 .formulario-cabecera {
@@ -49,6 +60,11 @@
 
 .tarjeta-formulario--ancha {
     max-width: 680px;
+}
+
+.tarjeta-formulario--ancha.tarjeta-formulario--plana {
+    max-width: 680px;
+    margin: 0 auto;
 }
 
 .campo {
@@ -352,6 +368,7 @@
         rgba(46, 46, 56, 0.75) 100%
     );
 }
+
 .login-split-texto {
     position: absolute;
     left: 40px;
@@ -445,27 +462,15 @@
     border-radius: 50px;
     padding: 13px 26px;
 
-    box-shadow: 0 5px 15px rgba(255, 182, 211, 0.35);
-
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-}
-.tarjeta-formulario--plana .boton-principal {
-    display: flex;
-    width: fit-content;
-    margin: 8px auto 0;
-    border: none;
-}
-.tarjeta-formulario--plana .boton-principal {
-    background-color: var(--rosa);
-    color: var(--texto);
-
-    border-radius: 50px;
-    padding: 13px 26px;
-
     box-shadow: 0 6px 16px rgba(46, 46, 56, 0.25),
                 0 2px 6px rgba(255, 182, 211, 0.35);
 
     transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+
+    display: flex;
+    width: fit-content;
+    margin: 8px auto 0;
+    border: none;
 }
 
 .tarjeta-formulario--plana .boton-principal:hover {
@@ -474,55 +479,6 @@
 
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(255, 182, 211, 0.45);
-}
-
-.tarjeta-formulario--ancha.tarjeta-formulario--plana {
-    max-width: 680px;
-    margin: 0 auto;
-}
-
-.seccion-formulario {
-    position: relative;
-    overflow: hidden;
-    background-image: url(../img/fondo-login.jpg);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-.seccion-formulario .contenedor {
-    position: relative;
-    z-index: 1;
-}
-.seccion-formulario::before,
-.seccion-formulario::after {
-    content: "";
-    position: absolute;
-    border-radius: 50%;
-    opacity: 0.5;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.seccion-formulario::before {
-    width: 260px;
-    height: 260px;
-    top: -80px;
-    left: -60px;
-    background-color: var(--celeste);
-}
-
-.seccion-formulario::after {
-    width: 300px;
-    height: 300px;
-    bottom: -100px;
-    right: -70px;
-    background-color: var(--rosa);
-}
-
-.seccion-formulario .contenedor {
-    position: relative;
-    z-index: 1;
 }
 
 @media (max-width: 900px) {
@@ -537,4 +493,340 @@
     .login-split-formulario {
         padding: 40px 28px;
     }
+}
+
+/* =========================================================
+   PERFIL — cabecera con foto + tarjeta blanca + franja
+========================================================= */
+
+.perfil-pagina {
+    padding: 0 0 100px;
+    background: linear-gradient(160deg, #FFFDFB 0%, var(--beige) 55%, #FCF3F7 100%);
+}
+
+.perfil-header {
+    max-width: 700px;
+    margin: 0 auto 24px;
+
+    position: relative;
+    overflow: hidden;
+
+    border-radius: 28px;
+
+    padding: 140px 22px 22px;
+    min-height: 80px;
+}
+
+.perfil-header-imagen {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-size: 20px 20px;
+}
+
+.perfil-header-tarjeta {
+    position: relative;
+    z-index: 1;
+
+    background-color: var(--blanco);
+    border-radius: 24px;
+
+    padding: 1px 32px 24px;
+
+    box-shadow: 0 10px 26px rgba(46, 46, 56, 0.10);
+
+    text-align: center;
+}
+.perfil-avatar {
+    width: 150px;
+    height: 150px;
+
+    margin: -100px auto 34px;
+
+    border-radius: 50%;
+    background-color: var(--blanco);
+    border: 3px solid var(--celeste);
+
+    box-shadow: 0 8px 20px rgba(46, 46, 56, 0.15);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 38px;
+}
+.perfil-avatar {
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.perfil-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.perfil-avatar-overlay {
+    position: absolute;
+    inset: 0;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: rgba(46, 46, 56, 0.45);
+    color: var(--blanco);
+    font-size: 24px;
+
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.perfil-avatar:hover .perfil-avatar-overlay {
+    opacity: 1;
+}
+
+.perfil-header-tarjeta h1 {
+    font-size: 1.5rem;
+    color: var(--texto);
+    padding-bottom: 24px;
+}
+
+.perfil-header-franja {
+    background: linear-gradient(135deg, var(--celeste) 0%, var(--rosa) 50%, var(--morado) 100%);
+    border-radius: 0 0 24px 24px;
+
+    padding: 16px 24px;
+    margin: 0 -32px -24px;
+
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+}
+.perfil-dato {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--texto);
+}
+
+.perfil-dato-icono {
+    font-size: 15px;
+}
+
+.perfil-grid {
+    max-width: 900px;
+    margin: 0 auto 24px;
+
+    position: relative;
+    z-index: 2;
+
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+.perfil-card--editable {
+    position: relative;
+
+    border: 2px solid transparent;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.perfil-card--editable:hover {
+    border-color: var(--celeste);
+    box-shadow: 0 12px 30px rgba(46, 46, 56, 0.10);
+}
+
+.perfil-sobre-formulario {
+    display: none;
+}
+
+.perfil-card--editando .perfil-sobre-vista {
+    display: none;
+}
+
+.perfil-card--editando .perfil-sobre-formulario {
+    display: block;
+}
+
+.perfil-card--editando.perfil-card--editable {
+    border-color: var(--celeste-fuerte);
+    box-shadow: 0 12px 30px rgba(46, 46, 56, 0.10);
+}
+
+.perfil-card--editando .perfil-card-editar {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.perfil-dato-fila {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+
+    padding: 14px 0;
+    border-bottom: 1px solid var(--beige);
+
+    text-align: left;
+}
+
+.perfil-dato-fila:last-child {
+    border-bottom: none;
+}
+
+.perfil-dato-fila-label {
+    font-weight: bold;
+    font-size: 14px;
+    color: var(--texto);
+}
+
+.perfil-dato-fila-valor {
+    font-size: 14px;
+    color: var(--gris-suave);
+    text-align: right;
+}
+.perfil-card-editar {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 7px 16px;
+    border: none;
+    border-radius: 50px;
+
+    background-color: var(--beige);
+    color: var(--texto);
+
+    font-family: inherit;
+    font-weight: bold;
+    font-size: 13px;
+    cursor: pointer;
+
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.25s ease, transform 0.25s ease, background-color 0.25s ease;
+}
+
+.perfil-card--editable:hover .perfil-card-editar {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.perfil-card-editar:hover {
+    background-color: var(--celeste);
+}
+
+.perfil-card {
+    background-color: var(--blanco);
+    border-radius: 24px;
+    padding: 32px;
+
+    box-shadow: 0 10px 26px rgba(46, 46, 56, 0.06);
+
+    max-width: 900px;
+    margin: 0 auto 24px;
+}
+
+.perfil-grid .perfil-card {
+    margin: 0;
+    max-width: none;
+}
+
+.perfil-card h2 {
+    font-size: 17px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin-bottom: 22px;
+    color: var(--texto);
+}
+
+.perfil-card h2 span {
+    font-size: 20px;
+}
+
+.perfil-card .boton-principal {
+    width: 100%;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.perfil-lista-vacia {
+    text-align: center;
+    padding: 30px 10px;
+    color: var(--gris-suave);
+    font-size: 14.5px;
+}
+
+.perfil-card-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: var(--celeste-fuerte);
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.perfil-mascota-item,
+.perfil-cita-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    background-color: var(--beige);
+    border-radius: 16px;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+
+    text-align: left;
+}
+
+.perfil-mascota-item:last-child,
+.perfil-cita-item:last-child {
+    margin-bottom: 0;
+}
+
+@media (max-width: 750px) {
+    .perfil-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .perfil-portada {
+        height: 160px;
+    }
+
+    .perfil-header-franja {
+        gap: 16px;
+    }
+}
+
+.perfil-password-toggle {
+    margin-top: 18px;
+    text-align: center;
+}
+
+.perfil-password-formulario {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--beige);
+}
+
+.perfil-cerrar-sesion-wrap {
+    text-align: center;
+    margin-top: 30px;
 }
