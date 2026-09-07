@@ -799,3 +799,27 @@
         grid-template-columns: 1fr;
     }
 }
+
+.admin-panel-editar {
+    background-color: #2A2440;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 28px 32px;
+    margin-bottom: 26px;
+}
+
+.admin-panel-editar h2 {
+    color: var(--blanco);
+    font-size: 18px;
+    margin: 0 0 6px;
+}
+
+.admin-panel-editar-botones {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.admin-panel-editar-botones .boton-principal {
+    flex: 1;
+}

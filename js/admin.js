@@ -2,11 +2,11 @@
    PATITAS FELICES — admin.js
    Lógica del panel de administración: protección de acceso,
    KPIs del dashboard, y gestión de usuarios (tabla, filtros,
-   modales, exportación a Excel).
+   modal Ver, panel inline Editar, exportación a Excel).
    Depende de las funciones ya definidas en usuarios.js
    (obtenerUsuarios, guardarUsuarios, obtenerSesion,
    guardarSesion, cerrarSesion, validarRequerido, validarCorreo,
-   marcarCampo).
+   validarPassword, marcarCampo, REGIONES).
 ========================================================= */
 
 function protegerRutaAdmin() {
@@ -297,7 +297,7 @@ function exportarUsuarioComoExcel(usuario) {
     exportarUsuariosComoExcel([usuario], `usuario-${usuario.correo.split('@')[0]}`);
 }
 
-/* ================= MODALES: VER / EDITAR ================= */
+/* ================= MODAL VER + PANEL EDITAR ================= */
 
 function initModalesUsuarios(sesion) {
     const tbody = document.getElementById('admin-tabla-body');
@@ -306,9 +306,16 @@ function initModalesUsuarios(sesion) {
     const modalVerContenido = document.getElementById('modal-ver-contenido');
     const modalVerCerrar = document.getElementById('modal-ver-cerrar');
 
-    const modalEditarFondo = document.getElementById('modal-editar-fondo');
-    const modalEditarCerrar = document.getElementById('modal-editar-cerrar');
+    const panelEditar = document.getElementById('panel-editar');
+    const btnCerrarEditar = document.getElementById('btn-cerrar-editar');
+    const btnCancelarEditar = document.getElementById('btn-cancelar-editar');
     const formEditar = document.getElementById('form-editar-usuario');
+
+    const panelCrear = document.getElementById('panel-crear');
+    const btnCerrarCrear = document.getElementById('btn-cerrar-crear');
+    const btnCancelarCrear = document.getElementById('btn-cancelar-crear');
+    const formCrear = document.getElementById('form-crear-usuario');
+    const accesoNuevo = document.getElementById('acceso-nuevo');
 
     if (!tbody) return;
 
@@ -333,7 +340,7 @@ function initModalesUsuarios(sesion) {
             abrirModalVer(usuario);
         } else if (accion === 'editar') {
             modalVerFondo.style.display = 'none';
-            abrirModalEditar(usuario);
+            abrirPanelEditar(usuario);
         } else if (accion === 'eliminar') {
             modalVerFondo.style.display = 'none';
             eliminarUsuarioConConfirmacion(usuario, sesion);
@@ -382,7 +389,7 @@ function initModalesUsuarios(sesion) {
         modalVerFondo.style.display = 'flex';
     }
 
-    function abrirModalEditar(usuario) {
+    function abrirPanelEditar(usuario) {
         document.getElementById('editar-correo-original').value = usuario.correo;
         document.getElementById('editar-run').value = usuario.run || '';
         document.getElementById('editar-correo').value = usuario.correo || '';
@@ -395,14 +402,27 @@ function initModalesUsuarios(sesion) {
         document.getElementById('editar-rol').value = usuario.rol || 'cliente';
         document.getElementById('editar-activo').checked = usuario.activo !== false;
 
-        poblarRegionComunaModal(usuario.region, usuario.comuna);
+        poblarRegionComuna('editar', usuario.region, usuario.comuna);
 
-        modalEditarFondo.style.display = 'flex';
+        panelEditar.style.display = 'flex';
     }
 
-    function poblarRegionComunaModal(regionGuardada, comunaGuardada) {
-        const selectRegion = document.getElementById('editar-region');
-        const selectComuna = document.getElementById('editar-comuna');
+    function abrirPanelCrear() {
+        formCrear.reset();
+        document.getElementById('crear-activo').checked = true;
+        ['crear-run', 'crear-correo', 'crear-nombre', 'crear-apellidos', 'crear-password', 'crear-password2'].forEach((id) => {
+            const campo = document.getElementById(id).closest('.campo');
+            if (campo) campo.classList.remove('campo--invalido', 'campo--valido');
+        });
+
+        poblarRegionComuna('crear', '', '');
+
+        panelCrear.style.display = 'flex';
+    }
+
+    function poblarRegionComuna(prefijo, regionGuardada, comunaGuardada) {
+        const selectRegion = document.getElementById(`${prefijo}-region`);
+        const selectComuna = document.getElementById(`${prefijo}-comuna`);
         if (!selectRegion || !selectComuna) return;
 
         selectRegion.innerHTML = '<option value="">Selecciona la región</option>';
@@ -438,74 +458,163 @@ function initModalesUsuarios(sesion) {
         if (e.target === modalVerFondo) modalVerFondo.style.display = 'none';
     });
 
-    modalEditarCerrar.addEventListener('click', () => modalEditarFondo.style.display = 'none');
-    modalEditarFondo.addEventListener('click', (e) => {
-        if (e.target === modalEditarFondo) modalEditarFondo.style.display = 'none';
+    btnCerrarEditar.addEventListener('click', () => {
+        panelEditar.style.display = 'none';
+    });
+    panelEditar.addEventListener('click', (e) => {
+        if (e.target === panelEditar) panelEditar.style.display = 'none';
+    });
+
+    btnCancelarEditar.addEventListener('click', () => {
+        panelEditar.style.display = 'none';
     });
 
     formEditar.addEventListener('submit', (e) => {
-    e.preventDefault();
+        e.preventDefault();
 
-    const correoOriginal = document.getElementById('editar-correo-original').value;
-    const nuevoNombre = document.getElementById('editar-nombre').value.trim();
-    const nuevosApellidos = document.getElementById('editar-apellidos').value.trim();
-    const nuevoCorreo = document.getElementById('editar-correo').value.trim();
-    const nuevoTelefono = document.getElementById('editar-telefono').value.trim();
-    const nuevaRegion = document.getElementById('editar-region').value;
-    const nuevaComuna = document.getElementById('editar-comuna').value;
-    const nuevaDireccion = document.getElementById('editar-direccion').value.trim();
-    const nuevaPassword = document.getElementById('editar-password').value;
-    const nuevaPassword2 = document.getElementById('editar-password2').value;
-    const nuevoRol = document.getElementById('editar-rol').value;
-    const nuevoActivo = document.getElementById('editar-activo').checked;
+        const correoOriginal = document.getElementById('editar-correo-original').value;
+        const nuevoNombre = document.getElementById('editar-nombre').value.trim();
+        const nuevosApellidos = document.getElementById('editar-apellidos').value.trim();
+        const nuevoCorreo = document.getElementById('editar-correo').value.trim();
+        const nuevoTelefono = document.getElementById('editar-telefono').value.trim();
+        const nuevaRegion = document.getElementById('editar-region').value;
+        const nuevaComuna = document.getElementById('editar-comuna').value;
+        const nuevaDireccion = document.getElementById('editar-direccion').value.trim();
+        const nuevaPassword = document.getElementById('editar-password').value;
+        const nuevaPassword2 = document.getElementById('editar-password2').value;
+        const nuevoRol = document.getElementById('editar-rol').value;
+        const nuevoActivo = document.getElementById('editar-activo').checked;
 
-    const errores = {
-        'campo-editar-nombre': validarRequerido(nuevoNombre, 50, 'El nombre'),
-        'campo-editar-correo': validarCorreo(nuevoCorreo),
-        'campo-editar-password': nuevaPassword.length > 0 ? validarPassword(nuevaPassword) : null,
-        'campo-editar-password2': nuevaPassword.length > 0 && nuevaPassword !== nuevaPassword2 ? 'Las contraseñas no coinciden.' : null,
-    };
+        const errores = {
+            'campo-editar-nombre': validarRequerido(nuevoNombre, 50, 'El nombre'),
+            'campo-editar-correo': validarCorreo(nuevoCorreo),
+            'campo-editar-password': nuevaPassword.length > 0 ? validarPassword(nuevaPassword) : null,
+            'campo-editar-password2': nuevaPassword.length > 0 && nuevaPassword !== nuevaPassword2 ? 'Las contraseñas no coinciden.' : null,
+        };
 
-    Object.entries(errores).forEach(([id, msg]) => marcarCampo(id, msg));
-    const hayErrores = Object.values(errores).some((e) => e !== null);
-    if (hayErrores) return;
+        Object.entries(errores).forEach(([id, msg]) => marcarCampo(id, msg));
+        const hayErrores = Object.values(errores).some((e) => e !== null);
+        if (hayErrores) return;
 
-    const usuarios = obtenerUsuarios();
+        const usuarios = obtenerUsuarios();
 
-    const correoDuplicado = usuarios.some(
-        (u) => u.correo.toLowerCase() === nuevoCorreo.toLowerCase() && u.correo.toLowerCase() !== correoOriginal.toLowerCase()
-    );
-    if (correoDuplicado) {
-        marcarCampo('campo-editar-correo', 'Ese correo ya está en uso por otra cuenta.');
-        return;
-    }
+        const correoDuplicado = usuarios.some(
+            (u) => u.correo.toLowerCase() === nuevoCorreo.toLowerCase() && u.correo.toLowerCase() !== correoOriginal.toLowerCase()
+        );
+        if (correoDuplicado) {
+            marcarCampo('campo-editar-correo', 'Ese correo ya está en uso por otra cuenta.');
+            return;
+        }
 
-    const indice = usuarios.findIndex((u) => u.correo === correoOriginal);
-    if (indice !== -1) {
-        usuarios[indice] = {
-            ...usuarios[indice],
+        const indice = usuarios.findIndex((u) => u.correo === correoOriginal);
+        if (indice !== -1) {
+            usuarios[indice] = {
+                ...usuarios[indice],
+                nombre: nuevoNombre,
+                apellidos: nuevosApellidos,
+                correo: nuevoCorreo,
+                telefono: nuevoTelefono,
+                region: nuevaRegion,
+                comuna: nuevaComuna,
+                direccion: nuevaDireccion,
+                rol: nuevoRol,
+                activo: nuevoActivo,
+                password: nuevaPassword.length > 0 ? nuevaPassword : usuarios[indice].password,
+            };
+            guardarUsuarios(usuarios);
+
+            const sesionActual = obtenerSesion();
+            if (sesionActual && sesionActual.correo.toLowerCase() === correoOriginal.toLowerCase()) {
+                guardarSesion(usuarios[indice]);
+            }
+        }
+
+        panelEditar.style.display = 'none';
+        renderTablaUsuarios();
+    });
+
+    accesoNuevo.addEventListener('click', (e) => {
+        e.preventDefault();
+        abrirPanelCrear();
+    });
+
+    btnCerrarCrear.addEventListener('click', () => {
+        panelCrear.style.display = 'none';
+    });
+    panelCrear.addEventListener('click', (e) => {
+        if (e.target === panelCrear) panelCrear.style.display = 'none';
+    });
+
+    btnCancelarCrear.addEventListener('click', () => {
+        panelCrear.style.display = 'none';
+    });
+
+    formCrear.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const nuevoRun = document.getElementById('crear-run').value.trim();
+        const nuevoCorreo = document.getElementById('crear-correo').value.trim();
+        const nuevoNombre = document.getElementById('crear-nombre').value.trim();
+        const nuevosApellidos = document.getElementById('crear-apellidos').value.trim();
+        const nuevoTelefono = document.getElementById('crear-telefono').value.trim();
+        const nuevaRegion = document.getElementById('crear-region').value;
+        const nuevaComuna = document.getElementById('crear-comuna').value;
+        const nuevaDireccion = document.getElementById('crear-direccion').value.trim();
+        const nuevaPassword = document.getElementById('crear-password').value;
+        const nuevaPassword2 = document.getElementById('crear-password2').value;
+        const nuevoRol = document.getElementById('crear-rol').value;
+        const nuevoActivo = document.getElementById('crear-activo').checked;
+
+        const errores = {
+            'campo-crear-run': validarRun(nuevoRun),
+            'campo-crear-correo': validarCorreo(nuevoCorreo),
+            'campo-crear-nombre': validarRequerido(nuevoNombre, 50, 'El nombre'),
+            'campo-crear-apellidos': validarRequerido(nuevosApellidos, 100, 'Los apellidos'),
+            'campo-crear-password': validarPassword(nuevaPassword),
+            'campo-crear-password2': nuevaPassword !== nuevaPassword2 ? 'Las contraseñas no coinciden.' : null,
+        };
+
+        Object.entries(errores).forEach(([id, msg]) => marcarCampo(id, msg));
+        const hayErrores = Object.values(errores).some((e) => e !== null);
+        if (hayErrores) return;
+
+        const usuarios = obtenerUsuarios();
+
+        const correoDuplicado = usuarios.some((u) => u.correo.toLowerCase() === nuevoCorreo.toLowerCase());
+        if (correoDuplicado) {
+            marcarCampo('campo-crear-correo', 'Ese correo ya está en uso por otra cuenta.');
+            return;
+        }
+
+        const runLimpio = nuevoRun.replace(/\./g, '').replace(/-/g, '').toUpperCase();
+        const runDuplicado = usuarios.some(
+            (u) => (u.run || '').replace(/\./g, '').replace(/-/g, '').toUpperCase() === runLimpio
+        );
+        if (runDuplicado) {
+            marcarCampo('campo-crear-run', 'Ese RUN ya está en uso por otra cuenta.');
+            return;
+        }
+
+        usuarios.push({
+            run: nuevoRun,
+            correo: nuevoCorreo,
             nombre: nuevoNombre,
             apellidos: nuevosApellidos,
-            correo: nuevoCorreo,
             telefono: nuevoTelefono,
             region: nuevaRegion,
             comuna: nuevaComuna,
             direccion: nuevaDireccion,
             rol: nuevoRol,
             activo: nuevoActivo,
-            password: nuevaPassword.length > 0 ? nuevaPassword : usuarios[indice].password,
-        };
+            password: nuevaPassword,
+            fechaRegistro: new Date().toISOString(),
+        });
         guardarUsuarios(usuarios);
 
-        const sesionActual = obtenerSesion();
-        if (sesionActual && sesionActual.correo.toLowerCase() === correoOriginal.toLowerCase()) {
-            guardarSesion(usuarios[indice]);
-        }
-    }
-
-    modalEditarFondo.style.display = 'none';
-    renderTablaUsuarios();
-});
+        panelCrear.style.display = 'none';
+        renderTablaUsuarios();
+    });
+}
 
 function eliminarUsuarioConConfirmacion(usuario, sesion) {
     if (sesion && usuario.correo.toLowerCase() === sesion.correo.toLowerCase()) {

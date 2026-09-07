@@ -6,6 +6,7 @@
     <title>Gestión de usuarios | Patitas Felices</title>
 
     <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/estilo-usuarios.css">
     <link rel="stylesheet" href="../css/estilo-admin.css">
 </head>
 <body class="admin-body">
@@ -47,7 +48,7 @@
             </header>
 
             <section class="admin-accesos admin-accesos--usuarios">
-                <a href="../html/registro.html" class="admin-acceso">
+                <a href="#" class="admin-acceso" id="acceso-nuevo">
                     <div class="admin-acceso-icono">➕</div>
                     <div>
                         <h3>Nuevo usuario</h3>
@@ -139,106 +140,214 @@
     </div>
 
     <!-- ================= MODAL EDITAR ================= -->
-    <div class="admin-modal-fondo" id="modal-editar-fondo" style="display:none;">
-        <div class="admin-modal admin-modal--ancho">
-            <button type="button" class="admin-modal-cerrar" id="modal-editar-cerrar">✕</button>
-            <h2>Editar usuario</h2>
+    <div class="admin-modal-fondo" id="panel-editar" style="display:none;">
+    <section class="admin-modal admin-modal--ancho">
+        <button type="button" class="admin-modal-cerrar" id="btn-cerrar-editar">✕</button>
+        <h2>Editar usuario</h2>
 
-            <form id="form-editar-usuario" class="admin-modal-form" novalidate>
-                <input type="hidden" id="editar-correo-original">
+        <form id="form-editar-usuario" class="admin-modal-form" novalidate>
+            <input type="hidden" id="editar-correo-original">
 
-                <h4 class="admin-modal-seccion">Identificación</h4>
-                <div class="admin-modal-fila">
-                    <div class="campo">
-                        <label for="editar-run">RUN</label>
-                        <input type="text" id="editar-run" disabled>
-                    </div>
-                    <div class="campo" id="campo-editar-correo">
-                        <label for="editar-correo">Correo</label>
-                        <input type="email" id="editar-correo" maxlength="100">
-                        <p class="campo__error">Correo inválido o ya está en uso.</p>
-                    </div>
+            <h4 class="admin-modal-seccion">Identificación</h4>
+            <div class="admin-modal-fila">
+                <div class="campo">
+                    <label for="editar-run">RUN</label>
+                    <input type="text" id="editar-run" disabled>
                 </div>
+                <div class="campo" id="campo-editar-correo">
+                    <label for="editar-correo">Correo</label>
+                    <input type="email" id="editar-correo" maxlength="100">
+                    <p class="campo__error">Correo inválido o ya está en uso.</p>
+                </div>
+            </div>
 
-                <h4 class="admin-modal-seccion">Datos personales</h4>
-                <div class="admin-modal-fila">
-                    <div class="campo" id="campo-editar-nombre">
-                        <label for="editar-nombre">Nombre</label>
-                        <input type="text" id="editar-nombre" maxlength="50">
-                        <p class="campo__error">El nombre es obligatorio.</p>
-                    </div>
-                    <div class="campo" id="campo-editar-apellidos">
-                        <label for="editar-apellidos">Apellidos</label>
-                        <input type="text" id="editar-apellidos" maxlength="100">
-                        <p class="campo__error">Los apellidos son obligatorios.</p>
-                    </div>
+            <h4 class="admin-modal-seccion">Datos personales</h4>
+            <div class="admin-modal-fila">
+                <div class="campo" id="campo-editar-nombre">
+                    <label for="editar-nombre">Nombre</label>
+                    <input type="text" id="editar-nombre" maxlength="50">
+                    <p class="campo__error">El nombre es obligatorio.</p>
                 </div>
-                <div class="admin-modal-fila">
-                    <div class="campo">
-                        <label for="editar-telefono">Teléfono</label>
-                        <input type="tel" id="editar-telefono">
-                    </div>
+                <div class="campo" id="campo-editar-apellidos">
+                    <label for="editar-apellidos">Apellidos</label>
+                    <input type="text" id="editar-apellidos" maxlength="100">
+                    <p class="campo__error">Los apellidos son obligatorios.</p>
                 </div>
+            </div>
+            <div class="admin-modal-fila">
+                <div class="campo">
+                    <label for="editar-telefono">Teléfono</label>
+                    <input type="tel" id="editar-telefono">
+                </div>
+            </div>
 
-                <h4 class="admin-modal-seccion">Dirección</h4>
-                <div class="admin-modal-fila">
-                    <div class="campo">
-                        <label for="editar-region">Región</label>
-                        <select id="editar-region">
-                            <option value="">Selecciona la región</option>
-                        </select>
-                    </div>
-                    <div class="campo">
-                        <label for="editar-comuna">Comuna</label>
-                        <select id="editar-comuna">
-                            <option value="">Primero elige una región</option>
-                        </select>
-                    </div>
+            <h4 class="admin-modal-seccion">Dirección</h4>
+            <div class="admin-modal-fila">
+                <div class="campo">
+                    <label for="editar-region">Región</label>
+                    <select id="editar-region">
+                        <option value="">Selecciona la región</option>
+                    </select>
                 </div>
-                <div class="admin-modal-fila">
-                    <div class="campo">
-                        <label for="editar-direccion">Dirección</label>
-                        <input type="text" id="editar-direccion" maxlength="300">
-                    </div>
+                <div class="campo">
+                    <label for="editar-comuna">Comuna</label>
+                    <select id="editar-comuna">
+                        <option value="">Primero elige una región</option>
+                    </select>
                 </div>
+            </div>
+            <div class="admin-modal-fila">
+                <div class="campo">
+                    <label for="editar-direccion">Dirección</label>
+                    <input type="text" id="editar-direccion" maxlength="300">
+                </div>
+            </div>
 
-                <h4 class="admin-modal-seccion">Seguridad</h4>
-                <div class="admin-modal-fila">
-                    <div class="campo" id="campo-editar-password">
-                        <label for="editar-password">Contraseña (dejar vacío para mantener)</label>
-                        <input type="password" id="editar-password" maxlength="10" placeholder="4-10 caracteres">
-                        <p class="campo__error">Debe tener entre 4 y 10 caracteres.</p>
-                    </div>
-                    <div class="campo" id="campo-editar-password2">
-                        <label for="editar-password2">Confirmar contraseña</label>
-                        <input type="password" id="editar-password2" maxlength="10" placeholder="Confirmar si cambias">
-                        <p class="campo__error">Las contraseñas no coinciden.</p>
-                    </div>
+            <h4 class="admin-modal-seccion">Seguridad</h4>
+            <div class="admin-modal-fila">
+                <div class="campo" id="campo-editar-password">
+                    <label for="editar-password">Contraseña (dejar vacío para mantener)</label>
+                    <input type="password" id="editar-password" maxlength="10" placeholder="4-10 caracteres">
+                    <p class="campo__error">Debe tener entre 4 y 10 caracteres.</p>
                 </div>
-
-                <h4 class="admin-modal-seccion">Rol y estado</h4>
-                <div class="admin-modal-fila">
-                    <div class="campo">
-                        <label for="editar-rol">Rol</label>
-                        <select id="editar-rol">
-                            <option value="cliente">Cliente</option>
-                            <option value="admin">Administrador</option>
-                        </select>
-                    </div>
-                    <div class="admin-modal-checkbox">
-                        <label>
-                            <input type="checkbox" id="editar-activo">
-                            Usuario activo
-                        </label>
-                    </div>
+                <div class="campo" id="campo-editar-password2">
+                    <label for="editar-password2">Confirmar contraseña</label>
+                    <input type="password" id="editar-password2" maxlength="10" placeholder="Confirmar si cambias">
+                    <p class="campo__error">Las contraseñas no coinciden.</p>
                 </div>
+            </div>
 
+            <h4 class="admin-modal-seccion">Rol y estado</h4>
+            <div class="admin-modal-fila">
+                <div class="campo">
+                    <label for="editar-rol">Rol</label>
+                    <select id="editar-rol">
+                        <option value="cliente">Cliente</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+                <div class="admin-modal-checkbox">
+                    <label>
+                        <input type="checkbox" id="editar-activo">
+                        Usuario activo
+                    </label>
+                </div>
+            </div>
+
+            <div class="admin-panel-editar-botones">
                 <button type="submit" class="boton-principal">
                     <span>Guardar cambios</span>
                     <span class="flecha-boton" aria-hidden="true">⟶</span>
                 </button>
-            </form>
-        </div>
+                <button type="button" id="btn-cancelar-editar" class="admin-btn-limpiar">Cancelar</button>
+            </div>
+        </form>
+    </section>
+    </div>
+
+    <!-- ================= MODAL CREAR ================= -->
+    <div class="admin-modal-fondo" id="panel-crear" style="display:none;">
+    <section class="admin-modal admin-modal--ancho">
+        <button type="button" class="admin-modal-cerrar" id="btn-cerrar-crear">✕</button>
+        <h2>Nuevo usuario</h2>
+
+        <form id="form-crear-usuario" class="admin-modal-form" novalidate>
+            <h4 class="admin-modal-seccion">Identificación</h4>
+            <div class="admin-modal-fila">
+                <div class="campo" id="campo-crear-run">
+                    <label for="crear-run">RUN</label>
+                    <input type="text" id="crear-run" maxlength="9" placeholder="19011022K">
+                    <p class="campo__error">Ingresa un RUN válido (7 a 9 caracteres, dígito verificador correcto).</p>
+                </div>
+                <div class="campo" id="campo-crear-correo">
+                    <label for="crear-correo">Correo</label>
+                    <input type="email" id="crear-correo" maxlength="100">
+                    <p class="campo__error">Correo inválido o ya está en uso.</p>
+                </div>
+            </div>
+
+            <h4 class="admin-modal-seccion">Datos personales</h4>
+            <div class="admin-modal-fila">
+                <div class="campo" id="campo-crear-nombre">
+                    <label for="crear-nombre">Nombre</label>
+                    <input type="text" id="crear-nombre" maxlength="50">
+                    <p class="campo__error">El nombre es obligatorio.</p>
+                </div>
+                <div class="campo" id="campo-crear-apellidos">
+                    <label for="crear-apellidos">Apellidos</label>
+                    <input type="text" id="crear-apellidos" maxlength="100">
+                    <p class="campo__error">Los apellidos son obligatorios.</p>
+                </div>
+            </div>
+            <div class="admin-modal-fila">
+                <div class="campo">
+                    <label for="crear-telefono">Teléfono</label>
+                    <input type="tel" id="crear-telefono">
+                </div>
+            </div>
+
+            <h4 class="admin-modal-seccion">Dirección</h4>
+            <div class="admin-modal-fila">
+                <div class="campo">
+                    <label for="crear-region">Región</label>
+                    <select id="crear-region">
+                        <option value="">Selecciona la región</option>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label for="crear-comuna">Comuna</label>
+                    <select id="crear-comuna">
+                        <option value="">Primero elige una región</option>
+                    </select>
+                </div>
+            </div>
+            <div class="admin-modal-fila">
+                <div class="campo">
+                    <label for="crear-direccion">Dirección</label>
+                    <input type="text" id="crear-direccion" maxlength="300">
+                </div>
+            </div>
+
+            <h4 class="admin-modal-seccion">Seguridad</h4>
+            <div class="admin-modal-fila">
+                <div class="campo" id="campo-crear-password">
+                    <label for="crear-password">Contraseña</label>
+                    <input type="password" id="crear-password" maxlength="10" placeholder="4-10 caracteres">
+                    <p class="campo__error">Debe tener entre 4 y 10 caracteres.</p>
+                </div>
+                <div class="campo" id="campo-crear-password2">
+                    <label for="crear-password2">Confirmar contraseña</label>
+                    <input type="password" id="crear-password2" maxlength="10">
+                    <p class="campo__error">Las contraseñas no coinciden.</p>
+                </div>
+            </div>
+
+            <h4 class="admin-modal-seccion">Rol y estado</h4>
+            <div class="admin-modal-fila">
+                <div class="campo">
+                    <label for="crear-rol">Rol</label>
+                    <select id="crear-rol">
+                        <option value="cliente">Cliente</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+                <div class="admin-modal-checkbox">
+                    <label>
+                        <input type="checkbox" id="crear-activo" checked>
+                        Usuario activo
+                    </label>
+                </div>
+            </div>
+
+            <div class="admin-panel-editar-botones">
+                <button type="submit" class="boton-principal">
+                    <span>Crear usuario</span>
+                    <span class="flecha-boton" aria-hidden="true">⟶</span>
+                </button>
+                <button type="button" id="btn-cancelar-crear" class="admin-btn-limpiar">Cancelar</button>
+            </div>
+        </form>
+    </section>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
