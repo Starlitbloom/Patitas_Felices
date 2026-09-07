@@ -46,6 +46,35 @@
                 </div>
             </header>
 
+            <section class="admin-accesos admin-accesos--usuarios">
+                <a href="../html/registro.html" class="admin-acceso">
+                    <div class="admin-acceso-icono">➕</div>
+                    <div>
+                        <h3>Nuevo usuario</h3>
+                        <p>Crea una cuenta con datos completos.</p>
+                    </div>
+                    <span class="admin-acceso-flecha">→</span>
+                </a>
+
+                <a href="#admin-buscador" class="admin-acceso" id="acceso-editar">
+                    <div class="admin-acceso-icono">✏️</div>
+                    <div>
+                        <h3>Editar usuario</h3>
+                        <p>Busca uno y edita sus datos existentes.</p>
+                    </div>
+                    <span class="admin-acceso-flecha">→</span>
+                </a>
+
+                <a href="#admin-tabla-body" class="admin-acceso" id="acceso-mostrar">
+                    <div class="admin-acceso-icono">👁️</div>
+                    <div>
+                        <h3>Mostrar usuarios</h3>
+                        <p>Ver, filtrar y administrar usuarios.</p>
+                    </div>
+                    <span class="admin-acceso-flecha">→</span>
+                </a>
+            </section>
+
             <!-- FILTROS -->
             <section class="admin-filtros">
                 <input type="text" id="admin-buscador" class="admin-buscador" placeholder="Buscar por RUN, nombre o correo...">
@@ -56,7 +85,15 @@
                     <option value="admin">Administrador</option>
                 </select>
 
+                <select id="admin-orden" class="admin-select">
+                    <option value="recientes">Orden: Recientes</option>
+                    <option value="az">Orden: Nombre A-Z</option>
+                    <option value="za">Orden: Nombre Z-A</option>
+                </select>
+
                 <button type="button" id="admin-btn-limpiar" class="admin-btn-limpiar">Limpiar</button>
+
+                <button type="button" id="admin-btn-exportar-seleccion" class="admin-btn-exportar">📤 Exportar seleccionados</button>
             </section>
 
             <!-- TABLA -->
@@ -65,6 +102,7 @@
                     <table class="admin-tabla">
                         <thead>
                             <tr>
+                                <th><input type="checkbox" id="admin-check-todos"></th>
                                 <th>RUN</th>
                                 <th>Nombre</th>
                                 <th>Apellidos</th>
@@ -102,37 +140,97 @@
 
     <!-- ================= MODAL EDITAR ================= -->
     <div class="admin-modal-fondo" id="modal-editar-fondo" style="display:none;">
-        <div class="admin-modal">
+        <div class="admin-modal admin-modal--ancho">
             <button type="button" class="admin-modal-cerrar" id="modal-editar-cerrar">✕</button>
             <h2>Editar usuario</h2>
 
             <form id="form-editar-usuario" class="admin-modal-form" novalidate>
                 <input type="hidden" id="editar-correo-original">
 
-                <div class="campo" id="campo-editar-nombre">
-                    <label for="editar-nombre">Nombre</label>
-                    <input type="text" id="editar-nombre" maxlength="50">
-                    <p class="campo__error">El nombre es obligatorio.</p>
+                <h4 class="admin-modal-seccion">Identificación</h4>
+                <div class="admin-modal-fila">
+                    <div class="campo">
+                        <label for="editar-run">RUN</label>
+                        <input type="text" id="editar-run" disabled>
+                    </div>
+                    <div class="campo" id="campo-editar-correo">
+                        <label for="editar-correo">Correo</label>
+                        <input type="email" id="editar-correo" maxlength="100">
+                        <p class="campo__error">Correo inválido o ya está en uso.</p>
+                    </div>
                 </div>
 
-                <div class="campo" id="campo-editar-apellidos">
-                    <label for="editar-apellidos">Apellidos</label>
-                    <input type="text" id="editar-apellidos" maxlength="100">
-                    <p class="campo__error">Los apellidos son obligatorios.</p>
+                <h4 class="admin-modal-seccion">Datos personales</h4>
+                <div class="admin-modal-fila">
+                    <div class="campo" id="campo-editar-nombre">
+                        <label for="editar-nombre">Nombre</label>
+                        <input type="text" id="editar-nombre" maxlength="50">
+                        <p class="campo__error">El nombre es obligatorio.</p>
+                    </div>
+                    <div class="campo" id="campo-editar-apellidos">
+                        <label for="editar-apellidos">Apellidos</label>
+                        <input type="text" id="editar-apellidos" maxlength="100">
+                        <p class="campo__error">Los apellidos son obligatorios.</p>
+                    </div>
+                </div>
+                <div class="admin-modal-fila">
+                    <div class="campo">
+                        <label for="editar-telefono">Teléfono</label>
+                        <input type="tel" id="editar-telefono">
+                    </div>
                 </div>
 
-                <div class="campo" id="campo-editar-correo">
-                    <label for="editar-correo">Correo</label>
-                    <input type="email" id="editar-correo" maxlength="100">
-                    <p class="campo__error">Correo inválido o ya está en uso.</p>
+                <h4 class="admin-modal-seccion">Dirección</h4>
+                <div class="admin-modal-fila">
+                    <div class="campo">
+                        <label for="editar-region">Región</label>
+                        <select id="editar-region">
+                            <option value="">Selecciona la región</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label for="editar-comuna">Comuna</label>
+                        <select id="editar-comuna">
+                            <option value="">Primero elige una región</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="admin-modal-fila">
+                    <div class="campo">
+                        <label for="editar-direccion">Dirección</label>
+                        <input type="text" id="editar-direccion" maxlength="300">
+                    </div>
                 </div>
 
-                <div class="campo" id="campo-editar-rol">
-                    <label for="editar-rol">Rol</label>
-                    <select id="editar-rol">
-                        <option value="cliente">Cliente</option>
-                        <option value="admin">Administrador</option>
-                    </select>
+                <h4 class="admin-modal-seccion">Seguridad</h4>
+                <div class="admin-modal-fila">
+                    <div class="campo" id="campo-editar-password">
+                        <label for="editar-password">Contraseña (dejar vacío para mantener)</label>
+                        <input type="password" id="editar-password" maxlength="10" placeholder="4-10 caracteres">
+                        <p class="campo__error">Debe tener entre 4 y 10 caracteres.</p>
+                    </div>
+                    <div class="campo" id="campo-editar-password2">
+                        <label for="editar-password2">Confirmar contraseña</label>
+                        <input type="password" id="editar-password2" maxlength="10" placeholder="Confirmar si cambias">
+                        <p class="campo__error">Las contraseñas no coinciden.</p>
+                    </div>
+                </div>
+
+                <h4 class="admin-modal-seccion">Rol y estado</h4>
+                <div class="admin-modal-fila">
+                    <div class="campo">
+                        <label for="editar-rol">Rol</label>
+                        <select id="editar-rol">
+                            <option value="cliente">Cliente</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+                    <div class="admin-modal-checkbox">
+                        <label>
+                            <input type="checkbox" id="editar-activo">
+                            Usuario activo
+                        </label>
+                    </div>
                 </div>
 
                 <button type="submit" class="boton-principal">
@@ -142,6 +240,7 @@
             </form>
         </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <script src="../js/usuarios.js"></script>
     <script src="../js/admin.js"></script>

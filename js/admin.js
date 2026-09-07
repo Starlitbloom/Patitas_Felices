@@ -1,9 +1,12 @@
 /* =========================================================
    PATITAS FELICES — admin.js
    Lógica del panel de administración: protección de acceso,
-   KPIs del dashboard y tabla de últimos usuarios.
+   KPIs del dashboard, y gestión de usuarios (tabla, filtros,
+   modales, exportación a Excel).
    Depende de las funciones ya definidas en usuarios.js
-   (obtenerUsuarios, obtenerSesion, cerrarSesion).
+   (obtenerUsuarios, guardarUsuarios, obtenerSesion,
+   guardarSesion, cerrarSesion, validarRequerido, validarCorreo,
+   marcarCampo).
 ========================================================= */
 
 function protegerRutaAdmin() {
@@ -17,6 +20,8 @@ function protegerRutaAdmin() {
     return sesion;
 }
 
+/* ================= DASHBOARD ================= */
+
 function initDashboardAdmin() {
     const sesion = protegerRutaAdmin();
     if (!sesion) return;
@@ -26,12 +31,9 @@ function initDashboardAdmin() {
 
     const usuarios = obtenerUsuarios();
 
-    // KPI: total de usuarios
     const kpiTotal = document.getElementById('kpi-total-usuarios');
     if (kpiTotal) kpiTotal.textContent = usuarios.length;
 
-    // KPI: nuevos esta semana (requiere que cada usuario tenga 'fechaRegistro';
-    // si aún no la guardas, este KPI queda en 0 sin romper nada)
     const unaSemanaMs = 7 * 24 * 60 * 60 * 1000;
     const ahora = Date.now();
     const nuevosSemana = usuarios.filter((u) => {
@@ -41,7 +43,6 @@ function initDashboardAdmin() {
     const kpiNuevos = document.getElementById('kpi-nuevos-semana');
     if (kpiNuevos) kpiNuevos.textContent = nuevosSemana;
 
-    // KPI: mascotas y citas (placeholders hasta que existan esas páginas)
     let mascotas = [];
     let citas = [];
     try {
@@ -60,7 +61,6 @@ function initDashboardAdmin() {
         kpiCitas.textContent = pendientes;
     }
 
-    // Tabla: últimos 5 usuarios registrados
     const tbody = document.getElementById('admin-tabla-recientes');
     const vacia = document.getElementById('admin-tabla-vacia');
 
@@ -97,8 +97,12 @@ function initBotonCerrarSesionAdmin() {
     });
 }
 
+/* ================= GESTIÓN DE USUARIOS ================= */
+
 let filtroTextoUsuarios = '';
 let filtroRolUsuarios = '';
+let ordenUsuarios = 'recientes';
+let correosSeleccionados = new Set();
 
 function initPaginaUsuarios() {
     const sesion = protegerRutaAdmin();
@@ -122,26 +126,44 @@ function initPaginaUsuarios() {
         });
     }
 
+    const selectOrden = document.getElementById('admin-orden');
+    if (selectOrden) {
+        selectOrden.addEventListener('change', () => {
+            ordenUsuarios = selectOrden.value;
+            renderTablaUsuarios();
+        });
+    }
+
     const btnLimpiar = document.getElementById('admin-btn-limpiar');
     if (btnLimpiar) {
         btnLimpiar.addEventListener('click', () => {
             filtroTextoUsuarios = '';
             filtroRolUsuarios = '';
+            ordenUsuarios = 'recientes';
             if (buscador) buscador.value = '';
             if (filtroRol) filtroRol.value = '';
+            if (selectOrden) selectOrden.value = 'recientes';
             renderTablaUsuarios();
         });
     }
 
+    const btnExportarSeleccion = document.getElementById('admin-btn-exportar-seleccion');
+    if (btnExportarSeleccion) {
+        btnExportarSeleccion.addEventListener('click', () => {
+            if (correosSeleccionados.size === 0) {
+                alert('Selecciona al menos un usuario para exportar.');
+                return;
+            }
+            const usuarios = obtenerUsuarios().filter((u) => correosSeleccionados.has(u.correo));
+            exportarUsuariosComoExcel(usuarios, 'usuarios-seleccionados');
+        });
+    }
+
     initModalesUsuarios(sesion);
+    initCheckTodos();
 }
 
-function renderTablaUsuarios() {
-    const tbody = document.getElementById('admin-tabla-body');
-    const vacia = document.getElementById('admin-tabla-vacia');
-    if (!tbody) return;
-
-    const sesion = obtenerSesion();
+function obtenerUsuariosFiltradosYOrdenados() {
     let usuarios = obtenerUsuarios();
 
     if (filtroTextoUsuarios) {
@@ -155,6 +177,25 @@ function renderTablaUsuarios() {
         usuarios = usuarios.filter((u) => (u.rol || 'cliente') === filtroRolUsuarios);
     }
 
+    if (ordenUsuarios === 'az') {
+        usuarios = [...usuarios].sort((a, b) => (a.nombre || '').localeCompare(b.nombre || ''));
+    } else if (ordenUsuarios === 'za') {
+        usuarios = [...usuarios].sort((a, b) => (b.nombre || '').localeCompare(a.nombre || ''));
+    } else {
+        usuarios = [...usuarios].reverse();
+    }
+
+    return usuarios;
+}
+
+function renderTablaUsuarios() {
+    const tbody = document.getElementById('admin-tabla-body');
+    const vacia = document.getElementById('admin-tabla-vacia');
+    if (!tbody) return;
+
+    const sesion = obtenerSesion();
+    const usuarios = obtenerUsuariosFiltradosYOrdenados();
+
     if (usuarios.length === 0) {
         tbody.innerHTML = '';
         if (vacia) vacia.style.display = 'block';
@@ -167,9 +208,11 @@ function renderTablaUsuarios() {
         const rol = u.rol || 'cliente';
         const badgeClase = rol === 'admin' ? 'admin-badge--admin' : 'admin-badge--cliente';
         const esUnoMismo = sesion && u.correo.toLowerCase() === sesion.correo.toLowerCase();
+        const marcado = correosSeleccionados.has(u.correo) ? 'checked' : '';
 
         return `
             <tr>
+                <td><input type="checkbox" class="admin-check-fila" data-correo="${u.correo}" ${marcado}></td>
                 <td>${u.run || '—'}</td>
                 <td>${u.nombre || ''}</td>
                 <td>${u.apellidos || ''}</td>
@@ -186,7 +229,75 @@ function renderTablaUsuarios() {
             </tr>
         `;
     }).join('');
+
+    tbody.querySelectorAll('.admin-check-fila').forEach((chk) => {
+        chk.addEventListener('change', () => {
+            if (chk.checked) {
+                correosSeleccionados.add(chk.dataset.correo);
+            } else {
+                correosSeleccionados.delete(chk.dataset.correo);
+            }
+            actualizarCheckTodos();
+        });
+    });
+
+    actualizarCheckTodos();
 }
+
+function actualizarCheckTodos() {
+    const checkTodos = document.getElementById('admin-check-todos');
+    if (!checkTodos) return;
+
+    const filas = document.querySelectorAll('.admin-check-fila');
+    if (filas.length === 0) {
+        checkTodos.checked = false;
+        return;
+    }
+    checkTodos.checked = Array.from(filas).every((f) => f.checked);
+}
+
+function initCheckTodos() {
+    const checkTodos = document.getElementById('admin-check-todos');
+    if (!checkTodos) return;
+
+    checkTodos.addEventListener('change', () => {
+        document.querySelectorAll('.admin-check-fila').forEach((chk) => {
+            chk.checked = checkTodos.checked;
+            if (checkTodos.checked) {
+                correosSeleccionados.add(chk.dataset.correo);
+            } else {
+                correosSeleccionados.delete(chk.dataset.correo);
+            }
+        });
+    });
+}
+
+/* ================= EXPORTAR A EXCEL ================= */
+
+function exportarUsuariosComoExcel(usuarios, nombreArchivo) {
+    const filas = usuarios.map((u) => ({
+        RUN: u.run || '',
+        Nombre: u.nombre || '',
+        Apellidos: u.apellidos || '',
+        Correo: u.correo || '',
+        Telefono: u.telefono || '',
+        Region: u.region || '',
+        Comuna: u.comuna || '',
+        Direccion: u.direccion || '',
+        Rol: u.rol || 'cliente',
+    }));
+
+    const hoja = XLSX.utils.json_to_sheet(filas);
+    const libro = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(libro, hoja, 'Usuarios');
+    XLSX.writeFile(libro, `${nombreArchivo}.xlsx`);
+}
+
+function exportarUsuarioComoExcel(usuario) {
+    exportarUsuariosComoExcel([usuario], `usuario-${usuario.correo.split('@')[0]}`);
+}
+
+/* ================= MODALES: VER / EDITAR ================= */
 
 function initModalesUsuarios(sesion) {
     const tbody = document.getElementById('admin-tabla-body');
@@ -204,9 +315,16 @@ function initModalesUsuarios(sesion) {
     tbody.addEventListener('click', (e) => {
         const btn = e.target.closest('button[data-accion]');
         if (!btn) return;
+        manejarAccionUsuario(btn.dataset.correo, btn.dataset.accion);
+    });
 
-        const correo = btn.dataset.correo;
-        const accion = btn.dataset.accion;
+    modalVerContenido.addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-accion]');
+        if (!btn) return;
+        manejarAccionUsuario(btn.dataset.correo, btn.dataset.accion);
+    });
+
+    function manejarAccionUsuario(correo, accion) {
         const usuarios = obtenerUsuarios();
         const usuario = usuarios.find((u) => u.correo === correo);
         if (!usuario) return;
@@ -214,49 +332,51 @@ function initModalesUsuarios(sesion) {
         if (accion === 'ver') {
             abrirModalVer(usuario);
         } else if (accion === 'editar') {
+            modalVerFondo.style.display = 'none';
             abrirModalEditar(usuario);
         } else if (accion === 'eliminar') {
+            modalVerFondo.style.display = 'none';
             eliminarUsuarioConConfirmacion(usuario, sesion);
+        } else if (accion === 'exportar') {
+            exportarUsuarioComoExcel(usuario);
         }
-    });
+    }
 
     function abrirModalVer(usuario) {
+        const rol = usuario.rol || 'cliente';
+        const badgeRolClase = rol === 'admin' ? 'admin-badge--admin' : 'admin-badge--cliente';
+        const avatarSrc = usuario.avatar || '';
+        const iniciales = `${(usuario.nombre || '?')[0]}${(usuario.apellidos || '')[0] || ''}`.toUpperCase();
+
         modalVerContenido.innerHTML = `
-            <div class="perfil-dato-fila">
-                <span class="perfil-dato-fila-label">RUN</span>
-                <span class="perfil-dato-fila-valor">${usuario.run || '—'}</span>
+            <div class="admin-detalle-cabecera">
+                <div class="admin-detalle-avatar">
+                    ${avatarSrc
+                        ? `<img src="${avatarSrc}" alt="Foto de ${usuario.nombre}">`
+                        : `<span>${iniciales}</span>`}
+                </div>
+
+                <div class="admin-detalle-info">
+                    <h3>${usuario.nombre || ''} ${usuario.apellidos || ''}</h3>
+                    <p class="admin-detalle-run">RUN: ${usuario.run || '—'}</p>
+
+                    <div class="admin-detalle-linea">
+                        <strong>${usuario.correo || '—'}</strong>
+                        <span class="admin-badge ${badgeRolClase}">${rol}</span>
+                    </div>
+
+                    <p class="admin-detalle-linea admin-detalle-secundaria">
+                        Tel: ${usuario.telefono || 'No registrado'} · ${usuario.region || 'Sin región'}${usuario.comuna ? ' / ' + usuario.comuna : ''}
+                    </p>
+
+                    <span class="admin-badge admin-badge--activo">Activo</span>
+                </div>
             </div>
-            <div class="perfil-dato-fila">
-                <span class="perfil-dato-fila-label">Nombre</span>
-                <span class="perfil-dato-fila-valor">${usuario.nombre || '—'}</span>
-            </div>
-            <div class="perfil-dato-fila">
-                <span class="perfil-dato-fila-label">Apellidos</span>
-                <span class="perfil-dato-fila-valor">${usuario.apellidos || '—'}</span>
-            </div>
-            <div class="perfil-dato-fila">
-                <span class="perfil-dato-fila-label">Correo</span>
-                <span class="perfil-dato-fila-valor">${usuario.correo || '—'}</span>
-            </div>
-            <div class="perfil-dato-fila">
-                <span class="perfil-dato-fila-label">Teléfono</span>
-                <span class="perfil-dato-fila-valor">${usuario.telefono || 'No registrado'}</span>
-            </div>
-            <div class="perfil-dato-fila">
-                <span class="perfil-dato-fila-label">Región</span>
-                <span class="perfil-dato-fila-valor">${usuario.region || '—'}</span>
-            </div>
-            <div class="perfil-dato-fila">
-                <span class="perfil-dato-fila-label">Comuna</span>
-                <span class="perfil-dato-fila-valor">${usuario.comuna || '—'}</span>
-            </div>
-            <div class="perfil-dato-fila">
-                <span class="perfil-dato-fila-label">Dirección</span>
-                <span class="perfil-dato-fila-valor">${usuario.direccion || '—'}</span>
-            </div>
-            <div class="perfil-dato-fila">
-                <span class="perfil-dato-fila-label">Rol</span>
-                <span class="perfil-dato-fila-valor">${usuario.rol || 'cliente'}</span>
+
+            <div class="admin-detalle-acciones">
+                <button type="button" class="admin-btn-accion admin-btn-accion--editar" data-correo="${usuario.correo}" data-accion="editar">✏️ Editar</button>
+                <button type="button" class="admin-btn-accion admin-btn-accion--eliminar" data-correo="${usuario.correo}" data-accion="eliminar">🗑️ Eliminar</button>
+                <button type="button" class="admin-btn-accion" data-correo="${usuario.correo}" data-accion="exportar">📤 Exportar</button>
             </div>
         `;
         modalVerFondo.style.display = 'flex';
@@ -264,12 +384,53 @@ function initModalesUsuarios(sesion) {
 
     function abrirModalEditar(usuario) {
         document.getElementById('editar-correo-original').value = usuario.correo;
+        document.getElementById('editar-run').value = usuario.run || '';
+        document.getElementById('editar-correo').value = usuario.correo || '';
         document.getElementById('editar-nombre').value = usuario.nombre || '';
         document.getElementById('editar-apellidos').value = usuario.apellidos || '';
-        document.getElementById('editar-correo').value = usuario.correo || '';
+        document.getElementById('editar-telefono').value = usuario.telefono || '';
+        document.getElementById('editar-direccion').value = usuario.direccion || '';
+        document.getElementById('editar-password').value = '';
+        document.getElementById('editar-password2').value = '';
         document.getElementById('editar-rol').value = usuario.rol || 'cliente';
+        document.getElementById('editar-activo').checked = usuario.activo !== false;
+
+        poblarRegionComunaModal(usuario.region, usuario.comuna);
 
         modalEditarFondo.style.display = 'flex';
+    }
+
+    function poblarRegionComunaModal(regionGuardada, comunaGuardada) {
+        const selectRegion = document.getElementById('editar-region');
+        const selectComuna = document.getElementById('editar-comuna');
+        if (!selectRegion || !selectComuna) return;
+
+        selectRegion.innerHTML = '<option value="">Selecciona la región</option>';
+        REGIONES.forEach((r) => {
+            const opt = document.createElement('option');
+            opt.value = r.nombre;
+            opt.textContent = r.nombre;
+            selectRegion.appendChild(opt);
+        });
+
+        function llenarComunas(nombreRegion, comunaSeleccionada) {
+            const region = REGIONES.find((r) => r.nombre === nombreRegion);
+            selectComuna.innerHTML = '<option value="">Selecciona la comuna</option>';
+            if (region) {
+                region.comunas.forEach((c) => {
+                    const opt = document.createElement('option');
+                    opt.value = c;
+                    opt.textContent = c;
+                    if (c === comunaSeleccionada) opt.selected = true;
+                    selectComuna.appendChild(opt);
+                });
+            }
+        }
+
+        selectRegion.value = regionGuardada || '';
+        llenarComunas(regionGuardada, comunaGuardada);
+
+        selectRegion.onchange = () => llenarComunas(selectRegion.value, null);
     }
 
     modalVerCerrar.addEventListener('click', () => modalVerFondo.style.display = 'none');
@@ -282,56 +443,69 @@ function initModalesUsuarios(sesion) {
         if (e.target === modalEditarFondo) modalEditarFondo.style.display = 'none';
     });
 
-        formEditar.addEventListener('submit', (e) => {
-        e.preventDefault();
+    formEditar.addEventListener('submit', (e) => {
+    e.preventDefault();
 
-        const correoOriginal = document.getElementById('editar-correo-original').value;
-        const nuevoNombre = document.getElementById('editar-nombre').value.trim();
-        const nuevosApellidos = document.getElementById('editar-apellidos').value.trim();
-        const nuevoCorreo = document.getElementById('editar-correo').value.trim();
-        const nuevoRol = document.getElementById('editar-rol').value;
+    const correoOriginal = document.getElementById('editar-correo-original').value;
+    const nuevoNombre = document.getElementById('editar-nombre').value.trim();
+    const nuevosApellidos = document.getElementById('editar-apellidos').value.trim();
+    const nuevoCorreo = document.getElementById('editar-correo').value.trim();
+    const nuevoTelefono = document.getElementById('editar-telefono').value.trim();
+    const nuevaRegion = document.getElementById('editar-region').value;
+    const nuevaComuna = document.getElementById('editar-comuna').value;
+    const nuevaDireccion = document.getElementById('editar-direccion').value.trim();
+    const nuevaPassword = document.getElementById('editar-password').value;
+    const nuevaPassword2 = document.getElementById('editar-password2').value;
+    const nuevoRol = document.getElementById('editar-rol').value;
+    const nuevoActivo = document.getElementById('editar-activo').checked;
 
-        const errores = {
-            'campo-editar-nombre': validarRequerido(nuevoNombre, 50, 'El nombre'),
-            'campo-editar-apellidos': validarRequerido(nuevosApellidos, 100, 'Los apellidos'),
-            'campo-editar-correo': validarCorreo(nuevoCorreo),
+    const errores = {
+        'campo-editar-nombre': validarRequerido(nuevoNombre, 50, 'El nombre'),
+        'campo-editar-correo': validarCorreo(nuevoCorreo),
+        'campo-editar-password': nuevaPassword.length > 0 ? validarPassword(nuevaPassword) : null,
+        'campo-editar-password2': nuevaPassword.length > 0 && nuevaPassword !== nuevaPassword2 ? 'Las contraseñas no coinciden.' : null,
+    };
+
+    Object.entries(errores).forEach(([id, msg]) => marcarCampo(id, msg));
+    const hayErrores = Object.values(errores).some((e) => e !== null);
+    if (hayErrores) return;
+
+    const usuarios = obtenerUsuarios();
+
+    const correoDuplicado = usuarios.some(
+        (u) => u.correo.toLowerCase() === nuevoCorreo.toLowerCase() && u.correo.toLowerCase() !== correoOriginal.toLowerCase()
+    );
+    if (correoDuplicado) {
+        marcarCampo('campo-editar-correo', 'Ese correo ya está en uso por otra cuenta.');
+        return;
+    }
+
+    const indice = usuarios.findIndex((u) => u.correo === correoOriginal);
+    if (indice !== -1) {
+        usuarios[indice] = {
+            ...usuarios[indice],
+            nombre: nuevoNombre,
+            apellidos: nuevosApellidos,
+            correo: nuevoCorreo,
+            telefono: nuevoTelefono,
+            region: nuevaRegion,
+            comuna: nuevaComuna,
+            direccion: nuevaDireccion,
+            rol: nuevoRol,
+            activo: nuevoActivo,
+            password: nuevaPassword.length > 0 ? nuevaPassword : usuarios[indice].password,
         };
+        guardarUsuarios(usuarios);
 
-        Object.entries(errores).forEach(([id, msg]) => marcarCampo(id, msg));
-        const hayErrores = Object.values(errores).some((e) => e !== null);
-        if (hayErrores) return;
-
-        const usuarios = obtenerUsuarios();
-
-        const correoDuplicado = usuarios.some(
-            (u) => u.correo.toLowerCase() === nuevoCorreo.toLowerCase() && u.correo.toLowerCase() !== correoOriginal.toLowerCase()
-        );
-        if (correoDuplicado) {
-            marcarCampo('campo-editar-correo', 'Ese correo ya está en uso por otra cuenta.');
-            return;
+        const sesionActual = obtenerSesion();
+        if (sesionActual && sesionActual.correo.toLowerCase() === correoOriginal.toLowerCase()) {
+            guardarSesion(usuarios[indice]);
         }
+    }
 
-        const indice = usuarios.findIndex((u) => u.correo === correoOriginal);
-        if (indice !== -1) {
-            usuarios[indice] = {
-                ...usuarios[indice],
-                nombre: nuevoNombre,
-                apellidos: nuevosApellidos,
-                correo: nuevoCorreo,
-                rol: nuevoRol,
-            };
-            guardarUsuarios(usuarios);
-
-            const sesionActual = obtenerSesion();
-            if (sesionActual && sesionActual.correo.toLowerCase() === correoOriginal.toLowerCase()) {
-                guardarSesion(usuarios[indice]);
-            }
-        }
-
-        modalEditarFondo.style.display = 'none';
-        renderTablaUsuarios();
-    });
-}
+    modalEditarFondo.style.display = 'none';
+    renderTablaUsuarios();
+});
 
 function eliminarUsuarioConConfirmacion(usuario, sesion) {
     if (sesion && usuario.correo.toLowerCase() === sesion.correo.toLowerCase()) {
