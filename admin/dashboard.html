@@ -41,24 +41,40 @@
         <main class="admin-contenido">
 
             <header class="admin-topbar">
-                <h1>Bienvenido, <span id="admin-nombre-display">Admin</span>! 🐾</h1>
+                <div class="admin-topbar-fondo"></div>
+                <div class="admin-topbar-contenido">
+                    <p class="admin-topbar-etiqueta">Panel de administración</p>
+                    <h1>Bienvenido, <span id="admin-nombre-display">Admin</span> 🐾</h1>
+                </div>
             </header>
 
             <!-- KPIs -->
             <section class="admin-kpis">
                 <div class="admin-kpi">
+                    <div class="admin-kpi-cabecera">
+                        <span class="admin-kpi-icono">👥</span>
+                    </div>
                     <span class="admin-kpi-numero" id="kpi-total-usuarios">0</span>
                     <span class="admin-kpi-label">Usuarios registrados</span>
                 </div>
                 <div class="admin-kpi">
+                    <div class="admin-kpi-cabecera">
+                        <span class="admin-kpi-icono">✨</span>
+                    </div>
                     <span class="admin-kpi-numero" id="kpi-nuevos-semana">0</span>
                     <span class="admin-kpi-label">Nuevos esta semana</span>
                 </div>
                 <div class="admin-kpi">
+                    <div class="admin-kpi-cabecera">
+                        <span class="admin-kpi-icono">🐾</span>
+                    </div>
                     <span class="admin-kpi-numero" id="kpi-mascotas">0</span>
                     <span class="admin-kpi-label">Mascotas registradas</span>
                 </div>
                 <div class="admin-kpi">
+                    <div class="admin-kpi-cabecera">
+                        <span class="admin-kpi-icono">📅</span>
+                    </div>
                     <span class="admin-kpi-numero" id="kpi-citas">0</span>
                     <span class="admin-kpi-label">Citas pendientes</span>
                 </div>
@@ -89,6 +105,7 @@
             <section class="admin-tabla-seccion">
                 <h2>Últimos usuarios registrados</h2>
 
+                <div class="admin-tabla-wrap">
                 <table class="admin-tabla">
                     <thead>
                         <tr>

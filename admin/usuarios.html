@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de usuarios | Patitas Felices</title>
+
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/estilo-admin.css">
+</head>
+<body class="admin-body">
+
+    <div class="admin-layout">
+
+        <aside class="admin-sidebar">
+            <div class="admin-sidebar-logo">
+                <img src="../img/logo-patitas.png" alt="Logo Patitas Felices">
+                <span>Patitas Felices</span>
+            </div>
+
+            <p class="admin-sidebar-rol">Admin</p>
+
+            <nav class="admin-nav">
+                <a href="dashboard.html" class="admin-nav-item">
+                    <span>📊</span> Dashboard
+                </a>
+                <a href="usuarios.html" class="admin-nav-item admin-nav-item--activo">
+                    <span>👥</span> Usuarios
+                </a>
+                <a href="../html/index.html" class="admin-nav-item">
+                    <span>🌐</span> Ver sitio
+                </a>
+                <a href="#" id="btn-cerrar-sesion-admin" class="admin-nav-item admin-nav-item--salir">
+                    <span>🚪</span> Cerrar sesión
+                </a>
+            </nav>
+        </aside>
+
+        <main class="admin-contenido">
+
+            <header class="admin-topbar">
+                <div class="admin-topbar-fondo"></div>
+                <div class="admin-topbar-contenido">
+                    <p class="admin-topbar-etiqueta">Panel de administración</p>
+                    <h1>Gestión de usuarios 🐾</h1>
+                </div>
+            </header>
+
+            <!-- FILTROS -->
+            <section class="admin-filtros">
+                <input type="text" id="admin-buscador" class="admin-buscador" placeholder="Buscar por RUN, nombre o correo...">
+
+                <select id="admin-filtro-rol" class="admin-select">
+                    <option value="">Todos los roles</option>
+                    <option value="cliente">Cliente</option>
+                    <option value="admin">Administrador</option>
+                </select>
+
+                <button type="button" id="admin-btn-limpiar" class="admin-btn-limpiar">Limpiar</button>
+            </section>
+
+            <!-- TABLA -->
+            <section class="admin-tabla-seccion">
+                <div class="admin-tabla-wrap">
+                    <table class="admin-tabla">
+                        <thead>
+                            <tr>
+                                <th>RUN</th>
+                                <th>Nombre</th>
+                                <th>Apellidos</th>
+                                <th>Correo</th>
+                                <th>Comuna</th>
+                                <th>Rol</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-tabla-body">
+                            <!-- se llena por JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="admin-tabla-vacia" id="admin-tabla-vacia" style="display:none;">
+                    No se encontraron usuarios con esos filtros.
+                </p>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ================= MODAL VER ================= -->
+    <div class="admin-modal-fondo" id="modal-ver-fondo" style="display:none;">
+        <div class="admin-modal">
+            <button type="button" class="admin-modal-cerrar" id="modal-ver-cerrar">✕</button>
+            <h2>Detalle del usuario</h2>
+
+            <div class="admin-modal-datos" id="modal-ver-contenido">
+                <!-- se llena por JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL EDITAR ================= -->
+    <div class="admin-modal-fondo" id="modal-editar-fondo" style="display:none;">
+        <div class="admin-modal">
+            <button type="button" class="admin-modal-cerrar" id="modal-editar-cerrar">✕</button>
+            <h2>Editar usuario</h2>
+
+            <form id="form-editar-usuario" class="admin-modal-form" novalidate>
+                <input type="hidden" id="editar-correo-original">
+
+                <div class="campo" id="campo-editar-nombre">
+                    <label for="editar-nombre">Nombre</label>
+                    <input type="text" id="editar-nombre" maxlength="50">
+                    <p class="campo__error">El nombre es obligatorio.</p>
+                </div>
+
+                <div class="campo" id="campo-editar-apellidos">
+                    <label for="editar-apellidos">Apellidos</label>
+                    <input type="text" id="editar-apellidos" maxlength="100">
+                    <p class="campo__error">Los apellidos son obligatorios.</p>
+                </div>
+
+                <div class="campo" id="campo-editar-correo">
+                    <label for="editar-correo">Correo</label>
+                    <input type="email" id="editar-correo" maxlength="100">
+                    <p class="campo__error">Correo inválido o ya está en uso.</p>
+                </div>
+
+                <div class="campo" id="campo-editar-rol">
+                    <label for="editar-rol">Rol</label>
+                    <select id="editar-rol">
+                        <option value="cliente">Cliente</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="boton-principal">
+                    <span>Guardar cambios</span>
+                    <span class="flecha-boton" aria-hidden="true">⟶</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/usuarios.js"></script>
+    <script src="../js/admin.js"></script>
+</body>
+</html>
