@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Reportes | Patitas Felices</title>
 
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/estilo-admin.css">
 </head>
+
 <body class="admin-body">
 
     <div class="admin-layout">
 
+        <!-- ================= SIDEBAR ================= -->
         <aside class="admin-sidebar">
+
             <div class="admin-sidebar-logo">
                 <img src="../img/logo-patitas.png" alt="Logo Patitas Felices">
                 <span>Patitas Felices</span>
@@ -21,84 +26,221 @@
             <p class="admin-sidebar-rol">Admin</p>
 
             <nav class="admin-nav">
+
+                <!-- DASHBOARD -->
                 <a href="dashboard.html" class="admin-nav-item">
-                    <span>📊</span> Dashboard
+                    <img
+                        src="../img/icono-admin-dashboard.png"
+                        alt=""
+                        class="admin-nav-icono"
+                    >
+                    <span>Dashboard</span>
                 </a>
+
+                <!-- USUARIOS -->
                 <a href="usuarios.html" class="admin-nav-item">
-                    <span>👥</span> Usuarios
+                    <img
+                        src="../img/icono-admin-usuarios.png"
+                        alt=""
+                        class="admin-nav-icono"
+                    >
+                    <span>Usuarios</span>
                 </a>
-                <a href="reportes.html" class="admin-nav-item admin-nav-item--activo">
-                    <span>📈</span> Reportes
+
+                <!-- CITAS -->
+                <a href="admin-citas.html" class="admin-nav-item">
+                    <img
+                        src="../img/icono-admin-citas.png"
+                        alt=""
+                        class="admin-nav-icono"
+                    >
+                    <span>Citas</span>
                 </a>
+
+                <!-- REPORTES ACTIVO -->
+                <a
+                    href="reportes.html"
+                    class="admin-nav-item admin-nav-item--activo"
+                >
+                    <img
+                        src="../img/icono-admin-reportes.png"
+                        alt=""
+                        class="admin-nav-icono"
+                    >
+                    <span>Reportes</span>
+                </a>
+
+                <!-- VER SITIO -->
                 <a href="../html/index.html" class="admin-nav-item">
-                    <span>🌐</span> Ver sitio
+                    <img
+                        src="../img/icono-admin-ver-sitio.png"
+                        alt=""
+                        class="admin-nav-icono"
+                    >
+                    <span>Ver sitio</span>
                 </a>
-                <a href="#" id="btn-cerrar-sesion-admin" class="admin-nav-item admin-nav-item--salir">
-                    <span>🚪</span> Cerrar sesión
+
+                <!-- CERRAR SESIÓN -->
+                <a
+                    href="#"
+                    id="btn-cerrar-sesion-admin"
+                    class="admin-nav-item admin-nav-item--salir"
+                >
+                    <img
+                        src="../img/icono-admin-cerrar-sesion.png"
+                        alt=""
+                        class="admin-nav-icono"
+                    >
+                    <span>Cerrar sesión</span>
                 </a>
+
             </nav>
+
         </aside>
 
+
+        <!-- ================= CONTENIDO ================= -->
         <main class="admin-contenido">
 
+            <!-- ENCABEZADO -->
             <header class="admin-topbar">
+
                 <div class="admin-topbar-fondo"></div>
+
                 <div class="admin-topbar-contenido">
-                    <p class="admin-topbar-etiqueta">Panel de administración</p>
+                    <p class="admin-topbar-etiqueta">
+                        Panel de administración
+                    </p>
+
                     <h1>Reportes 🐾</h1>
                 </div>
+
             </header>
 
-            <!-- RESUMEN -->
+
+            <!-- ================= RESUMEN ================= -->
             <section class="admin-kpis">
+
                 <div class="admin-kpi">
+
                     <div class="admin-kpi-cabecera">
                         <span class="admin-kpi-icono">👥</span>
                     </div>
-                    <span class="admin-kpi-numero" id="rep-total-usuarios">0</span>
-                    <span class="admin-kpi-label">Usuarios totales</span>
+
+                    <span
+                        class="admin-kpi-numero"
+                        id="rep-total-usuarios"
+                    >
+                        0
+                    </span>
+
+                    <span class="admin-kpi-label">
+                        Usuarios totales
+                    </span>
+
                 </div>
+
+
                 <div class="admin-kpi">
+
                     <div class="admin-kpi-cabecera">
                         <span class="admin-kpi-icono">🛡️</span>
                     </div>
-                    <span class="admin-kpi-numero" id="rep-total-admins">0</span>
-                    <span class="admin-kpi-label">Administradores</span>
+
+                    <span
+                        class="admin-kpi-numero"
+                        id="rep-total-admins"
+                    >
+                        0
+                    </span>
+
+                    <span class="admin-kpi-label">
+                        Administradores
+                    </span>
+
                 </div>
+
+
                 <div class="admin-kpi">
+
                     <div class="admin-kpi-cabecera">
                         <span class="admin-kpi-icono">📍</span>
                     </div>
-                    <span class="admin-kpi-numero" id="rep-total-regiones">0</span>
-                    <span class="admin-kpi-label">Regiones con usuarios</span>
+
+                    <span
+                        class="admin-kpi-numero"
+                        id="rep-total-regiones"
+                    >
+                        0
+                    </span>
+
+                    <span class="admin-kpi-label">
+                        Regiones con usuarios
+                    </span>
+
                 </div>
+
+
                 <div class="admin-kpi">
+
                     <div class="admin-kpi-cabecera">
                         <span class="admin-kpi-icono">🖼️</span>
                     </div>
-                    <span class="admin-kpi-numero" id="rep-con-avatar">0</span>
-                    <span class="admin-kpi-label">Con foto de perfil</span>
+
+                    <span
+                        class="admin-kpi-numero"
+                        id="rep-con-avatar"
+                    >
+                        0
+                    </span>
+
+                    <span class="admin-kpi-label">
+                        Con foto de perfil
+                    </span>
+
                 </div>
+
             </section>
 
-            <!-- GRÁFICOS -->
+
+            <!-- ================= GRÁFICOS ================= -->
             <section class="admin-graficos">
-                <div class="admin-grafico-card">
-                    <h2>Usuarios por rol</h2>
-                    <canvas id="grafico-roles"></canvas>
-                </div>
 
                 <div class="admin-grafico-card">
-                    <h2>Usuarios por región</h2>
-                    <canvas id="grafico-regiones"></canvas>
+
+                    <h2>
+                        Usuarios por rol
+                    </h2>
+
+                    <canvas id="grafico-roles"></canvas>
+
                 </div>
+
+
+                <div class="admin-grafico-card">
+
+                    <h2>
+                        Usuarios por región
+                    </h2>
+
+                    <canvas id="grafico-regiones"></canvas>
+
+                </div>
+
             </section>
 
-            <!-- TABLA: comunas con más usuarios -->
+
+            <!-- ================= TABLA ================= -->
             <section class="admin-tabla-seccion">
-                <h2>Comunas con más usuarios registrados</h2>
+
+                <h2>
+                    Comunas con más usuarios registrados
+                </h2>
+
                 <div class="admin-tabla-wrap">
+
                     <table class="admin-tabla">
+
                         <thead>
                             <tr>
                                 <th>Comuna</th>
@@ -106,46 +248,102 @@
                                 <th>Usuarios</th>
                             </tr>
                         </thead>
+
                         <tbody id="rep-tabla-comunas">
-                            <!-- se llena por JS -->
+                            <!-- Se llena por JS -->
                         </tbody>
+
                     </table>
+
                 </div>
-                <p class="admin-tabla-vacia" id="rep-comunas-vacia" style="display:none;">
+
+                <p
+                    class="admin-tabla-vacia"
+                    id="rep-comunas-vacia"
+                    style="display:none;"
+                >
                     Aún no hay suficientes datos de comunas.
                 </p>
+
             </section>
 
-            <!-- PRÓXIMAMENTE -->
+
+            <!-- ================= PRÓXIMAMENTE ================= -->
             <section class="admin-proximamente">
+
                 <div class="admin-proximamente-card">
-                    <span class="admin-proximamente-icono">🐾</span>
+
+                    <span class="admin-proximamente-icono">
+                        🐾
+                    </span>
+
                     <div>
                         <h3>Reporte de mascotas</h3>
-                        <p>Se activará automáticamente cuando el módulo de mascotas esté disponible.</p>
+
+                        <p>
+                            Se activará automáticamente cuando el
+                            módulo de mascotas esté disponible.
+                        </p>
                     </div>
+
                 </div>
+
+
                 <div class="admin-proximamente-card">
-                    <span class="admin-proximamente-icono">📅</span>
+
+                    <span class="admin-proximamente-icono">
+                        📅
+                    </span>
+
                     <div>
                         <h3>Reporte de citas</h3>
-                        <p>Se activará automáticamente cuando el módulo de citas esté disponible.</p>
+
+                        <p>
+                            Se activará automáticamente cuando el
+                            módulo de citas esté disponible.
+                        </p>
                     </div>
+
                 </div>
+
             </section>
 
+
+            <!-- ================= EXPORTAR ================= -->
             <div class="admin-reportes-exportar">
-                <button type="button" id="btn-exportar-reporte" class="admin-btn-exportar">📤 Exportar reporte completo (Excel)</button>
+
+                <button
+                    type="button"
+                    id="btn-exportar-reporte"
+                    class="admin-btn-exportar"
+                >
+                    📤 Exportar reporte completo (Excel)
+                </button>
+
             </div>
 
         </main>
+
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+    <!-- ================= LIBRERÍAS ================= -->
+
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
+    </script>
+
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js">
+    </script>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
 
     <script src="../js/usuarios.js"></script>
     <script src="../js/admin.js"></script>
     <script src="../js/reportes.js"></script>
+
 </body>
+
 </html>

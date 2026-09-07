@@ -898,3 +898,44 @@
         grid-template-columns: 1fr;
     }
 }
+/* =========================================================
+   ICONOS PNG DEL MENÚ LATERAL ADMIN
+========================================================= */
+
+.admin-nav-item img {
+    width: 28px;
+    height: 28px;
+
+    max-width: 28px;
+    max-height: 28px;
+
+    object-fit: contain;
+
+    display: block;
+    flex-shrink: 0;
+}
+
+
+/* Mantiene todos los elementos del menú alineados */
+.admin-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+
+/* Icono del elemento seleccionado */
+.admin-nav-item--activo img {
+    width: 28px;
+    height: 28px;
+}
+
+
+/* Evita que cualquier estilo general agrande las imágenes */
+.admin-sidebar .admin-nav .admin-nav-item img {
+    width: 28px !important;
+    height: 28px !important;
+
+    max-width: 28px !important;
+    max-height: 28px !important;
+}
