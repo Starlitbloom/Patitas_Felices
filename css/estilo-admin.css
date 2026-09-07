@@ -823,3 +823,78 @@
 .admin-panel-editar-botones .boton-principal {
     flex: 1;
 }
+
+/* ================= GRÁFICOS ================= */
+
+.admin-graficos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 30px;
+}
+
+.admin-grafico-card {
+    background-color: #2A2440;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 22px;
+}
+
+.admin-grafico-card h2 {
+    color: var(--blanco);
+    font-size: 15px;
+    margin: 0 0 16px;
+}
+
+.admin-grafico-card canvas {
+    max-height: 240px;
+}
+
+/* ================= PRÓXIMAMENTE ================= */
+
+.admin-proximamente {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin: 30px 0;
+}
+
+.admin-proximamente-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px dashed rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    padding: 20px 22px;
+}
+
+.admin-proximamente-icono {
+    font-size: 26px;
+    opacity: 0.6;
+}
+
+.admin-proximamente-card h3 {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 14.5px;
+    margin: 0 0 4px;
+}
+
+.admin-proximamente-card p {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 12.5px;
+    margin: 0;
+}
+
+.admin-reportes-exportar {
+    text-align: center;
+    margin-top: 10px;
+}
+
+@media (max-width: 900px) {
+    .admin-graficos,
+    .admin-proximamente {
+        grid-template-columns: 1fr;
+    }
+}
