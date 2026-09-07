@@ -939,3 +939,23 @@
     max-width: 28px !important;
     max-height: 28px !important;
 }
+/* =========================================================
+   ICONOS DE ACCIONES - GESTIÓN DE USUARIOS
+========================================================= */
+
+.admin-usuarios-accion-icono {
+    width: 38px !important;
+    height: 38px !important;
+
+    max-width: 38px !important;
+    max-height: 38px !important;
+
+    object-fit: contain;
+    display: block;
+}
+
+.admin-acceso-icono:has(.admin-usuarios-accion-icono) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
