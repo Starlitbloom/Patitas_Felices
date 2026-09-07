@@ -1,0 +1,274 @@
+/* =========================================================
+   PATITAS FELICES — estilo-admin.css
+   Panel de administración. Reutiliza variables de :root
+   definidas en styles.css (--rosa, --celeste, --morado,
+   --beige, --texto, --blanco, --gris-suave).
+========================================================= */
+
+.admin-body {
+    background-color: #1E1B2E;
+    margin: 0;
+    font-family: inherit;
+}
+
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ================= SIDEBAR ================= */
+
+.admin-sidebar {
+    width: 240px;
+    flex-shrink: 0;
+
+    background: linear-gradient(160deg, #2A2440 0%, #241F3A 100%);
+
+    padding: 28px 20px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+}
+
+.admin-sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-sidebar-logo img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.admin-sidebar-logo span {
+    color: var(--blanco);
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.admin-sidebar-rol {
+    color: var(--rosa);
+    font-weight: bold;
+    font-size: 14px;
+    margin: -10px 0 0;
+}
+
+.admin-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.admin-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 11px 14px;
+    border-radius: 12px;
+
+    color: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
+    font-size: 14.5px;
+    font-weight: 600;
+
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.admin-nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+    color: var(--blanco);
+}
+
+.admin-nav-item--activo {
+    background: linear-gradient(135deg, var(--rosa), var(--morado));
+    color: #2A1F3D;
+}
+
+.admin-nav-item--salir {
+    margin-top: auto;
+    color: rgba(255, 182, 193, 0.85);
+}
+
+/* ================= CONTENIDO ================= */
+
+.admin-contenido {
+    flex: 1;
+    padding: 34px 40px 60px;
+}
+
+.admin-topbar h1 {
+    color: var(--blanco);
+    font-size: 1.6rem;
+    margin: 0 0 28px;
+}
+
+.admin-topbar h1 span {
+    color: var(--rosa);
+}
+
+/* ================= KPIs ================= */
+
+.admin-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 30px;
+}
+
+.admin-kpi {
+    background-color: #2A2440;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+    padding: 22px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.admin-kpi-numero {
+    font-size: 1.9rem;
+    font-weight: 800;
+    color: var(--blanco);
+}
+
+.admin-kpi-label {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+/* ================= ACCESOS RÁPIDOS ================= */
+
+.admin-accesos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 34px;
+}
+
+.admin-acceso {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    background-color: #2A2440;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+    padding: 20px 22px;
+
+    text-decoration: none;
+
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.admin-acceso:hover {
+    transform: translateY(-3px);
+    border-color: var(--rosa);
+}
+
+.admin-acceso-icono {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--rosa), var(--morado));
+    font-size: 20px;
+}
+
+.admin-acceso h3 {
+    color: var(--blanco);
+    font-size: 15px;
+    margin: 0 0 4px;
+}
+
+.admin-acceso p {
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 13px;
+    margin: 0;
+}
+
+.admin-acceso-flecha {
+    margin-left: auto;
+    color: var(--rosa);
+    font-size: 18px;
+}
+
+/* ================= TABLA ================= */
+
+.admin-tabla-seccion h2 {
+    color: var(--blanco);
+    font-size: 17px;
+    margin: 0 0 16px;
+}
+
+.admin-tabla {
+    width: 100%;
+    border-collapse: collapse;
+
+    background-color: #2A2440;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.admin-tabla th {
+    text-align: left;
+    padding: 14px 20px;
+    background-color: #201C33;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.admin-tabla td {
+    padding: 14px 20px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.admin-badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.admin-badge--admin {
+    background-color: rgba(255, 182, 211, 0.18);
+    color: var(--rosa);
+}
+
+.admin-badge--cliente {
+    background-color: rgba(214, 236, 250, 0.18);
+    color: var(--celeste);
+}
+
+.admin-tabla-vacia {
+    text-align: center;
+    padding: 30px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+}
+
+@media (max-width: 900px) {
+    .admin-kpis {
+        grid-template-columns: 1fr 1fr;
+    }
+    .admin-accesos {
+        grid-template-columns: 1fr;
+    }
+    .admin-sidebar {
+        width: 200px;
+    }
+}

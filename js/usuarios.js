@@ -169,7 +169,11 @@ function initFormLogin() {
         }
 
         guardarSesion(usuario);
-        window.location.href = 'perfil.html';
+        if (usuario.rol === 'admin') {
+            window.location.href = '../admin/dashboard.html';
+        } else {
+            window.location.href = 'perfil.html';
+        }
     });
 }
 
@@ -224,6 +228,7 @@ function initFormRegistro() {
             region: form.region.value,
             comuna: form.comuna.value,
             direccion: form.direccion.value.trim(),
+            rol: 'cliente',
         };
 
         const usuarios = obtenerUsuarios();
@@ -315,7 +320,7 @@ function initFormPerfil() {
             'campo-apellidos': validarRequerido(form.apellidos.value, 100, 'Los apellidos'),
             'campo-correo': validarCorreo(form.correo.value.trim()),
             'campo-direccion': validarRequerido(form.direccion.value, 300, 'La dirección'),
-            'campo-password-vista': validarPassword(nuevaPassword),
+            'campo-password-vista': nuevaPassword.length > 0 ? validarPassword(nuevaPassword) : null,
         };
 
         Object.entries(errores).forEach(([id, msg]) => marcarCampo(id, msg));
@@ -345,7 +350,7 @@ function initFormPerfil() {
                 direccion: form.direccion.value.trim(),
                 region: form.region ? form.region.value : usuarios[indice].region,
                 comuna: form.comuna ? form.comuna.value : usuarios[indice].comuna,
-                password: nuevaPassword,
+                password: nuevaPassword.length > 0 ? nuevaPassword : usuarios[indice].password,
             };
             guardarUsuarios(usuarios);
             guardarSesion(usuarios[indice]);
@@ -557,7 +562,63 @@ function actualizarVistaPerfil() {
     document.getElementById('vista-direccion').textContent = document.getElementById('direccion').value || '—';
 }
 
+/* =========================================================
+   CUENTAS ADMIN FIJAS (para demo/entrega)
+   Se aseguran de existir cada vez que carga cualquier página,
+   sin duplicar ni pisar otros datos si ya existen.
+========================================================= */
+
+const ADMINS_FIJOS = [
+    {
+        nombre: 'Maria',
+        apellidos: 'Calfileo Ceballos',
+        run: '11111111-1',
+        correo: 'ma.calfileo@duoc.cl',
+        password: '1234',
+    },
+    {
+        nombre: 'Rocio',
+        apellidos: 'Cruces',
+        run: '22222222-2',
+        correo: 'ro.cruces@duoc.cl',
+        password: '1234',
+    },
+];
+
+function asegurarAdminsFijos() {
+    const usuarios = obtenerUsuarios();
+
+    ADMINS_FIJOS.forEach((datosAdmin) => {
+        const existente = usuarios.find(
+            (u) => u.correo.toLowerCase() === datosAdmin.correo.toLowerCase()
+        );
+
+        if (existente) {
+            // ya existe: solo aseguramos que tenga rol admin y la password fija
+            existente.rol = 'admin';
+            existente.password = datosAdmin.password;
+        } else {
+            // no existe: la creamos completa
+            usuarios.push({
+                nombre: datosAdmin.nombre,
+                apellidos: datosAdmin.apellidos,
+                run: datosAdmin.run,
+                correo: datosAdmin.correo,
+                password: datosAdmin.password,
+                telefono: '',
+                region: '',
+                comuna: '',
+                direccion: '',
+                rol: 'admin',
+            });
+        }
+    });
+
+    guardarUsuarios(usuarios);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    asegurarAdminsFijos();
     initFormLogin();
     initFormRegistro();
     initRegionComuna();

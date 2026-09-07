@@ -830,3 +830,19 @@
     text-align: center;
     margin-top: 30px;
 }
+
+.perfil-sobre-formulario .boton-principal {
+    border: none;
+    box-shadow: 0 6px 16px rgba(46, 46, 56, 0.12),
+                0 2px 6px rgba(255, 182, 211, 0.35);
+
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.perfil-sobre-formulario .boton-principal:hover {
+    background: linear-gradient(135deg, #FFC5DE, var(--celeste));
+    color: var(--texto);
+
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 182, 211, 0.45);
+}

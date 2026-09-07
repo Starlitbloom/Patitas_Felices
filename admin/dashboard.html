@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin | Patitas Felices</title>
+
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/estilo-admin.css">
+</head>
+<body class="admin-body">
+
+    <div class="admin-layout">
+
+        <!-- ================= SIDEBAR ================= -->
+        <aside class="admin-sidebar">
+            <div class="admin-sidebar-logo">
+                <img src="../img/logo-patitas.png" alt="Logo Patitas Felices">
+                <span>Patitas Felices</span>
+            </div>
+
+            <p class="admin-sidebar-rol">Admin</p>
+
+            <nav class="admin-nav">
+                <a href="dashboard.html" class="admin-nav-item admin-nav-item--activo">
+                    <span>📊</span> Dashboard
+                </a>
+                <a href="usuarios.html" class="admin-nav-item">
+                    <span>👥</span> Usuarios
+                </a>
+                <a href="../index.html" class="admin-nav-item">
+                    <span>🌐</span> Ver sitio
+                </a>
+                <a href="#" id="btn-cerrar-sesion-admin" class="admin-nav-item admin-nav-item--salir">
+                    <span>🚪</span> Cerrar sesión
+                </a>
+            </nav>
+        </aside>
+
+        <!-- ================= CONTENIDO ================= -->
+        <main class="admin-contenido">
+
+            <header class="admin-topbar">
+                <h1>Bienvenido, <span id="admin-nombre-display">Admin</span>! 🐾</h1>
+            </header>
+
+            <!-- KPIs -->
+            <section class="admin-kpis">
+                <div class="admin-kpi">
+                    <span class="admin-kpi-numero" id="kpi-total-usuarios">0</span>
+                    <span class="admin-kpi-label">Usuarios registrados</span>
+                </div>
+                <div class="admin-kpi">
+                    <span class="admin-kpi-numero" id="kpi-nuevos-semana">0</span>
+                    <span class="admin-kpi-label">Nuevos esta semana</span>
+                </div>
+                <div class="admin-kpi">
+                    <span class="admin-kpi-numero" id="kpi-mascotas">0</span>
+                    <span class="admin-kpi-label">Mascotas registradas</span>
+                </div>
+                <div class="admin-kpi">
+                    <span class="admin-kpi-numero" id="kpi-citas">0</span>
+                    <span class="admin-kpi-label">Citas pendientes</span>
+                </div>
+            </section>
+
+            <!-- Accesos rápidos -->
+            <section class="admin-accesos">
+                <a href="usuarios.html" class="admin-acceso">
+                    <div class="admin-acceso-icono">👥</div>
+                    <div>
+                        <h3>Gestión de usuarios</h3>
+                        <p>Ver, buscar y administrar cuentas registradas.</p>
+                    </div>
+                    <span class="admin-acceso-flecha">→</span>
+                </a>
+
+                <a href="../index.html" class="admin-acceso">
+                    <div class="admin-acceso-icono">🌐</div>
+                    <div>
+                        <h3>Ver el sitio</h3>
+                        <p>Abrir Patitas Felices como lo ve un visitante.</p>
+                    </div>
+                    <span class="admin-acceso-flecha">→</span>
+                </a>
+            </section>
+
+            <!-- Últimos usuarios registrados -->
+            <section class="admin-tabla-seccion">
+                <h2>Últimos usuarios registrados</h2>
+
+                <table class="admin-tabla">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Correo</th>
+                            <th>Comuna</th>
+                            <th>Rol</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-tabla-recientes">
+                        <!-- se llena por JS -->
+                    </tbody>
+                </table>
+
+                <p class="admin-tabla-vacia" id="admin-tabla-vacia" style="display:none;">
+                    Aún no hay usuarios registrados.
+                </p>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="../js/usuarios.js"></script>
+    <script src="../js/admin.js"></script>
+</body>
+</html>
