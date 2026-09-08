@@ -8,11 +8,12 @@
    --celeste-fuerte), así que no hace falta redefinirlas aquí.
 ========================================================= */
 
+/* Fondo general de la página, un beige más cálido que el --beige de la paleta base */
 body {
     background-color: #F8F3EA;
 }
 .valores {
-    background-color: #F8F3EA;
+    background-color: #F8F3EA; /* se sobrescribe más abajo con la imagen de fondo-patas.png, queda como color de respaldo */
 }
 
 /* =========================================================
@@ -21,6 +22,7 @@ body {
    transparente de lo que va pasando debajo.
 ========================================================= */
 
+/* Franja oscura degradada, fija arriba de la pantalla, detrás del header transparente */
 .header-sombra {
     position: fixed;
     top: 0;
@@ -36,14 +38,15 @@ body {
         rgba(20, 20, 25, 0) 100%
     );
 
-    z-index: 40;
+    z-index: 40; /* debajo del header (z-index: 50) pero encima del contenido normal */
 
-    opacity: 0;
+    opacity: 0; /* oculta por defecto: hero-parallax.js la activa al hacer scroll */
     pointer-events: none;
 
     transition: opacity 0.3s ease;
 }
 
+/* Clase que agrega el JS de scroll para mostrar la sombra con transición suave */
 .header-sombra.visible {
     opacity: 1;
 }
@@ -52,6 +55,7 @@ body {
    HEADER FLOTANDO SOBRE EL HERO (solo en index.html)
 ========================================================= */
 
+/* El header no ocupa espacio en el flujo (position: fixed) para que la imagen del hero pase por debajo */
 .header-principal {
     position: fixed;
 
@@ -69,6 +73,7 @@ body {
    HERO CON IMAGEN A PANTALLA COMPLETA + CORTE DIFUMINADO
 ========================================================= */
 
+/* Contenedor del hero: alto fijo, todo lo que se salga de sus bordes se recorta */
 .hero-corte {
     position: relative;
 
@@ -81,6 +86,8 @@ body {
 }
 
 
+/* La imagen se dibuja más grande que su contenedor (130% alto, empieza en -15%) */
+/* para tener margen de sobra al aplicar el efecto parallax (hero-parallax.js) sin dejar bordes vacíos */
 .hero-corte-imagen img {
     position: absolute;
     top: -15%;
@@ -94,7 +101,7 @@ body {
 
     display: block;
 
-    will-change: transform;
+    will-change: transform; /* le avisa al navegador que esta capa se va a animar, para optimizar el render */
 }
 
 /* cuña borrosa color beige que suaviza el filo del corte diagonal,
@@ -104,6 +111,8 @@ body {
     inset: 0;
     z-index: 0;
 
+    /* Máscara que va desvaneciendo la imagen hacia abajo (de opaca a transparente), */
+    /* así el borde inferior del hero se funde con el fondo en vez de cortarse en seco */
     -webkit-mask-image: linear-gradient(
         to bottom,
         black 0%,
@@ -127,6 +136,8 @@ body {
     );
 }
 
+/* Capa extra encima de la imagen: un degradado radial beige (esquina inferior derecha) */
+/* combinado con un oscurecido diagonal, para que el texto blanco del hero resalte sobre la foto */
 .hero-corte-imagen::after {
     content: "";
     position: absolute;
@@ -148,7 +159,7 @@ body {
             rgba(20, 20, 25, 0.30) 100%
         );
 
-    pointer-events: none;
+    pointer-events: none; /* deja pasar los clics hacia lo que esté debajo (ej. botones del hero) */
 }
 
 .hero-corte-contenido {
@@ -165,17 +176,20 @@ body {
     padding: 155px 0 130px;
 }
 
+/* Bloque de texto del hero, desplazado hacia arriba-izquierda para una composición más dinámica */
 .hero-corte-texto {
     max-width: 760px;
     transform: translate(-120px, -60px);
     color: var(--blanco);
 }
+/* En tablet el desplazamiento se reduce, ya no hay tanto espacio horizontal de sobra */
 @media (max-width: 900px) {
     .hero-corte-texto {
         transform: translate(-15px, -25px);
     }
 }
 
+/* En mobile se elimina el desplazamiento por completo: el texto queda centrado/normal */
 @media (max-width: 550px) {
     .hero-corte-texto {
         transform: none;
@@ -185,20 +199,22 @@ body {
 .hero-corte-texto h1 {
     margin: 22px 0 20px;
 
-    font-size: clamp(2.8rem, 5vw, 4.2rem);
+    font-size: clamp(2.8rem, 5vw, 4.2rem); /* tamaño fluido entre 2.8rem y 4.2rem según el ancho de pantalla */
     line-height: 1.05;
 
     font-weight: 800;
 
     color: var(--blanco);
 
-    white-space: nowrap;
+    white-space: nowrap; /* evita que el título se corte en dos líneas de forma automática */
 }
 
+/* Permite resaltar una palabra del título en rosa envolviéndola en un <span> (ej. "Patitas Felices") */
 .hero-corte-texto h1 span {
     color: var(--rosa);
 }
 
+/* Regla duplicada de la de arriba (mismo selector, mismas propiedades) — se puede eliminar sin cambiar nada */
 .hero-corte-texto h1 span {
     color: var(--rosa);
 }
@@ -209,9 +225,10 @@ body {
     color: rgba(255, 255, 255, 0.88);
 
     font-size: 16px;
-    max-width: 85ch;
+    max-width: 85ch; /* limita el ancho de línea del párrafo para que no se estire demasiado en pantallas grandes */
 }
 
+/* Botón principal del hero: versión rosa clara sobre el fondo oscuro de la imagen */
 .hero-corte-texto .boton-principal {
     background: linear-gradient(135deg, #FFD6E7, #FFC5DE);
     color: var(--texto);
@@ -234,6 +251,7 @@ body {
     box-shadow: 0 8px 20px rgba(255, 182, 211, 0.35);
 }
 
+/* Flecha "→" dentro de los botones principales, con animación al hacer hover */
 .flecha-boton {
     font-size: 25px;
     font-weight: 900;
@@ -244,11 +262,13 @@ body {
     transition: transform 0.3s ease;
 }
 .boton-principal:hover .flecha-boton {
-    transform: translateX(5px);
+    transform: translateX(5px); /* la flecha "avanza" al pasar el mouse sobre el botón */
 }
+/* Override específico de padding solo para el botón del hero (más chico que el botón principal global) */
 .hero-corte-texto .boton-principal {
     padding: 8px 18px;
 }
+/* Separa la siguiente sección de las tarjetas flotantes, que sobresalen del hero con margin negativo */
 .hero-corte-tarjetas + section {
     margin-top: 170px;
 }
@@ -257,6 +277,7 @@ body {
    TARJETAS FLOTANTES
 ========================================================= */
 
+/* Las 3 tarjetas (servicios destacados) se superponen al hero gracias al margin-top negativo */
 .hero-corte-tarjetas {
     position: relative;
     z-index: 1;
@@ -310,6 +331,8 @@ body {
     margin-bottom: 8px;
 }
 
+/* La primera tarjeta usa una imagen con proporción distinta (más ancha que alta), */
+/* por eso se agranda un poco (scale) para que visualmente pese lo mismo que las otras dos */
 .tarjeta-flotante:nth-child(1) .tarjeta-flotante-imagen {
     width: 120px;
     height: 90px;
@@ -338,9 +361,10 @@ body {
 
 .valores {
     position: relative;
-    overflow: hidden;
+    overflow: hidden; /* recorta las manchas de color para que no se salgan de la sección */
 }
 
+/* Capa de fondo detrás del contenido, con las 3 manchas de color difuminadas */
 .valores-fondo {
     position: absolute;
     inset: 0;
@@ -350,6 +374,7 @@ body {
     pointer-events: none;
 }
 
+/* Cada <span> dentro de .valores-fondo es un círculo de color muy desenfocado (blur) */
 .valores-fondo span {
     position: absolute;
 
@@ -402,14 +427,17 @@ body {
    (solo en index.html)
 ========================================================= */
 
+/* Nota: este segundo bloque .valores pisa/complementa al de arriba (misma clase, más reglas). */
+/* Aquí se agrega la imagen de patrón de fondo por encima del color base ya definido */
 .valores {
     background-image: url(../img/fondo-patas.png);
     background-repeat: repeat;
     background-size: 990px 530px;
-    background-attachment: fixed;
+    background-attachment: fixed; /* el patrón queda "fijo" respecto a la ventana mientras se hace scroll (efecto parallax simple) */
     position: relative;
 }
 
+/* Capa rosa semitransparente encima del patrón de patitas, para que no compita visualmente con el contenido */
 .valores::before {
     content: "";
 
@@ -429,12 +457,14 @@ body {
     padding-bottom: 40px;
 }
 
+/* Regla repetida de más arriba (mismos selectores) — no rompe nada, pero es redundante */
 .valores .titulo-seccion,
 .valores .grid-valores {
     position: relative;
     z-index: 1;
 }
 
+/* Cada tarjeta de valor/servicio se ve blanca y sólida sobre el fondo rosa translúcido */
 .valores .valor {
     background-color: var(--blanco);
 }
@@ -445,6 +475,7 @@ body {
     padding-bottom: 10px;
 }
 
+/* La línea empieza con ancho 0, centrada, lista para "crecer" al hacer hover */
 .valores .valor h3::after {
     content: "";
 
@@ -461,6 +492,7 @@ body {
     transition: width 0.3s ease, left 0.3s ease;
 }
 
+/* Al hacer hover, la línea crece a 40px y se recentra (left ajustado a la mitad del nuevo ancho) */
 .valores .valor:hover h3::after {
     width: 40px;
     left: calc(50% - 20px);
@@ -479,6 +511,7 @@ body {
         padding: 190px 0 100px;
     }
 
+    /* Las 3 tarjetas flotantes se apilan en 1 columna en tablet */
     .hero-corte-tarjetas {
         grid-template-columns: 1fr;
         margin-top: -100px;
@@ -503,6 +536,7 @@ body {
    ESTADÍSTICAS
 ========================================================= */
 
+/* Sección con degradado diagonal celeste → blanco → rosa de fondo */
 .estadisticas {
     position: relative;
 
@@ -518,6 +552,7 @@ body {
     overflow: hidden;
 }
 
+/* Círculo decorativo morado, asomando por la esquina superior izquierda */
 .estadisticas::before {
     content: "";
 
@@ -536,6 +571,7 @@ body {
     z-index: 0;
 }
 
+/* Círculo decorativo rosa, asomando por la esquina inferior derecha */
 .estadisticas::after {
     content: "";
 
@@ -569,6 +605,8 @@ body {
     gap: 24px;
 }
 
+/* Tarjeta de estadística: arranca invisible y desplazada hacia abajo (opacity: 0, translateY), */
+/* el JS de IntersectionObserver agrega la clase --visible cuando entra en pantalla para animarla */
 .estadistica {
     position: relative;
 
@@ -587,6 +625,7 @@ body {
     transform: translateY(24px);
 }
 
+/* Estado final de la animación de aparición, activado por JS al hacer scroll */
 .estadistica.estadistica--visible {
     opacity: 1;
     transform: translateY(0);
@@ -598,6 +637,7 @@ body {
     box-shadow: 0 18px 36px rgba(46, 46, 56, 0.14);
 }
 
+/* Cada una de las 4 tarjetas tiene su propio color de borde superior, para variar visualmente */
 .estadistica:nth-child(2) { border-top-color: var(--celeste); }
 .estadistica:nth-child(3) { border-top-color: var(--morado); }
 .estadistica:nth-child(4) { border-top-color: var(--rosa); }
@@ -635,6 +675,7 @@ body {
     filter: drop-shadow(0 6px 8px rgba(46, 46, 56, 0.10));
 }
 
+/* El número grande que anima el contador (ej. de 0 a 500), controlado por JS con IntersectionObserver */
 .estadistica-numero {
     display: block;
     font-family: inherit;
@@ -651,12 +692,14 @@ body {
     font-weight: 600;
 }
 
+/* En tablet, las 4 estadísticas pasan de 4 a 2 columnas */
 @media (max-width: 900px) {
     .grid-estadisticas {
         grid-template-columns: 1fr 1fr;
     }
 }
 
+/* En mobile, se apilan en 1 columna */
 @media (max-width: 550px) {
     .grid-estadisticas {
         grid-template-columns: 1fr;
@@ -668,12 +711,14 @@ body {
    (solo en index.html)
 ========================================================= */
 
+/* Sección con degradado suave de fondo para la mini-lista de novedades/artículos */
 .quienes-somos {
     background: linear-gradient(160deg, #FFFDFB 0%, var(--beige) 55%, #FCF3F7 100%);
     position: relative;
     overflow: hidden;
 }
 
+/* Cada chip "destacado" aparece con una animación de fade-in + subida, en cascada (delay escalonado) */
 .quienes-destacados .destacado {
     opacity: 0;
     animation: aparecerChip 0.5s ease forwards;
@@ -696,6 +741,7 @@ body {
     gap: 12px;
 }
 
+/* Cada fila de la mini-lista de novedades es un link completo (icono + texto + flecha) */
 .quienes-mini-item {
     display: flex;
     align-items: center;
@@ -715,6 +761,7 @@ body {
     transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
+/* El segundo ítem cambia el color del borde izquierdo para diferenciarse visualmente del resto */
 .quienes-mini-item:nth-child(2) {
     border-left-color: var(--celeste-fuerte);
 }
@@ -731,7 +778,7 @@ body {
 
 .quienes-mini-texto {
     flex: 1;
-    min-width: 0;
+    min-width: 0; /* permite que el texto largo trunque/wrappee en vez de forzar el ancho del flex item */
 }
 
 .quienes-mini-texto h4 {
@@ -771,6 +818,7 @@ body {
     background-color: var(--blanco);
 }
 
+/* Las preguntas se acomodan en una grilla de 2 columnas (acordeón doble) */
 .faq-lista {
     max-width: 920px;
     margin: 0 auto;
@@ -783,7 +831,7 @@ body {
 .faq-item {
     background-color: var(--beige);
     border-radius: 18px;
-    overflow: hidden;
+    overflow: hidden; /* recorta la respuesta mientras el acordeón está cerrado (max-height: 0) */
 
     border-top: 4px solid var(--rosa);
 
@@ -792,6 +840,7 @@ body {
     transition: box-shadow 0.25s ease;
 }
 
+/* Igual que en las tarjetas de estadísticas: cada ítem del FAQ tiene su propio color de borde superior */
 .faq-item:nth-child(2) { border-top-color: var(--celeste); }
 .faq-item:nth-child(3) { border-top-color: var(--morado); }
 .faq-item:nth-child(4) { border-top-color: var(--rosa); }
@@ -800,6 +849,7 @@ body {
     box-shadow: 0 10px 26px rgba(46, 46, 56, 0.09);
 }
 
+/* La pregunta es un <button> completo (accesible, clicable en toda su fila), no solo el texto */
 .faq-pregunta {
     width: 100%;
 
@@ -853,6 +903,7 @@ body {
     color: var(--texto);
 }
 
+/* Ícono "+" que rota a "x" cuando la pregunta está abierta */
 .faq-icono {
     flex-shrink: 0;
     font-size: 20px;
@@ -860,10 +911,13 @@ body {
     transition: transform 0.3s ease;
 }
 
+/* Clase que agrega el JS del acordeón cuando el usuario abre esa pregunta */
 .faq-item.faq-item--abierto .faq-icono {
     transform: rotate(45deg);
 }
 
+/* La respuesta está oculta por defecto (max-height: 0); el JS del acordeón le ajusta un max-height */
+/* dinámico (scrollHeight) al abrirla para lograr la animación de despliegue */
 .faq-respuesta {
     max-height: 0;
     overflow: hidden;
@@ -871,11 +925,12 @@ body {
 }
 
 .faq-respuesta p {
-    padding: 0 20px 20px 74px;
+    padding: 0 20px 20px 74px; /* el padding-left grande alinea el texto con el título, dejando espacio para el ícono-tema */
     color: var(--gris-suave);
     font-size: 14px;
 }
 
+/* En mobile/tablet chico, el FAQ pasa de 2 columnas a 1 */
 @media (max-width: 750px) {
     .faq-lista {
         grid-template-columns: 1fr;
@@ -887,6 +942,7 @@ body {
    (solo en index.html)
 ========================================================= */
 
+/* Footer con foto de fondo (footer.jpg) oscurecida mediante blend-mode multiply */
 .footer-principal {
     background-image:
         url(../img/footer.jpg);
@@ -916,6 +972,7 @@ body {
     font-size: 13px;
 }
 
+/* Círculos decorativos muy tenues (opacity: 0.10) sobre la foto de fondo del footer */
 .footer-decoracion {
     position: absolute;
     border-radius: 50%;
@@ -949,6 +1006,7 @@ body {
     margin-bottom: 14px;
 }
 
+/* Fila de íconos de redes sociales, específica de index.html (footer de las demás páginas no la tiene) */
 .footer-social {
     display: flex;
     gap: 10px;
@@ -993,6 +1051,8 @@ body {
     padding-left: 4px;
 }
 
+/* Como el footer tiene la foto de fondo (más clara/oscura según la zona), se fuerza el color de texto */
+/* a --texto con !important para asegurar contraste, sin importar qué tan clara u oscura salga la foto */
 .footer-principal .footer-marca p,
 .footer-principal .footer-info h3,
 .footer-principal .footer-info p,
@@ -1013,23 +1073,27 @@ body {
     border-top: 1px solid rgba(46, 46, 56, 0.15);
 }
 
+/* Íconos sociales adaptados al fondo claro de la foto (en vez del fondo oscuro genérico del footer) */
 .footer-principal .footer-social-icono {
     background-color: rgba(46, 46, 56, 0.08);
     color: var(--texto);
 }
 
+/* En tablet, la 4ta columna del footer (redes sociales) se acomoda en una grilla de 2x2 */
 @media (max-width: 900px) {
     .footer-contenido--index {
         grid-template-columns: 1fr 1fr;
     }
 }
 
+/* En mobile, todas las columnas del footer se apilan en 1 sola */
 @media (max-width: 550px) {
     .footer-contenido--index {
         grid-template-columns: 1fr;
     }
 }
 
+/* Oculta elementos decorativos heredados de styles.css que no se usan en el diseño de index.html */
 .fondo-izquierdo,
 .fondo-derecho {
     display: none;

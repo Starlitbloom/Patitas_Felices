@@ -5,12 +5,14 @@
    --beige, --texto, --blanco, --gris-suave).
 ========================================================= */
 
+/* El panel admin usa un tema oscuro propio, distinto del resto del sitio (que es claro/pastel) */
 .admin-body {
     background-color: #1E1B2E;
     margin: 0;
     font-family: inherit;
 }
 
+/* Layout general: sidebar fijo a la izquierda + contenido flexible a la derecha */
 .admin-layout {
     display: flex;
     min-height: 100vh;
@@ -20,7 +22,7 @@
 
 .admin-sidebar {
     width: 250px;
-    flex-shrink: 0;
+    flex-shrink: 0; /* nunca se achica aunque el contenido de la derecha crezca */
 
     background: linear-gradient(180deg, #2A2440 0%, #201B33 100%);
     border-right: 1px solid rgba(255, 255, 255, 0.06);
@@ -45,7 +47,7 @@
     height: 42px;
     object-fit: contain;
     border-radius: 50%;
-    background-color: var(--blanco);
+    background-color: var(--blanco); /* fondo blanco para que el logo se vea bien sobre el sidebar oscuro */
     padding: 4px;
 }
 
@@ -55,6 +57,7 @@
     font-size: 15px;
 }
 
+/* Etiqueta "Admin" debajo del logo */
 .admin-sidebar-rol {
     display: inline-block;
     color: var(--rosa);
@@ -62,7 +65,7 @@
     font-size: 12.5px;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    margin: -20px 0 0;
+    margin: -20px 0 0; /* margen negativo para acercarla al logo y compensar el gap del flex del sidebar */
 }
 
 .admin-nav {
@@ -71,6 +74,7 @@
     gap: 6px;
 }
 
+/* Cada ítem del menú (Dashboard, Usuarios, Mascotas, etc.) */
 .admin-nav-item {
     display: flex;
     align-items: center;
@@ -94,9 +98,10 @@
 .admin-nav-item:hover {
     background-color: rgba(255, 255, 255, 0.06);
     color: var(--blanco);
-    transform: translateX(3px);
+    transform: translateX(3px); /* pequeño desplazamiento al pasar el mouse, típico de menús laterales */
 }
 
+/* Ítem de la página actual (clase agregada manualmente en el HTML según la página) */
 .admin-nav-item--activo {
     background: linear-gradient(135deg, var(--rosa), var(--morado));
     color: #2A1F3D;
@@ -104,11 +109,12 @@
 }
 
 .admin-nav-item--activo:hover {
-    transform: none;
+    transform: none; /* el ítem activo no necesita el efecto de desplazamiento */
 }
 
+/* "Cerrar sesión" siempre al final del menú */
 .admin-nav-item--salir {
-    margin-top: auto;
+    margin-top: auto; /* empuja este ítem hasta el fondo del sidebar (flex-direction: column) */
     color: rgba(255, 150, 150, 0.8);
 }
 
@@ -123,12 +129,14 @@
     flex: 1;
     padding: 36px 44px 60px;
 
+    /* Dos manchas de luz sutiles (rosa arriba-derecha, celeste centro-izquierda) para dar textura al fondo oscuro */
     background-image: radial-gradient(circle at 90% 0%, rgba(255, 182, 211, 0.05) 0%, transparent 45%),
                        radial-gradient(circle at 10% 30%, rgba(214, 236, 250, 0.04) 0%, transparent 40%);
 }
 
 /* ================= TOPBAR CON PATRÓN ================= */
 
+/* Encabezado de cada página del panel, con el patrón de huellitas de fondo (fondo-perfil.png) */
 .admin-topbar {
     position: relative;
     overflow: hidden;
@@ -142,17 +150,20 @@
     background-size: 90px 90px;
 }
 
+/* Capa oscura semitransparente sobre el patrón, para que el texto blanco se lea bien encima */
 .admin-topbar-fondo {
     position: absolute;
     inset: 0;
     background: linear-gradient(120deg, rgba(46, 30, 74, 0.88) 0%, rgba(74, 46, 92, 0.82) 100%);
 }
 
+/* El texto va en z-index: 1 para quedar por encima de la capa oscura */
 .admin-topbar-contenido {
     position: relative;
     z-index: 1;
 }
 
+/* Pequeño chip tipo "Panel de administración" arriba del título */
 .admin-topbar-etiqueta {
     display: inline-block;
     padding: 5px 14px;
@@ -174,12 +185,14 @@
     margin: 0;
 }
 
+/* Permite resaltar una palabra del título en rosa envolviéndola en un <span> */
 .admin-topbar h1 span {
     color: var(--rosa);
 }
 
 /* ================= KPIs ================= */
 
+/* Grilla base de tarjetas KPI: 4 columnas por defecto (usada en reportes) */
 .admin-kpis {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -187,10 +200,12 @@
     margin-bottom: 30px;
 }
 
+/* El dashboard tiene una tarjeta extra (solicitudes de mascotas), por eso usa 5 columnas */
 .admin-kpis--dashboard {
     grid-template-columns: repeat(5, 1fr);
 }
 
+/* Tarjeta KPI individual */
 .admin-kpi {
     position: relative;
     overflow: hidden;
@@ -199,7 +214,7 @@
     border-radius: 18px;
     padding: 22px 22px 20px;
 
-    border-top: 4px solid var(--rosa);
+    border-top: 4px solid var(--rosa); /* color por defecto de la primera tarjeta */
     box-shadow: 0 0 24px rgba(255, 182, 211, 0.08);
 
     display: flex;
@@ -214,6 +229,8 @@
     box-shadow: 0 0 30px rgba(255, 182, 211, 0.2), 0 14px 30px rgba(0, 0, 0, 0.3);
 }
 
+/* Cada tarjeta (2ª, 3ª, 4ª) tiene su propio color de borde/sombra para diferenciarlas a simple vista, */
+/* sin necesidad de agregar una clase distinta por tarjeta en el HTML */
 .admin-kpi:nth-child(2) { border-top-color: var(--celeste); box-shadow: 0 0 24px rgba(214, 236, 250, 0.08); }
 .admin-kpi:nth-child(2):hover { box-shadow: 0 0 30px rgba(214, 236, 250, 0.2), 0 14px 30px rgba(0, 0, 0, 0.3); }
 
@@ -223,6 +240,7 @@
 .admin-kpi:nth-child(4) { border-top-color: #FFD6A5; box-shadow: 0 0 24px rgba(255, 214, 165, 0.08); }
 .admin-kpi:nth-child(4):hover { box-shadow: 0 0 30px rgba(255, 214, 165, 0.2), 0 14px 30px rgba(0, 0, 0, 0.3); }
 
+/* Variante para la tarjeta que es un <a> clicable (KPI de solicitudes de mascotas en el dashboard) */
 .admin-kpi--enlace {
     text-decoration: none;
     cursor: pointer;
@@ -243,6 +261,7 @@
     justify-content: space-between;
 }
 
+/* Círculo/cuadrado con el emoji de cada KPI */
 .admin-kpi-icono {
     width: 44px;
     height: 44px;
@@ -258,6 +277,7 @@
     box-shadow: 0 0 16px rgba(255, 182, 211, 0.45);
 }
 
+/* Mismo criterio que arriba: cada ícono cambia de degradado según su posición en la grilla */
 .admin-kpi:nth-child(2) .admin-kpi-icono {
     background: linear-gradient(135deg, var(--celeste), var(--morado));
     box-shadow: 0 0 16px rgba(214, 236, 250, 0.4);
@@ -270,6 +290,8 @@
     background: linear-gradient(135deg, #FFD6A5, var(--rosa));
     box-shadow: 0 0 16px rgba(255, 214, 165, 0.4);
 }
+
+/* El número grande del KPI (ej. "128") */
 .admin-kpi-numero {
     font-size: 2.1rem;
     font-weight: 800;
@@ -277,6 +299,7 @@
     line-height: 1;
 }
 
+/* El texto descriptivo debajo del número (ej. "Usuarios registrados") */
 .admin-kpi-label {
     font-size: 13px;
     color: rgba(255, 255, 255, 0.5);
@@ -284,6 +307,7 @@
 
 /* ================= ACCESOS RÁPIDOS ================= */
 
+/* Grilla de 2 columnas para las tarjetas grandes de acceso directo (dashboard) */
 .admin-accesos {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -338,6 +362,7 @@
     margin: 0;
 }
 
+/* Flecha "→" al final de la tarjeta, empujada a la derecha con margin-left: auto */
 .admin-acceso-flecha {
     margin-left: auto;
     color: var(--rosa);
@@ -346,7 +371,7 @@
 }
 
 .admin-acceso:hover .admin-acceso-flecha {
-    transform: translateX(4px);
+    transform: translateX(4px); /* la flecha "avanza" un poco al pasar el mouse */
 }
 
 /* ================= TABLA ================= */
@@ -361,12 +386,14 @@
     gap: 8px;
 }
 
+/* Subtítulos tipo "Reporte de mascotas 🐾" / "Reporte de citas 📅" en reportes.html */
 .admin-reportes-subtitulo {
     color: var(--blanco);
     font-size: 18px;
     margin: 8px 0 16px;
 }
 
+/* Contenedor con bordes redondeados que "recorta" la tabla para que las esquinas se vean prolijas */
 .admin-tabla-wrap {
     background-color: #2A2440;
     border-radius: 18px;
@@ -404,6 +431,7 @@
     background-color: rgba(255, 255, 255, 0.03);
 }
 
+/* Etiqueta redondeada tipo "pill" para mostrar el rol/estado de un registro en la tabla */
 .admin-badge {
     display: inline-block;
     padding: 4px 14px;
@@ -424,6 +452,7 @@
     color: var(--celeste);
 }
 
+/* Mensaje que reemplaza a la tabla cuando no hay resultados (JS hace toggle con style="display:none/block") */
 .admin-tabla-vacia {
     text-align: center;
     padding: 34px;
@@ -431,6 +460,7 @@
     font-size: 14px;
 }
 
+/* Breakpoint tablet: KPIs pasan de 4/5 a 2 columnas, accesos a 1 columna, sidebar se angosta */
 @media (max-width: 900px) {
     .admin-kpis {
         grid-template-columns: 1fr 1fr;
@@ -448,6 +478,7 @@
 
 /* ================= FILTROS ================= */
 
+/* Barra de búsqueda + selects + botones en usuarios.html */
 .admin-filtros {
     display: flex;
     gap: 12px;
@@ -456,7 +487,7 @@
 }
 
 .admin-buscador {
-    flex: 1;
+    flex: 1; /* ocupa todo el espacio sobrante junto a los selects y botones */
     min-width: 220px;
 
     padding: 11px 16px;
@@ -512,6 +543,7 @@
 
 /* ================= ACCIONES DE TABLA ================= */
 
+/* Contenedor de los botones Ver/Editar/Eliminar dentro de cada fila (columna "Acciones") */
 .admin-acciones-fila {
     display: flex;
     gap: 8px;
@@ -537,9 +569,11 @@
     background-color: rgba(255, 255, 255, 0.1);
 }
 
+/* Cada botón toma el color de acento de su acción al pasar el mouse */
 .admin-btn-accion--ver:hover { color: var(--celeste); }
 .admin-btn-accion--editar:hover { color: var(--rosa); }
 
+/* "Eliminar" siempre en tono rojo, no solo al hover, para que se note que es una acción destructiva */
 .admin-btn-accion--eliminar {
     background-color: rgba(226, 75, 74, 0.1);
     border-color: rgba(226, 75, 74, 0.25);
@@ -551,17 +585,19 @@
     color: #FF9B9B;
 }
 
+/* Botones deshabilitados (ej. no puedes eliminarte a ti mismo como admin) */
 .admin-btn-accion:disabled {
     opacity: 0.35;
     cursor: not-allowed;
 }
 
 .admin-btn-accion:disabled:hover {
-    background-color: rgba(255, 255, 255, 0.04);
+    background-color: rgba(255, 255, 255, 0.04); /* anula el hover normal mientras está disabled */
 }
 
 /* ================= MODAL ================= */
 
+/* Fondo oscuro semitransparente que cubre toda la pantalla detrás del modal */
 .admin-modal-fondo {
     position: fixed;
     inset: 0;
@@ -576,6 +612,7 @@
     padding: 20px;
 }
 
+/* Caja blanca/oscura del modal en sí, centrada por el flex del fondo */
 .admin-modal {
     position: relative;
 
@@ -587,7 +624,7 @@
 
     max-width: 460px;
     width: 100%;
-    max-height: 85vh;
+    max-height: 85vh; /* si el contenido es muy largo, hace scroll interno en vez de desbordar la pantalla */
     overflow-y: auto;
 }
 
@@ -597,6 +634,7 @@
     margin: 0 0 20px;
 }
 
+/* Botón "✕" para cerrar el modal, posicionado en la esquina superior derecha */
 .admin-modal-cerrar {
     position: absolute;
     top: 20px;
@@ -613,6 +651,7 @@
     color: var(--blanco);
 }
 
+/* Reutiliza los estilos de "fila de dato" de perfil.html, pero recoloreados para el tema oscuro del modal */
 .admin-modal-datos .perfil-dato-fila {
     border-bottom-color: rgba(255, 255, 255, 0.08);
 }
@@ -625,6 +664,7 @@
     color: var(--blanco);
 }
 
+/* Inputs y selects del formulario dentro del modal, adaptados al tema oscuro */
 .admin-modal-form .campo label {
     color: rgba(255, 255, 255, 0.75);
 }
@@ -639,9 +679,10 @@
 .admin-modal-form .campo input:focus,
 .admin-modal-form .campo select:focus {
     border-color: var(--rosa);
-    background-color: #2A2440;
+    background-color: #2A2440; /* evita que el navegador aclare el fondo del input al enfocarlo */
 }
 
+/* Cabecera del modal "Ver": avatar a la izquierda + datos principales a la derecha */
 .admin-detalle-cabecera {
     display: flex;
     gap: 18px;
@@ -664,7 +705,7 @@
 
     font-size: 22px;
     font-weight: bold;
-    color: #2A1F3D;
+    color: #2A1F3D; /* se usa cuando no hay foto: muestra las iniciales sobre el degradado */
 }
 
 .admin-detalle-avatar img {
@@ -703,6 +744,7 @@
     font-size: 13px;
 }
 
+/* Variantes de badge usadas en el modal "Ver" y en reportes (activo/en tratamiento/pendiente) */
 .admin-badge--activo {
     background-color: rgba(139, 214, 160, 0.18);
     color: #8DD6A0;
@@ -719,6 +761,7 @@
     color: #F0A34B;
 }
 
+/* Miniatura de avatar dentro de las filas de la tabla de usuarios */
 .admin-tabla td img {
     width: 32px;
     height: 32px;
@@ -728,6 +771,7 @@
     margin-right: 10px;
 }
 
+/* Fila de botones al final del modal "Ver" (ej. Editar / Eliminar desde ahí mismo) */
 .admin-detalle-acciones {
     display: flex;
     gap: 10px;
@@ -737,11 +781,13 @@
     border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+/* Los 3 accesos rápidos de usuarios.html (Nuevo/Editar/Mostrar) van en 3 columnas, no 2 como el dashboard */
 .admin-accesos--usuarios {
     grid-template-columns: repeat(3, 1fr);
     margin-bottom: 26px;
 }
 
+/* Checkbox maestro de la tabla + checkboxes de cada fila (estos últimos los agrega admin.js por JS) */
 .admin-check-todos,
 .admin-check-fila,
 #admin-check-todos {
@@ -751,6 +797,7 @@
     cursor: pointer;
 }
 
+/* Columna del checkbox: angosta y centrada, distinta al resto de columnas de texto */
 .admin-tabla th:first-child,
 .admin-tabla td:first-child {
     width: 40px;
@@ -759,6 +806,7 @@
     padding-right: 8px;
 }
 
+/* Botón "Exportar" (usado tanto en reportes.html como en la barra de filtros de usuarios.html) */
 .admin-btn-exportar {
     padding: 11px 20px;
     border-radius: 12px;
@@ -779,16 +827,19 @@
     box-shadow: 0 8px 20px rgba(255, 182, 211, 0.3);
 }
 
+/* En tablet, los 3 accesos rápidos de usuarios.html se apilan en 1 columna */
 @media (max-width: 900px) {
     .admin-accesos--usuarios {
         grid-template-columns: 1fr;
     }
 }
 
+/* Los modales de Crear/Editar usuario son más anchos que el modal "Ver" porque tienen más campos */
 .admin-modal--ancho {
     max-width: 640px;
 }
 
+/* Encabezados tipo "Identificación", "Datos personales", etc. dentro de los formularios de los modales */
 .admin-modal-seccion {
     color: rgba(255, 255, 255, 0.5);
     font-size: 12.5px;
@@ -800,20 +851,23 @@
 }
 
 .admin-modal-seccion:first-of-type {
-    margin-top: 0;
+    margin-top: 0; /* la primera sección no necesita separación extra arriba */
 }
 
+/* Cada fila del formulario muestra 2 campos lado a lado (ej. Nombre + Apellidos) */
 .admin-modal-fila {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 18px;
 }
 
+/* Campo deshabilitado dentro del modal (ej. el RUN en el modal de editar) */
 .admin-modal-form .campo input:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
+/* Alinea el checkbox "Usuario activo" con la base de los inputs de texto de la misma fila */
 .admin-modal-checkbox {
     display: flex;
     align-items: flex-end;
@@ -838,12 +892,15 @@
     cursor: pointer;
 }
 
+/* En mobile, las filas de 2 campos pasan a 1 columna (campos apilados) */
 @media (max-width: 600px) {
     .admin-modal-fila {
         grid-template-columns: 1fr;
     }
 }
 
+/* Nota: este bloque no parece usarse en los HTML comentados antes (no hay .admin-panel-editar en el DOM), */
+/* probablemente quedó de una versión anterior donde el formulario de editar era inline y no un modal */
 .admin-panel-editar {
     background-color: #2A2440;
     border-radius: 18px;
@@ -858,6 +915,7 @@
     margin: 0 0 6px;
 }
 
+/* Fila de botones "Guardar cambios" / "Cancelar" al final de los formularios de Crear y Editar */
 .admin-panel-editar-botones {
     display: flex;
     gap: 12px;
@@ -865,11 +923,12 @@
 }
 
 .admin-panel-editar-botones .boton-principal {
-    flex: 1;
+    flex: 1; /* el botón principal ocupa todo el espacio disponible junto al botón "Cancelar" */
 }
 
 /* ================= GRÁFICOS ================= */
 
+/* Grilla de 2 columnas para los pares de gráficos en reportes.html (Chart.js) */
 .admin-graficos {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -890,12 +949,14 @@
     margin: 0 0 16px;
 }
 
+/* Evita que Chart.js estire el canvas más allá de una altura razonable dentro de la tarjeta */
 .admin-grafico-card canvas {
     max-height: 240px;
 }
 
 /* ================= PRÓXIMAMENTE ================= */
 
+/* Tarjetas de funcionalidades aún no implementadas (con borde punteado, look "placeholder") */
 .admin-proximamente {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -909,7 +970,7 @@
     gap: 16px;
 
     background-color: rgba(255, 255, 255, 0.02);
-    border: 1px dashed rgba(255, 255, 255, 0.12);
+    border: 1px dashed rgba(255, 255, 255, 0.12); /* borde punteado = distingue visualmente que es "futuro" */
     border-radius: 18px;
     padding: 20px 22px;
 }
@@ -931,11 +992,13 @@
     margin: 0;
 }
 
+/* Centra el botón "Exportar reporte completo" al final de reportes.html */
 .admin-reportes-exportar {
     text-align: center;
     margin-top: 10px;
 }
 
+/* En tablet, gráficos y tarjetas "próximamente" pasan de 2 a 1 columna */
 @media (max-width: 900px) {
     .admin-graficos,
     .admin-proximamente {
@@ -976,6 +1039,7 @@
 
 
 /* Evita que cualquier estilo general agrande las imágenes */
+/* (con !important porque en algún punto un ícono se estaba viendo más grande que el resto y esto lo fuerza) */
 .admin-sidebar .admin-nav .admin-nav-item img {
     width: 28px !important;
     height: 28px !important;
@@ -1000,6 +1064,7 @@
    ICONOS DE ACCIONES - GESTIÓN DE USUARIOS
 ========================================================= */
 
+/* Íconos más grandes (38px) que los del sidebar (28px), usados en las 3 tarjetas de acceso rápido de usuarios.html */
 .admin-usuarios-accion-icono {
     width: 38px !important;
     height: 38px !important;
@@ -1011,6 +1076,8 @@
     display: block;
 }
 
+/* :has() permite estilizar el contenedor .admin-acceso-icono solo cuando adentro hay un ícono de esta sección, */
+/* sin tener que agregarle una clase extra en el HTML */
 .admin-acceso-icono:has(.admin-usuarios-accion-icono) {
     display: flex;
     align-items: center;

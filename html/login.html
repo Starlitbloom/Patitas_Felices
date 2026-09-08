@@ -6,12 +6,14 @@
 
     <title>Iniciar sesión | Patitas Felices</title>
 
+    <!-- styles.css: base compartida. estilo-usuarios.css: layout split, tarjeta plana morada, campos, footer -->
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/estilo-usuarios.css">
 </head>
 
 <body>
 
+    <!-- Mismo header que index.html/nosotros.html, sin la clase "activo" en Inicio porque aquí no aplica -->
     <header class="header-principal">
 
         <div class="fondo-header fondo-izquierdo"></div>
@@ -27,11 +29,16 @@
                 <ul>
                     <li><a href="index.html">Inicio</a></li>
                     <li><a href="nosotros.html">Nosotros</a></li>
+
+                    <!-- nav-solo-sesion: nav-sesion.js oculta estos ítems si no hay sesión activa -->
                     <li class="nav-solo-sesion" id="nav-mascotas"><a href="mascotas.html">Mascotas</a></li>
                     <li><a href="novedades.html">Novedades</a></li>
                     <li><a href="contacto.html">Contacto</a></li>
                     <li class="nav-solo-sesion" id="nav-perfil"><a href="perfil.html">Mi perfil</a></li>
+
+                    <!-- Página actual: "activo" marca este ítem como resaltado en el menú -->
                     <li><a href="login.html" class="activo" id="nav-cuenta">Iniciar sesión</a></li>
+
                     <li>
                         <a href="solicitar-cita.html" class="btn-cita">
                             <img src="../img/calendario.png" alt="" class="icono-calendario">
@@ -45,13 +52,17 @@
 
     </header>
 
+    <!-- Sombra que aparece detrás del header al hacer scroll (mismo mecanismo que index.html) -->
     <div class="header-sombra" id="header-sombra"></div>
 
+    <!-- ================= LOGIN SPLIT ================= -->
+    <!-- Layout de 2 columnas: foto a la izquierda, formulario a la derecha (definido en estilo-usuarios.css) -->
     <main class="login-split">
 
         <div class="login-split-imagen">
             <img src="../img/gato-saltando.jpg" alt="Gato saltando">
 
+            <!-- Degradado oscuro sobre la foto, para que el texto blanco de abajo se lea bien -->
             <div class="login-split-overlay"></div>
 
             <div class="login-split-texto">
@@ -63,6 +74,8 @@
 
         <div class="login-split-formulario">
 
+            <!-- novalidate: se desactiva la validación nativa del navegador porque usuarios.js hace su propia validación -->
+            <!-- (RUT, dominio de correo, largo de contraseña) y muestra los mensajes de error personalizados -->
             <form class="tarjeta-formulario tarjeta-formulario--plana" id="form-login" novalidate>
 
                 <div class="formulario-cabecera formulario-cabecera--izq">
@@ -70,12 +83,14 @@
                     <p>Accede para agendar citas y revisar el historial de tu mascota.</p>
                 </div>
 
+                <!-- Campo correo con ícono ✉ dentro del input (estilo "pastilla") -->
                 <div class="campo campo-icono" id="campo-correo">
                     <label for="correo">Correo</label>
                     <div class="campo-icono-wrap">
                         <span class="campo-icono-simbolo">✉</span>
                         <input type="email" id="correo" name="correo" maxlength="100" placeholder="tu-correo@duoc.cl">
                     </div>
+                    <!-- Mensaje de error, oculto hasta que usuarios.js agregue la clase .campo--invalido al contenedor -->
                     <p class="campo__error">Ingresa un correo válido de un dominio permitido.</p>
                 </div>
 
@@ -88,6 +103,8 @@
                     <p class="campo__error">La contraseña debe tener entre 4 y 10 caracteres.</p>
                 </div>
 
+                <!-- usuarios.js intercepta el submit: valida, busca al usuario en localStorage y redirige -->
+                <!-- según el rol (admin → admin/dashboard.html, cliente → perfil.html) -->
                 <button type="submit" class="boton-principal boton-principal--degradado">
                     <span>Iniciar sesión</span>
                     <span class="flecha-boton" aria-hidden="true">⟶</span>
@@ -102,6 +119,7 @@
         </div>
     </main>
 
+    <!-- Mismo footer que index.html/nosotros.html -->
     <footer class="footer-principal">
 
         <div class="footer-linea"></div>
@@ -150,6 +168,9 @@
 
     </footer>
 
+    <!-- usuarios.js: valida el formulario, autentica contra localStorage y guarda la sesión -->
+    <!-- index-interactivo.js: se reutiliza aquí solo por el efecto de sombra del header al hacer scroll -->
+    <!-- nav-sesion.js: ajusta el menú según haya o no sesión activa -->
     <script src="../js/usuarios.js"></script>
     <script src="../js/index-interactivo.js"></script>
     <script src="../js/nav-sesion.js"></script>

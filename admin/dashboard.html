@@ -7,6 +7,8 @@
 
     <title>Panel Admin | Patitas Felices</title>
 
+    <!-- styles.css: hoja de estilos compartida por todo el sitio -->
+    <!-- estilo-admin.css: overrides específicos del panel admin (sidebar, KPIs, tabla) -->
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/estilo-admin.css">
 </head>
@@ -14,13 +16,16 @@
 
 <body class="admin-body">
 
+    <!-- Contenedor general: sidebar fijo a la izquierda + contenido a la derecha -->
     <div class="admin-layout">
 
 
         <!-- ================= SIDEBAR ================= -->
+        <!-- Menú lateral de navegación entre las secciones del panel admin -->
 
         <aside class="admin-sidebar">
 
+            <!-- Logo + nombre del sitio, arriba del todo -->
             <div class="admin-sidebar-logo">
 
                 <img
@@ -35,6 +40,7 @@
             </div>
 
 
+            <!-- Etiqueta fija que indica el rol de quien está logueado -->
             <p class="admin-sidebar-rol">
                 Admin
             </p>
@@ -44,8 +50,9 @@
 
 
                 <!-- DASHBOARD -->
+                <!-- Página actual: por eso lleva la clase "activa" para resaltarla en el menú -->
 
-                <a
+                
                     href="dashboard.html"
                     class="admin-nav-item admin-nav-item--activo"
                 >
@@ -64,8 +71,9 @@
 
 
                 <!-- USUARIOS -->
+                <!-- Lleva a la gestión de usuarios (usuarios.js + admin.js) -->
 
-                <a
+                
                     href="usuarios.html"
                     class="admin-nav-item"
                 >
@@ -84,8 +92,9 @@
 
 
                 <!-- MASCOTAS -->
+                <!-- Usa un emoji en vez de ícono png porque aún no hay archivo de ícono para esta sección -->
 
-                <a
+                
                     href="admin-mascotas.html"
                     class="admin-nav-item"
                 >
@@ -103,7 +112,7 @@
 
                 <!-- CITAS -->
 
-                <a
+                
                     href="admin-citas.html"
                     class="admin-nav-item"
                 >
@@ -123,7 +132,7 @@
 
                 <!-- REPORTES -->
 
-                <a
+                
                     href="reportes.html"
                     class="admin-nav-item"
                 >
@@ -142,8 +151,9 @@
 
 
                 <!-- VER SITIO -->
+                <!-- Sale del panel admin y va al sitio público (index.html), tal como lo ve un visitante -->
 
-                <a
+                
                     href="../html/index.html"
                     class="admin-nav-item"
                 >
@@ -162,8 +172,9 @@
 
 
                 <!-- CERRAR SESIÓN -->
+                <!-- href="#" porque el cierre de sesión lo maneja JS (admin.js), no una navegación directa -->
 
-                <a
+                
                     href="#"
                     id="btn-cerrar-sesion-admin"
                     class="admin-nav-item admin-nav-item--salir"
@@ -189,6 +200,7 @@
 
 
         <!-- ================= CONTENIDO ================= -->
+        <!-- Todo lo que va a la derecha del sidebar: encabezado, KPIs, accesos y tabla -->
 
         <main class="admin-contenido">
 
@@ -197,6 +209,7 @@
 
             <header class="admin-topbar">
 
+                <!-- Capa decorativa de fondo (color/imagen), separada del texto para poder animarla u oscurecerla sin tocar el contenido -->
                 <div class="admin-topbar-fondo"></div>
 
 
@@ -209,6 +222,7 @@
 
                     <h1>
                         Bienvenido,
+                        <!-- admin.js reemplaza "Admin" por el nombre real de la sesión activa -->
                         <span id="admin-nombre-display">
                             Admin
                         </span>
@@ -222,6 +236,8 @@
 
 
             <!-- ================= KPIs ================= -->
+            <!-- Tarjetas con los indicadores clave del sistema. Todos los números en 0 son solo -->
+            <!-- valores por defecto: admin.js los calcula a partir de localStorage y los inserta por su id -->
 
             <section class="admin-kpis admin-kpis--dashboard">
 
@@ -239,6 +255,7 @@
                     </div>
 
 
+                    <!-- admin.js: cuenta el total de usuarios en patitasFelices_usuarios -->
                     <span
                         class="admin-kpi-numero"
                         id="kpi-total-usuarios"
@@ -268,6 +285,7 @@
                     </div>
 
 
+                    <!-- admin.js: filtra usuarios cuya fecha de registro cae dentro de los últimos 7 días -->
                     <span
                         class="admin-kpi-numero"
                         id="kpi-nuevos-semana"
@@ -297,6 +315,7 @@
                     </div>
 
 
+                    <!-- Total de mascotas registradas; el dato lo entrega mascotas.js -->
                     <span
                         class="admin-kpi-numero"
                         id="kpi-mascotas"
@@ -326,6 +345,7 @@
                     </div>
 
 
+                    <!-- Cantidad de citas con estado "pendiente" -->
                     <span
                         class="admin-kpi-numero"
                         id="kpi-citas"
@@ -343,6 +363,7 @@
 
 
                 <!-- SOLICITUDES DE MASCOTAS -->
+                <!-- Esta tarjeta es clicable (es un <a>, no un <div> como las demás) porque lleva directo a revisar los cambios -->
 
                 <a href="admin-mascotas.html" class="admin-kpi admin-kpi--enlace">
 
@@ -355,6 +376,7 @@
                     </div>
 
 
+                    <!-- Cambios/solicitudes de mascotas pendientes de aprobación por un admin -->
                     <span
                         class="admin-kpi-numero"
                         id="kpi-solicitudes-mascotas"
@@ -375,13 +397,14 @@
 
 
             <!-- ================= ACCESOS RÁPIDOS ================= -->
+            <!-- Atajos grandes hacia las secciones que más se usan desde el dashboard -->
 
             <section class="admin-accesos">
 
 
                 <!-- GESTIÓN DE USUARIOS -->
 
-                <a
+                
                     href="usuarios.html"
                     class="admin-acceso"
                 >
@@ -415,7 +438,7 @@
 
                 <!-- VER SITIO -->
 
-                <a
+                
                     href="../html/index.html"
                     class="admin-acceso"
                 >
@@ -451,6 +474,8 @@
 
 
             <!-- ================= ÚLTIMOS USUARIOS ================= -->
+            <!-- Tabla resumen (no es la gestión completa, esa vive en usuarios.html) -->
+            <!-- Solo muestra los registros más recientes para dar una vista rápida -->
 
             <section class="admin-tabla-seccion">
 
@@ -494,7 +519,7 @@
 
                         <tbody id="admin-tabla-recientes">
 
-                            <!-- Se llena por JS -->
+                            <!-- admin.js inserta aquí las filas de los últimos usuarios registrados -->
 
                         </tbody>
 
@@ -502,6 +527,7 @@
                     </table>
 
 
+                    <!-- Mensaje alternativo que se muestra solo si aún no hay usuarios (admin.js hace el toggle) -->
                     <p
                         class="admin-tabla-vacia"
                         id="admin-tabla-vacia"
@@ -527,6 +553,7 @@
 
 
     <!-- ================= JAVASCRIPT ================= -->
+    <!-- Orden importa: usuarios.js y mascotas.js definen las funciones de datos que admin.js consume -->
 
     <script src="../js/usuarios.js"></script>
     <script src="../js/mascotas.js"></script>

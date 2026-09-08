@@ -6,8 +6,10 @@
 
     <title>Patitas Felices | Veterinaria</title>
 
+    <!-- styles.css: base compartida. estilo-index.css: overrides exclusivos de esta página (hero, tarjetas, FAQ, etc.) -->
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/estilo-index.css">
+    <!-- Font Awesome: por si algún ícono de la página lo usa en vez de emoji/PNG -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
@@ -18,6 +20,7 @@
     ====================================================== -->
     <header class="header-principal">
 
+        <!-- Manchas decorativas del header; ocultas por CSS en index.html (display:none en estilo-index.css) -->
         <div class="fondo-header fondo-izquierdo"></div>
         <div class="fondo-header fondo-derecho"></div>
 
@@ -29,13 +32,22 @@
 
             <nav>
                 <ul>
+                    <!-- Página actual: clase "activo" para resaltar el ítem en el menú -->
                     <li><a href="index.html" class="activo">Inicio</a></li>
                     <li><a href="nosotros.html">Nosotros</a></li>
+
+                    <!-- nav-solo-sesion: nav-sesion.js oculta/muestra estos ítems según si hay sesión activa -->
                     <li class="nav-solo-sesion" id="nav-mascotas"><a href="mascotas.html">Mascotas</a></li>
+
                     <li><a href="novedades.html">Novedades</a></li>
                     <li><a href="contacto.html">Contacto</a></li>
+
                     <li class="nav-solo-sesion" id="nav-perfil"><a href="perfil.html">Mi perfil</a></li>
+
+                    <!-- nav-sesion.js cambia texto/href de este link: "Iniciar sesión" (visitante) -->
+                    <!-- vs "Cerrar sesión" o el nombre del usuario, cuando hay sesión activa -->
                     <li><a href="login.html" id="nav-cuenta">Iniciar sesión</a></li>
+
                     <li>
                         <a href="solicitar-cita.html" class="btn-cita">
                             <img src="../img/calendario.png" alt="" class="icono-calendario">
@@ -49,6 +61,7 @@
 
     </header>
 
+    <!-- Franja de sombra que aparece detrás del header transparente al hacer scroll (controlada por JS) -->
     <div class="header-sombra" id="header-sombra"></div>
 
     <!-- =====================================================
@@ -61,10 +74,13 @@
         ================================================== -->
         <section class="hero-corte">
 
+            <!-- Imagen a pantalla completa; el efecto de "corte diagonal" y el difuminado son 100% CSS (máscara + overlay) -->
             <div class="hero-corte-imagen">
                 <img src="../img/gato-con-patas-abiertas.jpg" alt="Gatito jugando con las patas abiertas">
             </div>
             
+            <!-- Nota: esta capa no tiene estilos definidos en estilo-index.css bajo este nombre exacto — -->
+            <!-- el difuminado real lo aplica la máscara CSS sobre .hero-corte-imagen; revisar si esta div sigue siendo necesaria -->
             <div class="hero-corte-difuminado"></div>
 
             <div class="hero-corte-contenido">
@@ -92,6 +108,7 @@
 
         </section>
 
+        <!-- Las 3 tarjetas flotantes van fuera de .hero-corte para poder superponerse a la sección con margin-top negativo -->
         <div class="hero-corte-tarjetas">
 
             <div class="tarjeta-flotante">
@@ -119,6 +136,7 @@
              SERVICIOS (reutiliza el mismo componente de
              "Nuestro compromiso" de nosotros.html)
         ================================================== -->
+        <!-- La clase .valores trae el fondo de patitas + manchas de color decorativas (definido en estilo-index.css) -->
         <section class="valores" id="servicios">
             <div class="contenedor">
 
@@ -172,6 +190,9 @@
 
                 <div class="grid-estadisticas">
 
+                    <!-- data-hasta = número final del contador; data-sufijo = texto que se agrega al final (+, %, o vacío) -->
+                    <!-- index-interactivo.js usa IntersectionObserver: cuando la tarjeta entra en pantalla, -->
+                    <!-- anima el número desde 0 hasta data-hasta y agrega la clase --visible para el fade-in -->
                     <div class="estadistica">
                         <div class="estadistica-icono">
     <img src="../img/icono-experiencia.png" alt="Icono de años de experiencia">
@@ -223,6 +244,7 @@
                         de la clínica para que siempre estés informado.
                     </p>
 
+                    <!-- Chips con animación de aparición en cascada (definida en estilo-index.css) -->
                     <div class="quienes-destacados">
                         <span class="destacado">♡ Salud</span>
                         <span class="destacado">♡ Bienestar</span>
@@ -230,6 +252,7 @@
                         <span class="destacado">♡ Consejos</span>
                     </div>
 
+                    <!-- Mini-lista con las 2 novedades más recientes; cada una es un link directo a novedades.html -->
                     <div class="quienes-mini-lista">
 
                         <a href="novedades.html" class="quienes-mini-item">
@@ -260,6 +283,7 @@
                     </div>
                 </div>
 
+                <!-- Columna derecha: fotos + manchas decorativas + badge flotante, reutiliza el mismo patrón visual de nosotros.html -->
                 <div class="quienes-imagenes">
                     <div class="quienes-decoracion decoracion-qs-rosa"></div>
                     <div class="quienes-decoracion decoracion-qs-celeste"></div>
@@ -278,6 +302,8 @@
         <!-- =================================================
             PREGUNTAS FRECUENTES (acordeón)
         ================================================== -->
+        <!-- Grid de 2 columnas; cada .faq-item es un acordeón independiente controlado por JS -->
+        <!-- (el botón .faq-pregunta hace toggle de la clase .faq-item--abierto en su .faq-item padre) -->
         <section class="faq">
             <div class="contenedor">
 
@@ -391,6 +417,7 @@
         <div class="footer-decoracion footer-decoracion-1"></div>
         <div class="footer-decoracion footer-decoracion-2"></div>
 
+        <!-- footer-contenido--index: variante de 3 columnas con redes sociales (definida en estilo-index.css) -->
         <div class="footer-contenido footer-contenido--index">
 
             <div class="footer-marca">
@@ -432,6 +459,9 @@
     </footer>
 
 
+    <!-- main.js: utilidades generales del sitio -->
+    <!-- index-interactivo.js: parallax del hero, contador animado de estadísticas y acordeón del FAQ -->
+    <!-- nav-sesion.js: muestra/oculta "Mascotas" y "Mi perfil", y cambia "Iniciar sesión" según haya sesión activa -->
     <script src="../js/main.js"></script>
     <script src="../js/index-interactivo.js"></script>
     <script src="../js/nav-sesion.js"></script>

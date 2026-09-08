@@ -6,11 +6,15 @@
    dependientes) + persistencia con localStorage.
 ========================================================= */
 
+// Dominios de correo aceptados en registro/edición de perfil
 const DOMINIOS_PERMITIDOS = ['duoc.cl', 'profesor.duoc.cl', 'gmail.com'];
 
+// Claves usadas en localStorage para persistir usuarios y la sesión activa
 const CLAVE_USUARIOS = 'patitasFelices_usuarios';
 const CLAVE_SESION = 'patitasFelices_sesion';
 
+// Catálogo completo de regiones y comunas de Chile, usado para poblar
+// los <select> dependientes de región/comuna en registro, perfil y admin
 const REGIONES = [
     { nombre: "Arica y Parinacota", comunas: ["Arica", "Camarones", "Putre", "General Lagos"] },
     { nombre: "Tarapacá", comunas: ["Iquique", "Alto Hospicio", "Pozo Almonte", "Camiña", "Colchane", "Huara", "Pica"] },
@@ -34,6 +38,11 @@ const REGIONES = [
    ALMACENAMIENTO (localStorage)
 ========================================================= */
 
+/**
+ * Lee y parsea el array completo de usuarios desde localStorage.
+ * Si la clave no existe o el JSON está corrupto, devuelve [] en vez
+ * de romper cualquier página que dependa de esta función.
+ */
 function obtenerUsuarios() {
     try {
         return JSON.parse(localStorage.getItem(CLAVE_USUARIOS)) || [];
@@ -46,11 +55,21 @@ function guardarUsuarios(usuarios) {
     localStorage.setItem(CLAVE_USUARIOS, JSON.stringify(usuarios));
 }
 
+/**
+ * Busca un usuario por correo, sin distinguir mayúsculas/minúsculas
+ * (para que "Juan@Gmail.com" y "juan@gmail.com" se traten como el mismo).
+ */
 function obtenerUsuarioPorCorreo(correo) {
     const usuarios = obtenerUsuarios();
     return usuarios.find((u) => u.correo.toLowerCase() === correo.toLowerCase()) || null;
 }
 
+/**
+ * Guarda la sesión activa en localStorage, EXCLUYENDO la contraseña
+ * (desestructuración con rest: se descarta password y se guarda el resto).
+ * Es una medida mínima de seguridad para no dejar la contraseña en texto
+ * plano flotando en la clave de sesión también.
+ */
 function guardarSesion(usuario) {
     // no guardamos la contraseña en la sesión activa
     const { password, ...usuarioSinPassword } = usuario;
@@ -70,12 +89,14 @@ function cerrarSesion() {
 }
 
 /* --- Validadores --- */
+// Todos devuelven null cuando el valor es válido, o un string con el mensaje
+// de error cuando no lo es. Este contrato es el que espera marcarCampo().
 
 function validarCorreo(correo) {
     if (!correo) return 'El correo es obligatorio.';
     if (correo.length > 100) return 'El correo no puede superar los 100 caracteres.';
     const partes = correo.split('@');
-    if (partes.length !== 2) return 'Ingresa un correo válido.';
+    if (partes.length !== 2) return 'Ingresa un correo válido.'; // cubre "sin @" y "más de un @"
     if (!DOMINIOS_PERMITIDOS.includes(partes[1].toLowerCase())) {
         return 'Solo se aceptan correos @duoc.cl, @profesor.duoc.cl o @gmail.com.';
     }
@@ -90,22 +111,34 @@ function validarPassword(password) {
     return null;
 }
 
+/**
+ * Calcula el dígito verificador esperado de un RUN chileno (algoritmo módulo 11)
+ * y lo compara contra el dígito que trae el RUN ingresado.
+ * runLimpio debe venir SIN puntos ni guion (ver validarRun, que hace esa limpieza antes).
+ */
 function validarDigitoVerificador(runLimpio) {
-    const cuerpo = runLimpio.slice(0, -1);
-    const dv = runLimpio.slice(-1).toUpperCase();
-    if (!/^\d+$/.test(cuerpo)) return false;
+    const cuerpo = runLimpio.slice(0, -1); // todo menos el último caracter (el dígito verificador)
+    const dv = runLimpio.slice(-1).toUpperCase(); // el dígito verificador tal cual viene
+    if (!/^\d+$/.test(cuerpo)) return false; // el cuerpo debe ser solo números
 
+    // Algoritmo estándar módulo 11: multiplica cada dígito (de derecha a izquierda)
+    // por una secuencia cíclica 2,3,4,5,6,7,2,3,4... y suma los resultados
     let suma = 0;
     let multiplo = 2;
     for (let i = cuerpo.length - 1; i >= 0; i--) {
         suma += parseInt(cuerpo[i], 10) * multiplo;
-        multiplo = multiplo === 7 ? 2 : multiplo + 1;
+        multiplo = multiplo === 7 ? 2 : multiplo + 1; // reinicia el ciclo al llegar a 7
     }
     const resto = 11 - (suma % 11);
+    // Casos especiales: resto 11 → dígito '0', resto 10 → dígito 'K'
     let dvEsperado = resto === 11 ? '0' : resto === 10 ? 'K' : String(resto);
     return dv === dvEsperado;
 }
 
+/**
+ * Valida el formato y el dígito verificador de un RUN.
+ * Acepta el RUN con o sin puntos/guion (los quita antes de validar el largo y el DV).
+ */
 function validarRun(run) {
     if (!run) return 'El RUN es obligatorio.';
     const limpio = run.replace(/\./g, '').replace(/-/g, '').toUpperCase();
@@ -116,6 +149,11 @@ function validarRun(run) {
     return null;
 }
 
+/**
+ * Validador genérico para campos de texto obligatorios (nombre, apellidos,
+ * dirección, región, comuna). maxLength es opcional: si no se pasa, no se
+ * valida largo máximo (útil para selects como región/comuna).
+ */
 function validarRequerido(valor, maxLength, nombreCampo) {
     if (!valor || valor.trim().length === 0) return `${nombreCampo} es obligatorio.`;
     if (maxLength && valor.length > maxLength) return `${nombreCampo} no puede superar los ${maxLength} caracteres.`;
@@ -124,6 +162,12 @@ function validarRequerido(valor, maxLength, nombreCampo) {
 
 /* --- UI --- */
 
+/**
+ * Marca visualmente un campo como válido o inválido, agregando/quitando
+ * las clases .campo--invalido / .campo--valido (definidas en estilo-usuarios.css)
+ * y actualizando el texto del mensaje de error si corresponde.
+ * Se usa en TODOS los formularios del sitio (login, registro, perfil, admin).
+ */
 function marcarCampo(id, mensajeError) {
     const campo = document.getElementById(id);
     if (!campo) return;
@@ -138,9 +182,16 @@ function marcarCampo(id, mensajeError) {
 }
 
 /* --- LOGIN --- */
+
+/**
+ * Configura el submit de login.html: valida formato de correo/contraseña,
+ * busca el usuario, compara la contraseña en texto plano (comparación directa
+ * porque no hay backend/hashing en este proyecto académico), guarda la sesión
+ * y redirige según el rol.
+ */
 function initFormLogin() {
     const form = document.getElementById('form-login');
-    if (!form) return;
+    if (!form) return; // esta función se llama en TODAS las páginas; si no existe el form, no hace nada
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -169,6 +220,7 @@ function initFormLogin() {
         }
 
         guardarSesion(usuario);
+        // Redirección según rol: admin va al panel, cliente va a su perfil
         if (usuario.rol === 'admin') {
             window.location.href = '../admin/dashboard.html';
         } else {
@@ -178,6 +230,13 @@ function initFormLogin() {
 }
 
 /* --- REGISTRO --- */
+
+/**
+ * Configura el submit de registro.html: valida todos los campos del formulario,
+ * verifica que correo y RUN no estén duplicados, crea el nuevo usuario con
+ * rol 'cliente' por defecto, lo guarda, inicia sesión automáticamente y
+ * redirige a perfil.html.
+ */
 function initFormRegistro() {
     const form = document.getElementById('form-registro');
     if (!form) return;
@@ -187,6 +246,8 @@ function initFormRegistro() {
 
         const correo = form.correo.value.trim();
 
+        // Se validan TODOS los campos de una vez (no se corta en el primer error),
+        // así el usuario ve de un solo intento todo lo que falta corregir
         const errores = {
             'campo-nombre': validarRequerido(form.nombre.value, 50, 'El nombre'),
             'campo-apellidos': validarRequerido(form.apellidos.value, 100, 'Los apellidos'),
@@ -204,6 +265,7 @@ function initFormRegistro() {
         const hayErrores = Object.values(errores).some((e) => e !== null);
         if (hayErrores) return;
 
+        // Validaciones de unicidad: correo y RUN no pueden repetirse entre usuarios
         if (obtenerUsuarioPorCorreo(correo)) {
             marcarCampo('campo-correo', 'Ya existe una cuenta registrada con este correo.');
             return;
@@ -235,12 +297,22 @@ function initFormRegistro() {
         usuarios.push(nuevoUsuario);
         guardarUsuarios(usuarios);
 
+        // Registro exitoso = inicio de sesión automático, evitando que el usuario
+        // tenga que volver a escribir su correo/contraseña en login.html
         guardarSesion(nuevoUsuario);
         window.location.href = 'perfil.html';
     });
 }
 
 /* --- REGIÓN / COMUNA --- */
+
+/**
+ * Puebla el <select id="region"> con las 16 regiones de REGIONES, y engancha
+ * el evento 'change' para que, al elegir una región, se repueble el
+ * <select id="comuna"> con las comunas correspondientes.
+ * Usada en registro.html y perfil.html (los selects con id genérico "region"/"comuna",
+ * a diferencia de los modales admin que usan poblarRegionComuna() con prefijo).
+ */
 function initRegionComuna() {
     const selectRegion = document.getElementById('region');
     const selectComuna = document.getElementById('comuna');
@@ -268,6 +340,13 @@ function initRegionComuna() {
 }
 
 /* --- PERFIL --- */
+
+/**
+ * Inicializa perfil.html: protege la ruta (redirige a login si no hay sesión),
+ * pinta la cabecera, el avatar, las mascotas y las citas, precarga el
+ * formulario de edición con los datos actuales, y configura el submit
+ * que guarda los cambios.
+ */
 function initFormPerfil() {
     const form = document.getElementById('form-perfil');
     if (!form) return;
@@ -275,7 +354,7 @@ function initFormPerfil() {
     const sesion = obtenerSesion();
 
     if (!sesion) {
-        window.location.href = 'login.html';
+        window.location.href = 'login.html'; // sin sesión no se puede ver el perfil
         return;
     }
 
@@ -297,6 +376,7 @@ function initFormPerfil() {
     if (form.region) {
         form.region.value = sesion.region || '';
         // dispara el evento 'change' para que se generen las opciones de comuna
+        // (initRegionComuna() debe haberse ejecutado ANTES para que el select ya tenga las regiones cargadas)
         form.region.dispatchEvent(new Event('change'));
     }
     if (form.comuna) {
@@ -316,6 +396,7 @@ function initFormPerfil() {
 
         const nuevaPassword = document.getElementById('password-actual-vista').value;
 
+        // Igual que en el editar de admin: la contraseña solo se valida si cambió
         const errores = {
             'campo-nombre': validarRequerido(form.nombre.value, 50, 'El nombre'),
             'campo-apellidos': validarRequerido(form.apellidos.value, 100, 'Los apellidos'),
@@ -329,6 +410,8 @@ function initFormPerfil() {
         const hayErrores = Object.values(errores).some((e) => e !== null);
         if (hayErrores) return;
 
+        // El correo puede cambiar, así que hay que verificar que el NUEVO correo
+        // no esté siendo usado por OTRO usuario (se excluye a sí mismo comparando con sesion.correo)
         const nuevoCorreo = form.correo.value.trim();
         const correoOcupadoPorOtro = obtenerUsuarios().some(
             (u) => u.correo && u.correo.toLowerCase() === nuevoCorreo.toLowerCase() && u.correo.toLowerCase() !== sesion.correo.toLowerCase()
@@ -343,7 +426,7 @@ function initFormPerfil() {
 
         if (indice !== -1) {
             usuarios[indice] = {
-                ...usuarios[indice],
+                ...usuarios[indice], // conserva campos no editables aquí (run, rol, avatar, fechaRegistro)
                 nombre: form.nombre.value.trim(),
                 apellidos: form.apellidos.value.trim(),
                 correo: form.correo.value.trim(),
@@ -354,15 +437,19 @@ function initFormPerfil() {
                 password: nuevaPassword.length > 0 ? nuevaPassword : usuarios[indice].password,
             };
             guardarUsuarios(usuarios);
-            guardarSesion(usuarios[indice]);
+            guardarSesion(usuarios[indice]); // la sesión debe reflejar los datos recién guardados
             actualizarCabeceraPerfil(usuarios[indice]);
         }
 
         actualizarVistaPerfil();
-        desactivarModoEdicionPerfil();
+        desactivarModoEdicionPerfil(); // vuelve a la vista de solo lectura tras guardar
     });
 }
 
+/**
+ * Conecta el botón "Cerrar sesión" de perfil.html (distinto del de admin.js,
+ * que redirige a login.html en vez de index.html).
+ */
 function initBotonCerrarSesion() {
     const btn = document.getElementById('btn-cerrar-sesion');
     if (!btn) return;
@@ -374,6 +461,10 @@ function initBotonCerrarSesion() {
     });
 }
 
+/**
+ * Actualiza el nombre, correo y comuna mostrados en la cabecera de perfil.html.
+ * Se llama tanto al cargar la página como después de guardar cambios en el formulario.
+ */
 function actualizarCabeceraPerfil(usuario) {
     const nombreDisplay = document.getElementById('perfil-nombre-display');
     const correoDisplay = document.getElementById('perfil-correo-display');
@@ -387,14 +478,19 @@ function actualizarCabeceraPerfil(usuario) {
 const TAMANO_MAX_AVATAR = 5 * 1024 * 1024; // 5 MB del archivo ORIGINAL (antes de comprimir)
 const AVATAR_LADO_PX = 200; // tamaño final del avatar guardado
 
+/**
+ * Configura la subida de avatar en perfil.html: hacer clic en el círculo de
+ * avatar abre el selector de archivo oculto; al elegir una imagen, se valida
+ * tipo y peso, se redimensiona/comprime, y se guarda como base64 en el usuario.
+ */
 function initAvatarUpload(sesion) {
     const contenedor = document.getElementById('perfil-avatar-contenedor');
     const input = document.getElementById('input-avatar');
     if (!contenedor || !input) return;
 
-    mostrarAvatar(sesion.avatar);
+    mostrarAvatar(sesion.avatar); // muestra la foto ya guardada (o el emoji, si no tiene)
 
-    contenedor.addEventListener('click', () => input.click());
+    contenedor.addEventListener('click', () => input.click()); // el círculo hace de botón visual para el input real
 
     input.addEventListener('change', () => {
         const archivo = input.files[0];
@@ -416,6 +512,8 @@ function initAvatarUpload(sesion) {
                     guardarAvatar(base64Comprimido);
                     mostrarAvatar(base64Comprimido);
                 } catch (error) {
+                    // localStorage tiene un límite de espacio (~5-10MB según navegador);
+                    // si se llena, setItem lanza QuotaExceededError
                     alert('No se pudo guardar la imagen: el almacenamiento está lleno. Prueba con otra foto.');
                     console.error(error);
                 }
@@ -426,6 +524,13 @@ function initAvatarUpload(sesion) {
     });
 }
 
+/**
+ * Recorta la imagen al cuadrado central, la escala a ladoMaximo×ladoMaximo px
+ * y la comprime a JPEG calidad 0.8, devolviendo un string base64 (data URL).
+ * Este proceso es clave para poder guardar avatares en localStorage sin
+ * chocar contra su límite de espacio (fotos de cámara sin comprimir pueden
+ * pesar varios MB cada una).
+ */
 function redimensionarImagen(archivo, ladoMaximo) {
     return new Promise((resolve, reject) => {
         const lector = new FileReader();
@@ -438,6 +543,7 @@ function redimensionarImagen(archivo, ladoMaximo) {
                 let alto = img.height;
 
                 // recorta al cuadrado central antes de escalar
+                // (evita que la imagen se vea "aplastada" si el original no es cuadrado)
                 const lado = Math.min(ancho, alto);
                 const offsetX = (ancho - lado) / 2;
                 const offsetY = (alto - lado) / 2;
@@ -447,6 +553,8 @@ function redimensionarImagen(archivo, ladoMaximo) {
                 canvas.height = ladoMaximo;
 
                 const ctx = canvas.getContext('2d');
+                // dibuja solo el recorte cuadrado (offsetX/offsetY/lado/lado) escalado
+                // al tamaño final (0/0/ladoMaximo/ladoMaximo)
                 ctx.drawImage(img, offsetX, offsetY, lado, lado, 0, 0, ladoMaximo, ladoMaximo);
 
                 // calidad 0.8 = buen balance entre peso y nitidez
@@ -455,7 +563,7 @@ function redimensionarImagen(archivo, ladoMaximo) {
             };
 
             img.onerror = reject;
-            img.src = e.target.result;
+            img.src = e.target.result; // dispara la carga de la imagen desde el data URL leído por FileReader
         };
 
         lector.onerror = reject;
@@ -463,6 +571,10 @@ function redimensionarImagen(archivo, ladoMaximo) {
     });
 }
 
+/**
+ * Alterna entre mostrar la <img> del avatar (si hay foto guardada) o el
+ * <span> con emoji de respaldo (si no hay foto).
+ */
 function mostrarAvatar(base64) {
     const img = document.getElementById('perfil-avatar-imagen');
     const emoji = document.getElementById('perfil-avatar-emoji');
@@ -478,6 +590,11 @@ function mostrarAvatar(base64) {
     }
 }
 
+/**
+ * Guarda el avatar (ya comprimido) en el registro del usuario y actualiza
+ * también la sesión, para que el avatar se refleje inmediatamente sin
+ * necesidad de recargar la página.
+ */
 function guardarAvatar(base64) {
     const sesion = obtenerSesion();
     if (!sesion) return;
@@ -494,6 +611,15 @@ function guardarAvatar(base64) {
 
 
 /* --- MASCOTAS --- */
+
+/**
+ * Pinta la lista de mascotas del usuario en sesión dentro de perfil.html.
+ * Lee directamente la clave patitasFelices_mascotas de localStorage (el módulo
+ * de mascotas del compañero es quien la llena) y filtra solo las que le
+ * pertenecen a este usuario (m.correoDueño).
+ * Si no tiene mascotas, NO hace nada: se deja el estado vacío por defecto
+ * que ya trae el HTML (perfil.html "Aún no tienes mascotas registradas").
+ */
 function renderMascotas(sesion) {
     const contenedor = document.getElementById('perfil-mascotas-lista');
     if (!contenedor) return;
@@ -522,6 +648,12 @@ function renderMascotas(sesion) {
     `).join('');
 }
 
+/**
+ * Conecta las acciones (editar/completar datos, etc.) sobre las mascotas
+ * listadas en perfil.html. La lógica real vive en initAccionesFormularioMascota,
+ * que debe estar definida en mascotas.js (cargado antes que este script en el HTML).
+ * Al terminar una acción, vuelve a renderizar la lista (callback renderMascotas(sesion)).
+ */
 function initAccionesMascotasPerfil(sesion) {
     const contenedor = document.getElementById('perfil-mascotas-lista');
     if (!contenedor) return;
@@ -530,6 +662,13 @@ function initAccionesMascotasPerfil(sesion) {
 }
 
 /* --- CITAS (placeholder: se conecta cuando el equipo tenga esa página lista) --- */
+
+/**
+ * Pinta la lista de citas del usuario en sesión. Al igual que renderMascotas,
+ * lee la clave patitasFelices_citas directamente (llenada por el módulo de citas
+ * del otro compañero) y filtra por correoUsuario. Si no hay citas propias,
+ * se deja el estado vacío por defecto del HTML.
+ */
 function renderCitas(sesion) {
     const contenedor = document.getElementById('perfil-citas-lista');
     if (!contenedor) return;
@@ -555,14 +694,23 @@ function renderCitas(sesion) {
     `).join('');
 }
 
+/** Activa el modo edición de la tarjeta "Sobre" (muestra el formulario, oculta la vista) */
 function activarModoEdicionPerfil() {
     document.getElementById('tarjeta-sobre').classList.add('perfil-card--editando');
 }
 
+/** Desactiva el modo edición (vuelve a mostrar la vista de solo lectura) */
 function desactivarModoEdicionPerfil() {
     document.getElementById('tarjeta-sobre').classList.remove('perfil-card--editando');
 }
 
+/**
+ * Copia los valores actuales del formulario de edición hacia los <span>
+ * de la vista de solo lectura. Se llama al cargar la página (con los datos
+ * recién precargados) y después de guardar cambios exitosamente.
+ * Para región/comuna usa selectedOptions[0]?.text para mostrar el NOMBRE
+ * legible (ej. "Rancagua") en vez del value crudo del <option>.
+ */
 function actualizarVistaPerfil() {
     document.getElementById('vista-nombre').textContent = document.getElementById('nombre').value || '—';
     document.getElementById('vista-apellidos').textContent = document.getElementById('apellidos').value || '—';
@@ -579,6 +727,8 @@ function actualizarVistaPerfil() {
    sin duplicar ni pisar otros datos si ya existen.
 ========================================================= */
 
+// Credenciales de administrador fijas para la demo/entrega de la EP1:
+// así el profesor/evaluador puede entrar al panel admin sin tener que registrarse
 const ADMINS_FIJOS = [
     {
         nombre: 'Maria',
@@ -596,6 +746,13 @@ const ADMINS_FIJOS = [
     },
 ];
 
+/**
+ * Garantiza que las 2 cuentas admin fijas existan en localStorage en cada
+ * carga de página. Si ya existen (por ejemplo, si el evaluador cambió sus
+ * datos personales sin querer), se les fuerza de vuelta el rol admin y la
+ * contraseña fija, sin tocar el resto de sus datos. Si no existen, se crean
+ * completas desde cero.
+ */
 function asegurarAdminsFijos() {
     const usuarios = obtenerUsuarios();
 
@@ -628,6 +785,9 @@ function asegurarAdminsFijos() {
     guardarUsuarios(usuarios);
 }
 
+// Punto de entrada: se ejecuta en TODAS las páginas que incluyan usuarios.js.
+// Cada init revisa internamente si sus elementos existen en el DOM actual,
+// así que es seguro llamarlas todas juntas sin importar en qué página estemos.
 document.addEventListener('DOMContentLoaded', () => {
     asegurarAdminsFijos();
     initFormLogin();
