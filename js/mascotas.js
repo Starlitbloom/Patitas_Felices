@@ -917,8 +917,22 @@ function renderizarCatalogo(especieFiltro) {
     }
 
 
+    const sesion =
+        obtenerSesionMascotas();
+
+    const mascotasDelUsuario =
+        sesion && sesion.correo
+            ? mascotas.filter(
+                (mascota) =>
+                    mascota.correoDueño &&
+                    mascota.correoDueño.toLowerCase() ===
+                        sesion.correo.toLowerCase()
+              )
+            : [];
+
+
     let lista =
-        mascotas;
+        mascotasDelUsuario;
 
 
     if (especieFiltro === "favoritos") {
@@ -928,7 +942,7 @@ function renderizarCatalogo(especieFiltro) {
 
 
         lista =
-            mascotas.filter(
+            mascotasDelUsuario.filter(
                 (mascota) =>
                     favoritos.includes(
                         mascota.id
@@ -941,7 +955,7 @@ function renderizarCatalogo(especieFiltro) {
     ) {
 
         lista =
-            mascotas.filter(
+            mascotasDelUsuario.filter(
                 (mascota) =>
                     mascota.especie ===
                     especieFiltro
@@ -1466,6 +1480,63 @@ function renderizarDetalleMascota() {
 
 
 /* =========================================================
+   VISOR AMPLIADO DE INFOGRAFÍAS (lightbox)
+   Al hacer clic en una imagen de "Cuidados básicos" se muestra
+   ampliada; se cierra con el botón, la tecla Escape o clic fuera.
+========================================================= */
+
+function initVisorInfografias() {
+
+    const visor =
+        document.getElementById("visor-infografia");
+
+    const imagenVisor =
+        document.getElementById("visor-infografia-imagen");
+
+    const botonCerrar =
+        document.getElementById("visor-infografia-cerrar");
+
+    const imagenes =
+        document.querySelectorAll(".img-cuidados");
+
+    if (!visor || !imagenVisor || imagenes.length === 0) {
+        return;
+    }
+
+    function abrirVisor(imagen) {
+        imagenVisor.src = imagen.src;
+        imagenVisor.alt = imagen.alt;
+        visor.classList.add("visor-infografia--abierto");
+    }
+
+    function cerrarVisor() {
+        visor.classList.remove("visor-infografia--abierto");
+        imagenVisor.src = "";
+    }
+
+    imagenes.forEach((imagen) => {
+        imagen.addEventListener("click", () => abrirVisor(imagen));
+    });
+
+    if (botonCerrar) {
+        botonCerrar.addEventListener("click", cerrarVisor);
+    }
+
+    visor.addEventListener("click", (evento) => {
+        if (evento.target === visor) {
+            cerrarVisor();
+        }
+    });
+
+    document.addEventListener("keydown", (evento) => {
+        if (evento.key === "Escape") {
+            cerrarVisor();
+        }
+    });
+}
+
+
+/* =========================================================
    INICIALIZACIÓN
 ========================================================= */
 
@@ -1492,6 +1563,8 @@ document.addEventListener("DOMContentLoaded", () => {
         initFiltrosMascotas();
 
         initBotonesFavorito();
+
+        initVisorInfografias();
 
         renderizarDetalleMascota();
 

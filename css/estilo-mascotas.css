@@ -582,11 +582,7 @@ GRID DE TARJETAS
 
 
 /* =========================================================
-<<<<<<< HEAD
    TARJETA DE MASCOTA — DISEÑO MEJORADO
-=======
-TARJETA DE MASCOTA
->>>>>>> b36ac79 (Cambios)
 ========================================================= */
 
 .tarjeta-mascota {
@@ -1175,7 +1171,6 @@ RESPONSIVE
 }
 
 /* =========================================================
-<<<<<<< HEAD
    FAVORITO EN TARJETAS — CORAZÓN FLOTANTE
    Solo afecta el catálogo de mascotas.
 ========================================================= */
@@ -1190,44 +1185,10 @@ RESPONSIVE
     width: 42px;
     height: 42px;
 
-=======
-SECCIÓN: CUIDADOS BÁSICOS POR ESPECIE (infografías)
-========================================================= */
-
-/* Colores por especie, a juego con cada infografía */
-:root {
-    --perro-color: #8B5CF6;   /* morado, como la infografía de perro */
-    --perro-color-suave: #9629d1;
-    --gato-color: #EC6BA5;    /* rosa/magenta, como la de gato */
-    --gato-color-suave: #ff99c2;
-    --conejo-color: #4FB6A6;     /* verde-azulado */
-    --conejo-color-suave: #84ebd6;
-    --ave-color: #F0A94E;  /* durazno/naranjo cálido */
-    --ave-color-suave: #ffe139;
-}
-
-.seccion-cuidados {
-    padding: 20px 0 90px;
-}
-
-/* 2 columnas -> 2 imágenes arriba, 2 abajo, con espacio entre ellas */
-.grid-cuidados,
-.grid-embebido {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 36px 40px;
-
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-.tarjeta-cuidado {
->>>>>>> b36ac79 (Cambios)
     display: flex;
     align-items: center;
     justify-content: center;
 
-<<<<<<< HEAD
     padding: 0;
 
     border: 1px solid rgba(255, 255, 255, 0.82);
@@ -1282,7 +1243,42 @@ SECCIÓN: CUIDADOS BÁSICOS POR ESPECIE (infografías)
     outline-offset: 3px;
 }
 
-=======
+/* =========================================================
+   SECCIÓN: CUIDADOS BÁSICOS POR ESPECIE (infografías)
+========================================================= */
+
+/* Colores por especie, a juego con cada infografía */
+:root {
+    --perro-color: #8B5CF6;   /* morado, como la infografía de perro */
+    --perro-color-suave: #9629d1;
+    --gato-color: #EC6BA5;    /* rosa/magenta, como la de gato */
+    --gato-color-suave: #ff99c2;
+    --conejo-color: #4FB6A6;     /* verde-azulado */
+    --conejo-color-suave: #84ebd6;
+    --ave-color: #F0A94E;  /* durazno/naranjo cálido */
+    --ave-color-suave: #ffe139;
+}
+
+.seccion-cuidados {
+    padding: 20px 0 90px;
+}
+
+/* 2 columnas -> 2 imágenes arriba, 2 abajo, con espacio entre ellas */
+.grid-cuidados,
+.grid-embebido {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 36px 40px;
+
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.tarjeta-cuidado {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     background-color: var(--blanco);
 
     padding: 8px;
@@ -1322,18 +1318,27 @@ SECCIÓN: CUIDADOS BÁSICOS POR ESPECIE (infografías)
     background-color: var(--ave-color-suave);
 }
 
-/* Controla el tamaño real de cada infografía dentro de su tarjeta */
+/* Controla el tamaño real de cada infografía dentro de su tarjeta.
+   Son clicables: al presionarlas se agrandan en un visor (ver mascotas.js). */
 .img-cuidados {
     display: block;
 
     width: 100%;
     height: auto;
 
-    max-width: 380px;
+    max-width: 200px;
 
     margin: 0 auto;
 
     border-radius: 16px;
+
+    cursor: zoom-in;
+
+    transition: transform 0.2s ease;
+}
+
+.img-cuidados:hover {
+    transform: scale(1.03);
 }
 
 @media (max-width: 900px) {
@@ -1343,7 +1348,7 @@ SECCIÓN: CUIDADOS BÁSICOS POR ESPECIE (infografías)
     }
 
     .img-cuidados {
-        max-width: 320px;
+        max-width: 180px;
     }
 }
 
@@ -1355,7 +1360,63 @@ SECCIÓN: CUIDADOS BÁSICOS POR ESPECIE (infografías)
     }
 
     .img-cuidados {
-        max-width: 280px;
+        max-width: 150px;
     }
 }
->>>>>>> b36ac79 (Cambios)
+
+/* =========================================================
+   VISOR AMPLIADO DE INFOGRAFÍAS (lightbox)
+========================================================= */
+
+.visor-infografia {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    padding: 24px;
+
+    background-color: rgba(20, 20, 26, 0.72);
+
+    cursor: zoom-out;
+}
+
+.visor-infografia.visor-infografia--abierto {
+    display: flex;
+}
+
+.visor-infografia img {
+    max-width: min(90vw, 700px);
+    max-height: 85vh;
+
+    border-radius: 16px;
+
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+.visor-infografia-cerrar {
+    position: absolute;
+
+    top: 20px;
+    right: 24px;
+
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 50%;
+
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #2E2E38;
+
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+}

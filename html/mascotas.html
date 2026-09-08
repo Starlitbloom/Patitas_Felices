@@ -213,9 +213,6 @@
 
         </section>
 
-<<<<<<< HEAD
-
-
         <!-- =========================================================
              CATÁLOGO DE MASCOTAS
              Mantiene la funcionalidad original.
@@ -297,7 +294,32 @@
 
                 </div>
 
-=======
+            </div>
+
+
+
+            <!-- ================= GRID ================= -->
+
+            <div
+                class="grid-mascotas"
+                id="grid-mascotas"
+            >
+
+                <!--
+                    Las tarjetas se generan dinámicamente
+                    desde js/mascotas.js
+                -->
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================================
+             CUIDADOS BÁSICOS POR ESPECIE
+        ========================================================== -->
+
         <section class="contenedor seccion-cuidados" aria-labelledby="titulo-cuidados">
             <div class="titulo-seccion">
                 <span class="seccion-etiqueta">Guía rápida</span>
@@ -321,25 +343,7 @@
                 <article class="tarjeta-cuidado">
                     <img src="../img/avesinfografia.png" alt="Infografía cuidados de aves" class="img-cuidados">
                 </article>
->>>>>>> b36ac79 (Cambios)
             </div>
-
-
-
-            <!-- ================= GRID ================= -->
-
-            <div
-                class="grid-mascotas"
-                id="grid-mascotas"
-            >
-
-                <!--
-                    Las tarjetas se generan dinámicamente
-                    desde js/mascotas.js
-                -->
-
-            </div>
-
         </section>
 
 
@@ -510,6 +514,20 @@
         </div>
 
     </footer>
+
+
+
+    <!-- =========================================================
+         VISOR AMPLIADO DE INFOGRAFÍAS (lightbox)
+         Se abre al hacer clic en una imagen de "Cuidados básicos".
+    ========================================================== -->
+
+    <div class="visor-infografia" id="visor-infografia">
+        <button type="button" class="visor-infografia-cerrar" id="visor-infografia-cerrar" aria-label="Cerrar imagen ampliada">
+            ✕
+        </button>
+        <img src="" alt="" id="visor-infografia-imagen">
+    </div>
 
 
 
