@@ -61,6 +61,16 @@ function initDashboardAdmin() {
         kpiCitas.textContent = pendientes;
     }
 
+    const kpiSolicitudesMascotas = document.getElementById('kpi-solicitudes-mascotas');
+    if (kpiSolicitudesMascotas) {
+        let solicitudesMascotas = [];
+        try {
+            solicitudesMascotas = JSON.parse(localStorage.getItem('patitasFelices_solicitudesMascotas')) || [];
+        } catch { solicitudesMascotas = []; }
+        const pendientesMascotas = solicitudesMascotas.filter((s) => s.estado === 'pendiente').length;
+        kpiSolicitudesMascotas.textContent = pendientesMascotas;
+    }
+
     const tbody = document.getElementById('admin-tabla-recientes');
     const vacia = document.getElementById('admin-tabla-vacia');
 

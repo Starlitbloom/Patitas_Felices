@@ -2600,3 +2600,126 @@ nav a.activo::after {
 .fondo-derecho {
     display: none;
 }
+
+
+/* =========================================================
+   FICHA DE MASCOTA — completar / editar datos
+   (compartido por mascotas.html, detalle-mascota.html y
+   el perfil del cliente)
+========================================================= */
+
+.alerta-incompleta {
+    background-color: #FFF3E0;
+    color: #B9660B;
+    font-weight: bold;
+    font-size: 13.5px;
+    padding: 10px 16px;
+    text-align: center;
+}
+
+.alerta-incompleta a {
+    color: #B9660B;
+    text-decoration: underline;
+}
+
+.alerta-mascota {
+    font-size: 13.5px;
+    font-weight: bold;
+    color: #B9660B;
+    margin: 10px 0 4px;
+}
+
+.alerta-mascota--info {
+    color: var(--celeste-fuerte);
+}
+
+.enlace-completar {
+    display: inline-block;
+    margin-bottom: 10px;
+    color: var(--celeste-fuerte);
+    font-weight: bold;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.formulario-mascota {
+    margin-top: 12px;
+    max-width: 420px;
+}
+
+.formulario-mascota .campo {
+    margin-bottom: 16px;
+}
+
+.formulario-mascota .campo label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    font-size: 13.5px;
+    color: var(--texto);
+}
+
+.formulario-mascota .campo input,
+.formulario-mascota .campo select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid rgba(46, 46, 56, 0.15);
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--texto);
+    background-color: var(--blanco);
+}
+
+.formulario-mascota .campo input:focus,
+.formulario-mascota .campo select:focus {
+    outline: none;
+    border-color: var(--celeste-fuerte);
+}
+
+.formulario-mascota .campo__error {
+    display: none;
+    color: #D64545;
+    font-size: 12.5px;
+    margin-top: 4px;
+}
+
+.formulario-mascota .campo--invalido input,
+.formulario-mascota .campo--invalido select {
+    border-color: #D64545;
+}
+
+.formulario-mascota .campo--invalido .campo__error {
+    display: block;
+}
+
+.formulario-mascota .fila-campos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.mascota-foto-upload {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mascota-foto-preview {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.boton-subir-foto {
+    padding: 9px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(46, 46, 56, 0.15);
+    background-color: var(--blanco);
+    color: var(--texto);
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: bold;
+    cursor: pointer;
+}

@@ -187,6 +187,10 @@
     margin-bottom: 30px;
 }
 
+.admin-kpis--dashboard {
+    grid-template-columns: repeat(5, 1fr);
+}
+
 .admin-kpi {
     position: relative;
     overflow: hidden;
@@ -218,6 +222,21 @@
 
 .admin-kpi:nth-child(4) { border-top-color: #FFD6A5; box-shadow: 0 0 24px rgba(255, 214, 165, 0.08); }
 .admin-kpi:nth-child(4):hover { box-shadow: 0 0 30px rgba(255, 214, 165, 0.2), 0 14px 30px rgba(0, 0, 0, 0.3); }
+
+.admin-kpi--enlace {
+    text-decoration: none;
+    cursor: pointer;
+    border-top-color: #F0A34B;
+    box-shadow: 0 0 24px rgba(240, 163, 75, 0.12);
+}
+.admin-kpi--enlace:hover {
+    box-shadow: 0 0 30px rgba(240, 163, 75, 0.25), 0 14px 30px rgba(0, 0, 0, 0.3);
+}
+.admin-kpi--enlace .admin-kpi-icono {
+    background: linear-gradient(135deg, #F0A34B, var(--rosa));
+    box-shadow: 0 0 16px rgba(240, 163, 75, 0.45);
+}
+
 .admin-kpi-cabecera {
     display: flex;
     align-items: center;
