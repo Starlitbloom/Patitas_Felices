@@ -361,6 +361,12 @@
     gap: 8px;
 }
 
+.admin-reportes-subtitulo {
+    color: var(--blanco);
+    font-size: 18px;
+    margin: 8px 0 16px;
+}
+
 .admin-tabla-wrap {
     background-color: #2A2440;
     border-radius: 18px;
@@ -703,6 +709,25 @@
     margin-top: 6px;
 }
 
+.admin-badge--tratamiento {
+    background-color: rgba(230, 214, 247, 0.18);
+    color: var(--morado);
+}
+
+.admin-badge--pendiente {
+    background-color: rgba(240, 163, 75, 0.18);
+    color: #F0A34B;
+}
+
+.admin-tabla td img {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    object-fit: cover;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
 .admin-detalle-acciones {
     display: flex;
     gap: 10px;
@@ -957,6 +982,19 @@
 
     max-width: 28px !important;
     max-height: 28px !important;
+}
+
+/* Icono emoji (cuando no hay PNG dedicado, ej. Mascotas) */
+.admin-nav-icono--emoji {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 18px;
 }
 /* =========================================================
    ICONOS DE ACCIONES - GESTIÓN DE USUARIOS

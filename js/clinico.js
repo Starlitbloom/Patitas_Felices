@@ -42,6 +42,18 @@ function mostrarMascotaNoEncontrada(seccionId) {
     `;
 }
 
+function puedeVerMascota(mascota, sesion) {
+    if (!sesion || !mascota) return false;
+    return sesion.rol === "admin" || mascota.correoDueño === sesion.correo;
+}
+
+function ocultarFormularioSiNoEsAdmin(idFormulario, sesion) {
+    const form = document.getElementById(idFormulario);
+    if (!form) return;
+    const tarjeta = form.closest(".tarjeta-formulario-clinica") || form;
+    tarjeta.style.display = sesion && sesion.rol === "admin" ? "" : "none";
+}
+
 
 /* =========================================================
    VALIDADORES (reglas propias de los formularios clínicos)
@@ -132,6 +144,7 @@ function initFormularioFicha(id) {
 
         if (!historiales[id]) historiales[id] = [];
         historiales[id].unshift(nuevoRegistro);
+        guardarHistoriales();
 
         renderizarAtencionesRecientes(id);
         form.reset();
@@ -151,8 +164,9 @@ function initFichaClinica() {
 
     const id = obtenerIdDesdeUrl();
     const mascota = obtenerMascotaPorId(id);
+    const sesion = obtenerSesionMascotas();
 
-    if (!mascota) {
+    if (!mascota || !puedeVerMascota(mascota, sesion)) {
         mostrarMascotaNoEncontrada("seccion-ficha-clinica");
         return;
     }
@@ -161,6 +175,7 @@ function initFichaClinica() {
     pintarCabeceraClinica(mascota);
     renderizarAtencionesRecientes(id);
     initFormularioFicha(id);
+    ocultarFormularioSiNoEsAdmin("form-ficha-clinica", sesion);
 }
 
 
@@ -174,8 +189,9 @@ function initHistorialClinico() {
 
     const id = obtenerIdDesdeUrl();
     const mascota = obtenerMascotaPorId(id);
+    const sesion = obtenerSesionMascotas();
 
-    if (!mascota) {
+    if (!mascota || !puedeVerMascota(mascota, sesion)) {
         mostrarMascotaNoEncontrada("seccion-historial");
         return;
     }
@@ -264,6 +280,7 @@ function initFormularioVacuna(id) {
 
         if (!vacunasPorMascota[id]) vacunasPorMascota[id] = [];
         vacunasPorMascota[id].unshift(nuevoRegistro);
+        guardarVacunasPorMascota();
 
         renderizarVacunas(id);
         form.reset();
@@ -283,8 +300,9 @@ function initVacunas() {
 
     const id = obtenerIdDesdeUrl();
     const mascota = obtenerMascotaPorId(id);
+    const sesion = obtenerSesionMascotas();
 
-    if (!mascota) {
+    if (!mascota || !puedeVerMascota(mascota, sesion)) {
         mostrarMascotaNoEncontrada("seccion-vacunas");
         return;
     }
@@ -293,6 +311,7 @@ function initVacunas() {
     pintarCabeceraClinica(mascota);
     renderizarVacunas(id);
     initFormularioVacuna(id);
+    ocultarFormularioSiNoEsAdmin("form-vacuna", sesion);
 }
 
 

@@ -261,6 +261,56 @@ function guardarMascotas() {
 
 
 /* =========================================================
+   PERSISTENCIA: HISTORIAL CLÍNICO Y VACUNAS
+   `historiales` y `vacunasPorMascota` son objetos { idMascota: [...] }
+   definidos más arriba; se sincronizan con localStorage igual
+   que `mascotas`, mutando el objeto in-place.
+========================================================= */
+
+const CLAVE_HISTORIALES = "patitasFelices_historiales";
+const CLAVE_VACUNAS = "patitasFelices_vacunas";
+
+function asegurarClinicoSeed() {
+    if (localStorage.getItem(CLAVE_HISTORIALES) === null) {
+        localStorage.setItem(CLAVE_HISTORIALES, JSON.stringify(historiales));
+    }
+    if (localStorage.getItem(CLAVE_VACUNAS) === null) {
+        localStorage.setItem(CLAVE_VACUNAS, JSON.stringify(vacunasPorMascota));
+    }
+}
+
+function cargarClinicoDesdeStorage() {
+    try {
+        const historialesGuardados = JSON.parse(localStorage.getItem(CLAVE_HISTORIALES));
+        if (historialesGuardados) {
+            Object.keys(historiales).forEach((k) => delete historiales[k]);
+            Object.assign(historiales, historialesGuardados);
+        }
+    } catch (error) {
+        console.error("No se pudieron cargar los historiales:", error);
+    }
+
+    try {
+        const vacunasGuardadas = JSON.parse(localStorage.getItem(CLAVE_VACUNAS));
+        if (vacunasGuardadas) {
+            Object.keys(vacunasPorMascota).forEach((k) => delete vacunasPorMascota[k]);
+            Object.assign(vacunasPorMascota, vacunasGuardadas);
+        }
+    } catch (error) {
+        console.error("No se pudieron cargar las vacunas:", error);
+    }
+}
+
+function guardarHistoriales() {
+    localStorage.setItem(CLAVE_HISTORIALES, JSON.stringify(historiales));
+}
+
+function guardarVacunasPorMascota() {
+    localStorage.setItem(CLAVE_VACUNAS, JSON.stringify(vacunasPorMascota));
+}
+
+
+/* =========================================================
    SOLICITUDES DE CAMBIO
    Una mascota ya completa no se edita directo: el dueño
    propone cambios, quedan "pendiente" hasta que un admin
@@ -522,8 +572,6 @@ function initAccionesFormularioMascota(contenedor, sesion, alGuardar) {
         if (mascota && !mascota.completo) {
             Object.assign(mascota, cambios);
             mascota.completo = true;
-            mascota.estado = "al-dia";
-            mascota.estadoTexto = "Control al día";
             guardarMascotas();
         } else if (mascota) {
             crearSolicitudCambio(id, sesion.correo, cambios);
@@ -764,6 +812,8 @@ function renderizarDetalleMascota() {
 document.addEventListener("DOMContentLoaded", () => {
     asegurarMascotasSeed();
     cargarMascotasDesdeStorage();
+    asegurarClinicoSeed();
+    cargarClinicoDesdeStorage();
 
     const requiereSesion = document.getElementById("grid-mascotas") || document.getElementById("detalle-mascota");
     if (requiereSesion && !obtenerSesionMascotas()) {

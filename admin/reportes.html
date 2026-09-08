@@ -47,6 +47,12 @@
                     <span>Usuarios</span>
                 </a>
 
+                <!-- MASCOTAS -->
+                <a href="admin-mascotas.html" class="admin-nav-item">
+                    <span class="admin-nav-icono admin-nav-icono--emoji">🐾</span>
+                    <span>Mascotas</span>
+                </a>
+
                 <!-- CITAS -->
                 <a href="admin-citas.html" class="admin-nav-item">
                     <img
@@ -268,42 +274,109 @@
             </section>
 
 
-            <!-- ================= PRÓXIMAMENTE ================= -->
-            <section class="admin-proximamente">
+            <!-- ================= REPORTE DE MASCOTAS ================= -->
+            <h2 class="admin-reportes-subtitulo">Reporte de mascotas 🐾</h2>
 
-                <div class="admin-proximamente-card">
+            <section class="admin-kpis">
 
-                    <span class="admin-proximamente-icono">
-                        🐾
-                    </span>
-
-                    <div>
-                        <h3>Reporte de mascotas</h3>
-
-                        <p>
-                            Se activará automáticamente cuando el
-                            módulo de mascotas esté disponible.
-                        </p>
+                <div class="admin-kpi">
+                    <div class="admin-kpi-cabecera">
+                        <span class="admin-kpi-icono">🐾</span>
                     </div>
-
+                    <span class="admin-kpi-numero" id="rep-total-mascotas">0</span>
+                    <span class="admin-kpi-label">Mascotas registradas</span>
                 </div>
 
-
-                <div class="admin-proximamente-card">
-
-                    <span class="admin-proximamente-icono">
-                        📅
-                    </span>
-
-                    <div>
-                        <h3>Reporte de citas</h3>
-
-                        <p>
-                            Se activará automáticamente cuando el
-                            módulo de citas esté disponible.
-                        </p>
+                <div class="admin-kpi">
+                    <div class="admin-kpi-cabecera">
+                        <span class="admin-kpi-icono">⚠️</span>
                     </div>
+                    <span class="admin-kpi-numero" id="rep-mascotas-incompletas">0</span>
+                    <span class="admin-kpi-label">Con datos incompletos</span>
+                </div>
 
+                <div class="admin-kpi">
+                    <div class="admin-kpi-cabecera">
+                        <span class="admin-kpi-icono">🔔</span>
+                    </div>
+                    <span class="admin-kpi-numero" id="rep-solicitudes-pendientes">0</span>
+                    <span class="admin-kpi-label">Solicitudes de cambio pendientes</span>
+                </div>
+
+                <div class="admin-kpi">
+                    <div class="admin-kpi-cabecera">
+                        <span class="admin-kpi-icono">🩺</span>
+                    </div>
+                    <span class="admin-kpi-numero" id="rep-mascotas-tratamiento">0</span>
+                    <span class="admin-kpi-label">En tratamiento</span>
+                </div>
+
+            </section>
+
+            <section class="admin-graficos">
+
+                <div class="admin-grafico-card">
+                    <h2>Mascotas por especie</h2>
+                    <canvas id="grafico-mascotas-especie"></canvas>
+                </div>
+
+                <div class="admin-grafico-card">
+                    <h2>Mascotas por estado clínico</h2>
+                    <canvas id="grafico-mascotas-estado"></canvas>
+                </div>
+
+            </section>
+
+
+            <!-- ================= REPORTE DE CITAS ================= -->
+            <h2 class="admin-reportes-subtitulo">Reporte de citas 📅</h2>
+
+            <section class="admin-kpis">
+
+                <div class="admin-kpi">
+                    <div class="admin-kpi-cabecera">
+                        <span class="admin-kpi-icono">📅</span>
+                    </div>
+                    <span class="admin-kpi-numero" id="rep-total-citas">0</span>
+                    <span class="admin-kpi-label">Citas totales</span>
+                </div>
+
+                <div class="admin-kpi">
+                    <div class="admin-kpi-cabecera">
+                        <span class="admin-kpi-icono">⏰</span>
+                    </div>
+                    <span class="admin-kpi-numero" id="rep-citas-pendientes">0</span>
+                    <span class="admin-kpi-label">Pendientes</span>
+                </div>
+
+                <div class="admin-kpi">
+                    <div class="admin-kpi-cabecera">
+                        <span class="admin-kpi-icono">✅</span>
+                    </div>
+                    <span class="admin-kpi-numero" id="rep-citas-confirmadas">0</span>
+                    <span class="admin-kpi-label">Confirmadas</span>
+                </div>
+
+                <div class="admin-kpi">
+                    <div class="admin-kpi-cabecera">
+                        <span class="admin-kpi-icono">❌</span>
+                    </div>
+                    <span class="admin-kpi-numero" id="rep-citas-canceladas">0</span>
+                    <span class="admin-kpi-label">Canceladas</span>
+                </div>
+
+            </section>
+
+            <section class="admin-graficos">
+
+                <div class="admin-grafico-card">
+                    <h2>Citas por estado</h2>
+                    <canvas id="grafico-citas-estado"></canvas>
+                </div>
+
+                <div class="admin-grafico-card">
+                    <h2>Servicios más solicitados</h2>
+                    <canvas id="grafico-citas-servicio"></canvas>
                 </div>
 
             </section>

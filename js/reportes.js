@@ -16,6 +16,26 @@ function initReportes() {
     renderGraficoRegiones(usuarios);
     renderTablaComunas(usuarios);
     initExportarReporte(usuarios);
+
+    const mascotas = leerLocalStorage('patitasFelices_mascotas');
+    const solicitudesMascotas = leerLocalStorage('patitasFelices_solicitudesMascotas');
+    const citas = leerLocalStorage('patitasFelices_citas');
+
+    renderKpisMascotas(mascotas, solicitudesMascotas);
+    renderGraficoMascotasEspecie(mascotas);
+    renderGraficoMascotasEstado(mascotas);
+
+    renderKpisCitas(citas);
+    renderGraficoCitasEstado(citas);
+    renderGraficoCitasServicio(citas);
+}
+
+function leerLocalStorage(clave) {
+    try {
+        return JSON.parse(localStorage.getItem(clave)) || [];
+    } catch {
+        return [];
+    }
 }
 
 function renderKpisReporte(usuarios) {
@@ -146,6 +166,199 @@ function renderTablaComunas(usuarios) {
             <td>${f.cantidad}</td>
         </tr>
     `).join('');
+}
+
+/* =========================================================
+   REPORTE DE MASCOTAS
+========================================================= */
+
+function renderKpisMascotas(mascotas, solicitudesMascotas) {
+    const total = document.getElementById('rep-total-mascotas');
+    if (total) total.textContent = mascotas.length;
+
+    const incompletas = document.getElementById('rep-mascotas-incompletas');
+    if (incompletas) incompletas.textContent = mascotas.filter((m) => !m.completo).length;
+
+    const pendientesSolicitudes = document.getElementById('rep-solicitudes-pendientes');
+    if (pendientesSolicitudes) {
+        pendientesSolicitudes.textContent = solicitudesMascotas.filter((s) => s.estado === 'pendiente').length;
+    }
+
+    const enTratamiento = document.getElementById('rep-mascotas-tratamiento');
+    if (enTratamiento) enTratamiento.textContent = mascotas.filter((m) => m.estado === 'tratamiento').length;
+}
+
+function renderGraficoMascotasEspecie(mascotas) {
+    const canvas = document.getElementById('grafico-mascotas-especie');
+    if (!canvas || typeof Chart === 'undefined') return;
+
+    if (mascotas.length === 0) return;
+
+    const conteoPorEspecie = {};
+    mascotas.forEach((m) => {
+        const especie = m.especie || 'Sin especificar';
+        conteoPorEspecie[especie] = (conteoPorEspecie[especie] || 0) + 1;
+    });
+
+    const entradas = Object.entries(conteoPorEspecie).sort((a, b) => b[1] - a[1]);
+
+    new Chart(canvas, {
+        type: 'doughnut',
+        data: {
+            labels: entradas.map(([especie]) => especie),
+            datasets: [{
+                data: entradas.map(([, cantidad]) => cantidad),
+                backgroundColor: ['#D6ECFA', '#FFD6E7', '#E6D6F7', '#FFD6A5', '#C8F0D8', '#F7E6A1'],
+                borderColor: '#2A2440',
+                borderWidth: 3,
+            }],
+        },
+        options: {
+            plugins: {
+                legend: {
+                    labels: { color: 'rgba(255,255,255,0.75)', font: { size: 12.5 } },
+                },
+            },
+        },
+    });
+}
+
+function renderGraficoMascotasEstado(mascotas) {
+    const canvas = document.getElementById('grafico-mascotas-estado');
+    if (!canvas || typeof Chart === 'undefined') return;
+
+    if (mascotas.length === 0) return;
+
+    const alDia = mascotas.filter((m) => m.estado === 'al-dia').length;
+    const tratamiento = mascotas.filter((m) => m.estado === 'tratamiento').length;
+    const pendientes = mascotas.filter((m) => (m.estado || 'pendiente') === 'pendiente').length;
+
+    new Chart(canvas, {
+        type: 'bar',
+        data: {
+            labels: ['Control al día', 'En tratamiento', 'Vacunas pendientes'],
+            datasets: [{
+                label: 'Mascotas',
+                data: [alDia, tratamiento, pendientes],
+                backgroundColor: ['#C8F0D8', '#E6D6F7', '#FFD6A5'],
+                borderRadius: 8,
+            }],
+        },
+        options: {
+            plugins: {
+                legend: { display: false },
+            },
+            scales: {
+                x: {
+                    ticks: { color: 'rgba(255,255,255,0.6)', precision: 0 },
+                    grid: { color: 'rgba(255,255,255,0.06)' },
+                },
+                y: {
+                    ticks: { color: 'rgba(255,255,255,0.75)', font: { size: 12 } },
+                    grid: { display: false },
+                },
+            },
+        },
+    });
+}
+
+
+/* =========================================================
+   REPORTE DE CITAS
+========================================================= */
+
+function estadoCitaNormalizado(cita) {
+    return (cita.estado || 'pendiente').toLowerCase();
+}
+
+function renderKpisCitas(citas) {
+    const total = document.getElementById('rep-total-citas');
+    if (total) total.textContent = citas.length;
+
+    const pendientes = document.getElementById('rep-citas-pendientes');
+    if (pendientes) pendientes.textContent = citas.filter((c) => estadoCitaNormalizado(c) === 'pendiente').length;
+
+    const confirmadas = document.getElementById('rep-citas-confirmadas');
+    if (confirmadas) confirmadas.textContent = citas.filter((c) => estadoCitaNormalizado(c).startsWith('confirmad')).length;
+
+    const canceladas = document.getElementById('rep-citas-canceladas');
+    if (canceladas) canceladas.textContent = citas.filter((c) => estadoCitaNormalizado(c).startsWith('cancelad')).length;
+}
+
+function renderGraficoCitasEstado(citas) {
+    const canvas = document.getElementById('grafico-citas-estado');
+    if (!canvas || typeof Chart === 'undefined') return;
+
+    if (citas.length === 0) return;
+
+    const pendientes = citas.filter((c) => estadoCitaNormalizado(c) === 'pendiente').length;
+    const confirmadas = citas.filter((c) => estadoCitaNormalizado(c).startsWith('confirmad')).length;
+    const canceladas = citas.filter((c) => estadoCitaNormalizado(c).startsWith('cancelad')).length;
+
+    new Chart(canvas, {
+        type: 'doughnut',
+        data: {
+            labels: ['Pendientes', 'Confirmadas', 'Canceladas'],
+            datasets: [{
+                data: [pendientes, confirmadas, canceladas],
+                backgroundColor: ['#FFD6A5', '#C8F0D8', '#F0A0A0'],
+                borderColor: '#2A2440',
+                borderWidth: 3,
+            }],
+        },
+        options: {
+            plugins: {
+                legend: {
+                    labels: { color: 'rgba(255,255,255,0.75)', font: { size: 12.5 } },
+                },
+            },
+        },
+    });
+}
+
+function renderGraficoCitasServicio(citas) {
+    const canvas = document.getElementById('grafico-citas-servicio');
+    if (!canvas || typeof Chart === 'undefined') return;
+
+    if (citas.length === 0) return;
+
+    const conteoPorServicio = {};
+    citas.forEach((c) => {
+        const servicio = c.servicio || 'Sin especificar';
+        conteoPorServicio[servicio] = (conteoPorServicio[servicio] || 0) + 1;
+    });
+
+    const entradas = Object.entries(conteoPorServicio).sort((a, b) => b[1] - a[1]).slice(0, 6);
+    const etiquetas = entradas.map(([servicio]) => servicio.length > 24 ? servicio.slice(0, 24) + '…' : servicio);
+
+    new Chart(canvas, {
+        type: 'bar',
+        data: {
+            labels: etiquetas,
+            datasets: [{
+                label: 'Citas',
+                data: entradas.map(([, cantidad]) => cantidad),
+                backgroundColor: '#D6ECFA',
+                borderRadius: 8,
+            }],
+        },
+        options: {
+            indexAxis: 'y',
+            plugins: {
+                legend: { display: false },
+            },
+            scales: {
+                x: {
+                    ticks: { color: 'rgba(255,255,255,0.6)', precision: 0 },
+                    grid: { color: 'rgba(255,255,255,0.06)' },
+                },
+                y: {
+                    ticks: { color: 'rgba(255,255,255,0.75)', font: { size: 12 } },
+                    grid: { display: false },
+                },
+            },
+        },
+    });
 }
 
 function initExportarReporte(usuarios) {

@@ -29,9 +29,9 @@ function marcarCampo(id, mensajeError) {
 ========================================================= */
 
 function claseEstado(estado) {
-    if (estado === "al-dia") return "estado-al-dia";
-    if (estado === "tratamiento") return "estado-tratamiento";
-    return "estado-pendiente";
+    if (estado === "al-dia") return "admin-badge--activo";
+    if (estado === "tratamiento") return "admin-badge--tratamiento";
+    return "admin-badge--pendiente";
 }
 
 function crearFilaMascota(mascota) {
@@ -41,11 +41,11 @@ function crearFilaMascota(mascota) {
             <td>${mascota.especie}</td>
             <td>${mascota.raza}</td>
             <td>${mascota.dueno}</td>
-            <td><span class="estado-badge ${claseEstado(mascota.estado)}">${mascota.estadoTexto}</span></td>
+            <td><span class="admin-badge ${claseEstado(mascota.estado)}">${mascota.estadoTexto}</span></td>
             <td>
-                <div class="acciones-fila">
-                    <button type="button" class="boton-accion boton-editar" data-accion="editar" data-id="${mascota.id}">Editar</button>
-                    <button type="button" class="boton-accion boton-eliminar" data-accion="eliminar" data-id="${mascota.id}">Eliminar</button>
+                <div class="admin-acciones-fila">
+                    <button type="button" class="admin-btn-accion admin-btn-accion--editar" data-accion="editar" data-id="${mascota.id}">Editar</button>
+                    <button type="button" class="admin-btn-accion admin-btn-accion--eliminar" data-accion="eliminar" data-id="${mascota.id}">Eliminar</button>
                 </div>
             </td>
         </tr>
@@ -57,7 +57,7 @@ function renderizarTablaMascotas() {
     if (!cuerpoTabla) return;
 
     if (mascotas.length === 0) {
-        cuerpoTabla.innerHTML = `<tr class="tabla-admin-vacio"><td colspan="6">No hay mascotas registradas.</td></tr>`;
+        cuerpoTabla.innerHTML = `<tr><td colspan="6" style="text-align:center; color:rgba(255,255,255,0.5);">No hay mascotas registradas.</td></tr>`;
         return;
     }
 
@@ -70,10 +70,10 @@ function renderizarTablaMascotas() {
 ========================================================= */
 
 function mostrarFormulario(mascota) {
-    const tarjeta = document.getElementById("tarjeta-formulario-mascota");
+    const modalFondo = document.getElementById("modal-mascota-fondo");
     const titulo = document.getElementById("titulo-formulario-mascota");
     const form = document.getElementById("form-mascota");
-    if (!tarjeta || !form) return;
+    if (!modalFondo || !form) return;
 
     form.reset();
     ["campo-nombre-m", "campo-especie-m", "campo-raza-m", "campo-edad-m", "campo-dueno-m", "campo-estado-m"]
@@ -94,13 +94,12 @@ function mostrarFormulario(mascota) {
         titulo.textContent = "Registrar nueva mascota";
     }
 
-    tarjeta.classList.add("visible");
-    tarjeta.scrollIntoView({ behavior: "smooth", block: "start" });
+    modalFondo.style.display = "flex";
 }
 
 function ocultarFormulario() {
-    const tarjeta = document.getElementById("tarjeta-formulario-mascota");
-    if (tarjeta) tarjeta.classList.remove("visible");
+    const modalFondo = document.getElementById("modal-mascota-fondo");
+    if (modalFondo) modalFondo.style.display = "none";
     idEnEdicion = null;
 }
 
@@ -169,6 +168,16 @@ function initFormularioMascota() {
 
     const botonCancelar = document.getElementById("boton-cancelar-mascota");
     if (botonCancelar) botonCancelar.addEventListener("click", ocultarFormulario);
+
+    const botonCerrar = document.getElementById("modal-mascota-cerrar");
+    if (botonCerrar) botonCerrar.addEventListener("click", ocultarFormulario);
+
+    const modalFondo = document.getElementById("modal-mascota-fondo");
+    if (modalFondo) {
+        modalFondo.addEventListener("click", (evento) => {
+            if (evento.target === modalFondo) ocultarFormulario();
+        });
+    }
 }
 
 
@@ -192,9 +201,9 @@ function crearFilaSolicitud(solicitud) {
             <td>${formatearCambios(solicitud.cambios)}</td>
             <td>${new Date(solicitud.fechaSolicitud).toLocaleDateString('es-CL')}</td>
             <td>
-                <div class="acciones-fila">
-                    <button type="button" class="boton-accion" data-accion="aprobar-solicitud" data-id="${solicitud.id}">Aprobar</button>
-                    <button type="button" class="boton-accion boton-eliminar" data-accion="rechazar-solicitud" data-id="${solicitud.id}">Rechazar</button>
+                <div class="admin-acciones-fila">
+                    <button type="button" class="admin-btn-accion admin-btn-accion--editar" data-accion="aprobar-solicitud" data-id="${solicitud.id}">Aprobar</button>
+                    <button type="button" class="admin-btn-accion admin-btn-accion--eliminar" data-accion="rechazar-solicitud" data-id="${solicitud.id}">Rechazar</button>
                 </div>
             </td>
         </tr>
@@ -208,7 +217,7 @@ function renderizarTablaSolicitudes() {
     const pendientes = obtenerSolicitudesMascotas().filter((s) => s.estado === "pendiente");
 
     if (pendientes.length === 0) {
-        cuerpoTabla.innerHTML = `<tr class="tabla-admin-vacio"><td colspan="5">No hay solicitudes pendientes.</td></tr>`;
+        cuerpoTabla.innerHTML = `<tr><td colspan="5" style="text-align:center; color:rgba(255,255,255,0.5);">No hay solicitudes pendientes.</td></tr>`;
         return;
     }
 

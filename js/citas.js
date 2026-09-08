@@ -1087,7 +1087,7 @@ document.addEventListener("DOMContentLoaded", () => {
             correoDueño: sesion.correo,
             imagen: "../img/cuidado.png",
             estado: "pendiente",
-            estadoTexto: "Datos incompletos",
+            estadoTexto: "Vacunas pendientes",
             descripcion: "",
             completo: false,
         });
