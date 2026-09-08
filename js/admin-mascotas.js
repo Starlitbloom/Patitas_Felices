@@ -4,6 +4,31 @@
 
 let idEnEdicion = null;
 
+const IMAGEN_GENERICA = "../img/cuidado.png";
+
+/* Redimensiona la imagen elegida a un ancho máximo antes de convertirla a base64, */
+/* para no llenar el localStorage con fotos pesadas sin comprimir */
+function redimensionarImagen(archivo, anchoMaximo) {
+    return new Promise((resolve, reject) => {
+        const lector = new FileReader();
+        lector.onerror = reject;
+        lector.onload = () => {
+            const img = new Image();
+            img.onerror = reject;
+            img.onload = () => {
+                const escala = Math.min(1, anchoMaximo / img.width);
+                const canvas = document.createElement("canvas");
+                canvas.width = img.width * escala;
+                canvas.height = img.height * escala;
+                canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+                resolve(canvas.toDataURL("image/jpeg", 0.82));
+            };
+            img.src = lector.result;
+        };
+        lector.readAsDataURL(archivo);
+    });
+}
+
 function validarRequerido(valor, maxLength, nombreCampo) {
     if (!valor || valor.trim().length === 0) return `${nombreCampo} es obligatorio.`;
     if (maxLength && valor.length > maxLength) return `${nombreCampo} no puede superar los ${maxLength} caracteres.`;
@@ -73,6 +98,7 @@ function mostrarFormulario(mascota) {
     const modalFondo = document.getElementById("modal-mascota-fondo");
     const titulo = document.getElementById("titulo-formulario-mascota");
     const form = document.getElementById("form-mascota");
+    const vistaPrevia = document.getElementById("imagen-vista-previa");
     if (!modalFondo || !form) return;
 
     form.reset();
@@ -89,10 +115,15 @@ function mostrarFormulario(mascota) {
         form.dueno.value = mascota.dueno;
         form.estado.value = mascota.estado;
         form.imagen.value = mascota.imagen || "";
+        // Si la foto es un archivo subido (data URL), no tiene sentido mostrar ese texto
+        // enorme en el campo de URL: se deja vacío y la vista previa basta para confirmarla
+        form.querySelector("#imagen-url").value = (mascota.imagen || "").startsWith("data:") ? "" : (mascota.imagen || "");
     } else {
         idEnEdicion = null;
         titulo.textContent = "Registrar nueva mascota";
     }
+
+    if (vistaPrevia) vistaPrevia.src = form.imagen.value || IMAGEN_GENERICA;
 
     modalFondo.style.display = "flex";
 }
@@ -140,7 +171,7 @@ function initFormularioMascota() {
                 mascota.dueno = form.dueno.value.trim();
                 mascota.estado = form.estado.value;
                 mascota.estadoTexto = textoEstado(form.estado.value);
-                mascota.imagen = form.imagen.value.trim() || "../img/cuidado.png";
+                mascota.imagen = form.imagen.value.trim() || IMAGEN_GENERICA;
             }
         } else {
             const nuevoId = form.nombre.value.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "-") + "-" + Date.now();
@@ -153,7 +184,7 @@ function initFormularioMascota() {
                 sexo: "No especificado",
                 peso: "No especificado",
                 dueno: form.dueno.value.trim(),
-                imagen: form.imagen.value.trim() ||"../img/cuidado.png",
+                imagen: form.imagen.value.trim() || IMAGEN_GENERICA,
                 estado: form.estado.value,
                 estadoTexto: textoEstado(form.estado.value),
                 descripcion: "Ficha creada desde el mantenedor administrativo.",
@@ -165,6 +196,37 @@ function initFormularioMascota() {
         renderizarTablaMascotas();
         ocultarFormulario();
     });
+
+    const inputArchivo = document.getElementById("imagen-archivo");
+    const inputUrl = document.getElementById("imagen-url");
+    const vistaPrevia = document.getElementById("imagen-vista-previa");
+
+    if (inputArchivo) {
+        inputArchivo.addEventListener("change", async () => {
+            const archivo = inputArchivo.files[0];
+            if (!archivo) return;
+
+            try {
+                const dataUrl = await redimensionarImagen(archivo, 500);
+                form.imagen.value = dataUrl;
+                if (inputUrl) inputUrl.value = "";
+                if (vistaPrevia) vistaPrevia.src = dataUrl;
+            } catch {
+                window.alert("No se pudo leer la imagen seleccionada.");
+            }
+        });
+    }
+
+    if (inputUrl && vistaPrevia) {
+        inputUrl.addEventListener("input", () => {
+            inputArchivo.value = "";
+            form.imagen.value = inputUrl.value.trim();
+            vistaPrevia.src = form.imagen.value || IMAGEN_GENERICA;
+        });
+        vistaPrevia.addEventListener("error", () => {
+            vistaPrevia.src = IMAGEN_GENERICA;
+        });
+    }
 
     const botonCancelar = document.getElementById("boton-cancelar-mascota");
     if (botonCancelar) botonCancelar.addEventListener("click", ocultarFormulario);
