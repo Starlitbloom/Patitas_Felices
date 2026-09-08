@@ -188,9 +188,16 @@
                 </div>
 
                 <div class="campo" id="campo-imagen-m">
-                    <label for="imagen">URL de la foto</label>
-                    <input type="text" id="imagen" name="imagen" maxlength="200" placeholder="Ej: ../img/nombre-mascota.jpg" autocomplete="off">
-                    <p class="campo__ayuda">Ruta o enlace de la imagen. Si la dejas vacía, se usará una foto genérica.</p>
+                    <label for="imagen-archivo">Foto de la mascota</label>
+                    <div class="admin-imagen-campo">
+                        <img id="imagen-vista-previa" class="admin-imagen-vista-previa" src="../img/cuidado.png" alt="Vista previa">
+                        <div class="admin-imagen-campo-controles">
+                            <input type="file" id="imagen-archivo" accept="image/*">
+                            <input type="text" id="imagen-url" placeholder="O pega una URL: ../img/nombre-mascota.jpg" autocomplete="off">
+                            <input type="hidden" id="imagen" name="imagen">
+                        </div>
+                    </div>
+                    <p class="campo__ayuda">Sube una foto desde tu equipo o pega el enlace de una imagen. Si la dejas vacía, se usará una foto genérica.</p>
                 </div>
 
                 <div class="admin-panel-editar-botones">
