@@ -15,7 +15,9 @@ const mascotas = [
         edad: "3 años",
         sexo: "Macho",
         peso: "28 kg",
-        dueno: "Constanza Herrera",
+        dueno: "Maria Calfileo Ceballos",
+        correoDueño: "ma.calfileo@duoc.cl",
+        completo: true,
         imagen: "../img/golden.jpg",
         estado: "al-dia",
         estadoTexto: "Control al día",
@@ -30,7 +32,9 @@ const mascotas = [
         edad: "2 años",
         sexo: "Hembra",
         peso: "4 kg",
-        dueno: "Diego Soto",
+        dueno: "Maria Calfileo Ceballos",
+        correoDueño: "ma.calfileo@duoc.cl",
+        completo: true,
         imagen: "../img/gataeuropea.jpg",
         estado: "pendiente",
         estadoTexto: "Vacunas pendientes",
@@ -45,7 +49,9 @@ const mascotas = [
         edad: "5 años",
         sexo: "Macho",
         peso: "32 kg",
-        dueno: "Javiera Muñoz",
+        dueno: "Rocio Cruces",
+        correoDueño: "ro.cruces@duoc.cl",
+        completo: true,
         imagen: "../img/labrador.jpg",
         estado: "tratamiento",
         estadoTexto: "En tratamiento",
@@ -60,7 +66,9 @@ const mascotas = [
         edad: "1 año",
         sexo: "Hembra",
         peso: "3.2 kg",
-        dueno: "Tomás Reyes",
+        dueno: "Maria Calfileo Ceballos",
+        correoDueño: "ma.calfileo@duoc.cl",
+        completo: true,
         imagen: "../img/gatopersa.jpg",
         estado: "al-dia",
         estadoTexto: "Control al día",
@@ -75,7 +83,9 @@ const mascotas = [
         edad: "3 meses ",
         sexo: "Hembra",
         peso: "1.1 kg",
-        dueno: "Mara Gonzalez",
+        dueno: "Rocio Cruces",
+        correoDueño: "ro.cruces@duoc.cl",
+        completo: true,
         imagen: "../img/conejo.jpg",
         estado: "al-dia",
         estadoTexto: "Control al día",
@@ -90,7 +100,9 @@ const mascotas = [
         edad: "1 año",
         sexo: "Macho",
         peso: "800 gr",
-        dueno: "Sofía Martínez",
+        dueno: "Rocio Cruces",
+        correoDueño: "ro.cruces@duoc.cl",
+        completo: true,
         imagen: "../img/Cacatua.jpg",
         estado: "al-dia",
         estadoTexto: "Control al día",
@@ -208,6 +220,107 @@ function alternarFavorito(id) {
 
     guardarFavoritos(favoritos);
     return favoritos.includes(id);
+}
+
+
+/* =========================================================
+   PERSISTENCIA (LocalStorage)
+   El arreglo `mascotas` sigue siendo la fuente que leen
+   catálogo/detalle/admin, pero ahora se sincroniza con
+   localStorage para que las altas/ediciones sobrevivan al
+   recargar la página y para que las mascotas creadas desde
+   "Solicitar cita" (js/citas.js) aparezcan aquí también.
+========================================================= */
+
+const CLAVE_MASCOTAS = "patitasFelices_mascotas";
+
+function asegurarMascotasSeed() {
+    if (localStorage.getItem(CLAVE_MASCOTAS) === null) {
+        localStorage.setItem(CLAVE_MASCOTAS, JSON.stringify(mascotas));
+    }
+}
+
+function cargarMascotasDesdeStorage() {
+    let guardadas = [];
+    try {
+        guardadas = JSON.parse(localStorage.getItem(CLAVE_MASCOTAS)) || [];
+    } catch (error) {
+        console.error("No se pudieron cargar las mascotas desde LocalStorage:", error);
+        guardadas = [];
+    }
+
+    if (guardadas.length > 0) {
+        mascotas.length = 0;
+        mascotas.push(...guardadas);
+    }
+}
+
+function guardarMascotas() {
+    localStorage.setItem(CLAVE_MASCOTAS, JSON.stringify(mascotas));
+}
+
+
+/* =========================================================
+   SOLICITUDES DE CAMBIO
+   Una mascota ya completa no se edita directo: el dueño
+   propone cambios, quedan "pendiente" hasta que un admin
+   los aprueba o rechaza desde admin/admin-mascotas.html.
+========================================================= */
+
+const CLAVE_SOLICITUDES_MASCOTAS = "patitasFelices_solicitudesMascotas";
+
+function obtenerSolicitudesMascotas() {
+    try {
+        return JSON.parse(localStorage.getItem(CLAVE_SOLICITUDES_MASCOTAS)) || [];
+    } catch (error) {
+        console.error("No se pudieron cargar las solicitudes de mascotas:", error);
+        return [];
+    }
+}
+
+function guardarSolicitudesMascotas(solicitudes) {
+    localStorage.setItem(CLAVE_SOLICITUDES_MASCOTAS, JSON.stringify(solicitudes));
+}
+
+function crearSolicitudCambio(mascotaId, correoSolicitante, cambios) {
+    const solicitudes = obtenerSolicitudesMascotas();
+    solicitudes.push({
+        id: `sol-${Date.now()}`,
+        mascotaId,
+        correoSolicitante,
+        cambios,
+        estado: "pendiente",
+        fechaSolicitud: new Date().toISOString(),
+        fechaResolucion: null,
+    });
+    guardarSolicitudesMascotas(solicitudes);
+}
+
+function aprobarSolicitud(id) {
+    const solicitudes = obtenerSolicitudesMascotas();
+    const solicitud = solicitudes.find((s) => s.id === id);
+    if (!solicitud || solicitud.estado !== "pendiente") return;
+
+    const mascota = obtenerMascotaPorId(solicitud.mascotaId);
+    if (mascota) {
+        Object.assign(mascota, solicitud.cambios);
+        mascota.completo = true;
+        guardarMascotas();
+    }
+
+    solicitud.estado = "aprobada";
+    solicitud.fechaResolucion = new Date().toISOString();
+    guardarSolicitudesMascotas(solicitudes);
+}
+
+function rechazarSolicitud(id) {
+    const solicitudes = obtenerSolicitudesMascotas();
+    const solicitud = solicitudes.find((s) => s.id === id);
+    if (!solicitud || solicitud.estado !== "pendiente") return;
+
+    solicitud.estado = "rechazada";
+    solicitud.fechaResolucion = new Date().toISOString();
+    guardarSolicitudesMascotas(solicitudes);
 }
 
 
@@ -432,6 +545,9 @@ function renderizarDetalleMascota() {
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
+    asegurarMascotasSeed();
+    cargarMascotasDesdeStorage();
+
     renderizarCatalogo("todas");
     initFiltrosMascotas();
     initBotonesFavorito();

@@ -189,6 +189,8 @@ nav a {
 
     font-weight: bold;
 
+    white-space: nowrap;
+
     transition:
         color 0.3s ease,
         transform 0.3s ease;
@@ -197,6 +199,15 @@ nav a {
 
 nav a:hover {
     color: var(--celeste-fuerte);
+}
+
+
+.nav-solo-sesion {
+    display: none;
+}
+
+.nav-solo-sesion.nav-solo-sesion--visible {
+    display: flex;
 }
 
 
@@ -1945,7 +1956,7 @@ nav a.activo::after {
    TABLET
 ========================================================= */
 
-@media (max-width: 900px) {
+@media (max-width: 1050px) {
 
     .header-principal {
         padding: 14px 20px;

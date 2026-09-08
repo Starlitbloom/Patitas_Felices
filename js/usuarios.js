@@ -282,6 +282,7 @@ function initFormPerfil() {
     actualizarCabeceraPerfil(sesion);
     initAvatarUpload(sesion);
     renderMascotas(sesion);
+    initAccionesMascotasPerfil(sesion);
     renderCitas(sesion);
 
     // precarga los datos del usuario logueado
@@ -492,30 +493,129 @@ function guardarAvatar(base64) {
 }
 
 
-/* --- MASCOTAS (placeholder: se conecta cuando el equipo tenga esa página lista) --- */
+/* --- MASCOTAS --- */
 function renderMascotas(sesion) {
     const contenedor = document.getElementById('perfil-mascotas-lista');
     if (!contenedor) return;
 
-    let mascotas = [];
+    let mascotasGuardadas = [];
     try {
-        mascotas = JSON.parse(localStorage.getItem('patitasFelices_mascotas')) || [];
+        mascotasGuardadas = JSON.parse(localStorage.getItem('patitasFelices_mascotas')) || [];
     } catch {
-        mascotas = [];
+        mascotasGuardadas = [];
     }
 
-    const propias = mascotas.filter((m) => m.correoDueño === sesion.correo);
+    const solicitudes = typeof obtenerSolicitudesMascotas === 'function' ? obtenerSolicitudesMascotas() : [];
+
+    const propias = mascotasGuardadas.filter((m) => m.correoDueño === sesion.correo);
     if (propias.length === 0) return;
 
-    contenedor.innerHTML = propias.map((m) => `
-        <div class="perfil-mascota-item">
-            <span>🐾</span>
-            <div>
-                <strong>${m.nombre || 'Mascota'}</strong><br>
-                <small>${m.especie || ''}</small>
+    contenedor.classList.remove('perfil-lista-vacia');
+
+    contenedor.innerHTML = propias.map((m) => {
+        const solicitudPendiente = solicitudes.find((s) => s.mascotaId === m.id && s.estado === 'pendiente');
+
+        let estadoHtml;
+        let botonTexto;
+        if (solicitudPendiente) {
+            estadoHtml = '<p class="perfil-mascota-alerta perfil-mascota-alerta--info">🕒 Cambios enviados, pendiente de aprobación.</p>';
+            botonTexto = null;
+        } else if (!m.completo) {
+            estadoHtml = '<p class="perfil-mascota-alerta">⚠️ Datos incompletos.</p>';
+            botonTexto = 'Completar datos →';
+        } else {
+            estadoHtml = '';
+            botonTexto = 'Editar →';
+        }
+
+        return `
+            <div class="perfil-mascota-item">
+                <span>🐾</span>
+                <div style="flex:1;">
+                    <strong>${m.nombre || 'Mascota'}</strong><br>
+                    <small>${m.especie || ''}${m.raza ? ' · ' + m.raza : ''}</small>
+                    ${estadoHtml}
+                    ${botonTexto ? `<a href="#" class="perfil-card-link" data-toggle-mascota="${m.id}">${botonTexto}</a>` : ''}
+
+                    <form class="perfil-mascota-formulario" data-mascota-id="${m.id}" style="display:none;" novalidate>
+                        <div class="campo" id="campo-raza-${m.id}">
+                            <label for="raza-${m.id}">Raza</label>
+                            <input type="text" id="raza-${m.id}" maxlength="40" value="${m.raza || ''}">
+                            <p class="campo__error">La raza es obligatoria.</p>
+                        </div>
+                        <div class="fila-campos">
+                            <div class="campo">
+                                <label for="sexo-${m.id}">Sexo</label>
+                                <input type="text" id="sexo-${m.id}" maxlength="20" value="${m.sexo || ''}">
+                            </div>
+                            <div class="campo">
+                                <label for="peso-${m.id}">Peso</label>
+                                <input type="text" id="peso-${m.id}" maxlength="20" value="${m.peso || ''}">
+                            </div>
+                        </div>
+                        <div class="campo">
+                            <label for="imagen-${m.id}">URL de foto (opcional)</label>
+                            <input type="text" id="imagen-${m.id}" maxlength="200" value="${m.imagen || ''}">
+                        </div>
+                        <div class="campo">
+                            <label for="descripcion-${m.id}">Descripción (opcional)</label>
+                            <input type="text" id="descripcion-${m.id}" maxlength="300" value="${m.descripcion || ''}">
+                        </div>
+                        <button type="submit" class="boton-principal">
+                            <span>Guardar</span>
+                            <span class="flecha-boton" aria-hidden="true">⟶</span>
+                        </button>
+                    </form>
+                </div>
             </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
+}
+
+function initAccionesMascotasPerfil(sesion) {
+    const contenedor = document.getElementById('perfil-mascotas-lista');
+    if (!contenedor) return;
+
+    contenedor.addEventListener('click', (e) => {
+        const toggle = e.target.closest('[data-toggle-mascota]');
+        if (!toggle) return;
+        e.preventDefault();
+
+        const form = contenedor.querySelector(`form[data-mascota-id="${toggle.dataset.toggleMascota}"]`);
+        if (form) form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    });
+
+    contenedor.addEventListener('submit', (e) => {
+        const form = e.target.closest('form[data-mascota-id]');
+        if (!form) return;
+        e.preventDefault();
+
+        const mascotaId = form.dataset.mascotaId;
+        const raza = document.getElementById(`raza-${mascotaId}`).value.trim();
+        const sexo = document.getElementById(`sexo-${mascotaId}`).value.trim();
+        const peso = document.getElementById(`peso-${mascotaId}`).value.trim();
+        const imagen = document.getElementById(`imagen-${mascotaId}`).value.trim();
+        const descripcion = document.getElementById(`descripcion-${mascotaId}`).value.trim();
+
+        const errorRaza = validarRequerido(raza, 40, 'La raza');
+        marcarCampo(`campo-raza-${mascotaId}`, errorRaza);
+        if (errorRaza) return;
+
+        const cambios = { raza, sexo, peso, imagen, descripcion };
+        const mascota = typeof obtenerMascotaPorId === 'function' ? obtenerMascotaPorId(mascotaId) : null;
+
+        if (mascota && !mascota.completo) {
+            Object.assign(mascota, cambios);
+            mascota.completo = true;
+            mascota.estado = 'al-dia';
+            mascota.estadoTexto = 'Control al día';
+            guardarMascotas();
+        } else {
+            crearSolicitudCambio(mascotaId, sesion.correo, cambios);
+        }
+
+        renderMascotas(sesion);
+    });
 }
 
 /* --- CITAS (placeholder: se conecta cuando el equipo tenga esa página lista) --- */

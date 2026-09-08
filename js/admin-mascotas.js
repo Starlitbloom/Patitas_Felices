@@ -157,16 +157,87 @@ function initFormularioMascota() {
                 imagen: form.imagen.value.trim() ||"../img/cuidado.png",
                 estado: form.estado.value,
                 estadoTexto: textoEstado(form.estado.value),
-                descripcion: "Ficha creada desde el mantenedor administrativo."
+                descripcion: "Ficha creada desde el mantenedor administrativo.",
+                completo: true
             });
         }
 
+        guardarMascotas();
         renderizarTablaMascotas();
         ocultarFormulario();
     });
 
     const botonCancelar = document.getElementById("boton-cancelar-mascota");
     if (botonCancelar) botonCancelar.addEventListener("click", ocultarFormulario);
+}
+
+
+/* =========================================================
+   SOLICITUDES DE CAMBIO PENDIENTES
+========================================================= */
+
+function formatearCambios(cambios) {
+    return Object.entries(cambios)
+        .filter(([, valor]) => valor)
+        .map(([campo, valor]) => `<strong>${campo}:</strong> ${valor}`)
+        .join('<br>');
+}
+
+function crearFilaSolicitud(solicitud) {
+    const mascota = obtenerMascotaPorId(solicitud.mascotaId);
+    return `
+        <tr data-id="${solicitud.id}">
+            <td>${mascota ? mascota.nombre : solicitud.mascotaId}</td>
+            <td>${solicitud.correoSolicitante}</td>
+            <td>${formatearCambios(solicitud.cambios)}</td>
+            <td>${new Date(solicitud.fechaSolicitud).toLocaleDateString('es-CL')}</td>
+            <td>
+                <div class="acciones-fila">
+                    <button type="button" class="boton-accion" data-accion="aprobar-solicitud" data-id="${solicitud.id}">Aprobar</button>
+                    <button type="button" class="boton-accion boton-eliminar" data-accion="rechazar-solicitud" data-id="${solicitud.id}">Rechazar</button>
+                </div>
+            </td>
+        </tr>
+    `;
+}
+
+function renderizarTablaSolicitudes() {
+    const cuerpoTabla = document.getElementById("cuerpo-tabla-solicitudes-mascotas");
+    if (!cuerpoTabla) return;
+
+    const pendientes = obtenerSolicitudesMascotas().filter((s) => s.estado === "pendiente");
+
+    if (pendientes.length === 0) {
+        cuerpoTabla.innerHTML = `<tr class="tabla-admin-vacio"><td colspan="5">No hay solicitudes pendientes.</td></tr>`;
+        return;
+    }
+
+    cuerpoTabla.innerHTML = pendientes.map(crearFilaSolicitud).join("");
+}
+
+function initAccionesTablaSolicitudes() {
+    const cuerpoTabla = document.getElementById("cuerpo-tabla-solicitudes-mascotas");
+    if (!cuerpoTabla) return;
+
+    cuerpoTabla.addEventListener("click", (evento) => {
+        const boton = evento.target.closest("button[data-accion]");
+        if (!boton) return;
+
+        const id = boton.dataset.id;
+
+        if (boton.dataset.accion === "aprobar-solicitud") {
+            aprobarSolicitud(id);
+            renderizarTablaMascotas();
+            renderizarTablaSolicitudes();
+        }
+
+        if (boton.dataset.accion === "rechazar-solicitud") {
+            const confirmar = window.confirm("¿Rechazar esta solicitud de cambio?");
+            if (!confirmar) return;
+            rechazarSolicitud(id);
+            renderizarTablaSolicitudes();
+        }
+    });
 }
 
 
@@ -195,6 +266,7 @@ function initAccionesTabla() {
 
             const indice = mascotas.findIndex((m) => m.id === id);
             if (indice !== -1) mascotas.splice(indice, 1);
+            guardarMascotas();
             renderizarTablaMascotas();
         }
     });
@@ -212,6 +284,9 @@ document.addEventListener("DOMContentLoaded", () => {
     renderizarTablaMascotas();
     initFormularioMascota();
     initAccionesTabla();
+
+    renderizarTablaSolicitudes();
+    initAccionesTablaSolicitudes();
 
     const botonNuevo = document.getElementById("boton-nueva-mascota");
     if (botonNuevo) botonNuevo.addEventListener("click", () => mostrarFormulario(null));

@@ -950,6 +950,74 @@ document.addEventListener("DOMContentLoaded", () => {
                 citasGuardadas
             )
         );
+
+
+        asegurarMascotaDeLaCita(
+            nuevaCita,
+            nombreCompletoUsuario
+        );
+    }
+
+
+    /* =====================================================
+       CREAR/VINCULAR MASCOTA A PARTIR DE LA CITA
+       Si el dueño ya tiene una mascota con ese nombre, no la
+       toca. Si no existe, crea una ficha mínima marcada como
+       incompleta, para que la termine de llenar desde su perfil.
+    ===================================================== */
+
+    const CLAVE_MASCOTAS = "patitasFelices_mascotas";
+
+    function generarIdMascota(nombre) {
+        const base = nombre
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[̀-ͯ]/g, "")
+            .replace(/[^a-z0-9]/g, "-");
+        return `${base}-${Date.now()}`;
+    }
+
+    function asegurarMascotaDeLaCita(cita, nombreDuenoCompleto) {
+
+        let mascotasGuardadas = [];
+        try {
+            mascotasGuardadas = JSON.parse(
+                localStorage.getItem(CLAVE_MASCOTAS)
+            ) || [];
+        } catch (error) {
+            console.error("No se pudieron leer las mascotas guardadas.", error);
+            mascotasGuardadas = [];
+        }
+
+        const yaExiste = mascotasGuardadas.some(
+            (m) =>
+                m.correoDueño === sesion.correo &&
+                m.nombre.toLowerCase() === cita.mascota.toLowerCase()
+        );
+
+        if (yaExiste) return;
+
+        mascotasGuardadas.push({
+            id: generarIdMascota(cita.mascota),
+            nombre: cita.mascota,
+            especie: cita.tipoMascota,
+            raza: "",
+            edad: String(cita.edadMascota || ""),
+            sexo: "",
+            peso: "",
+            dueno: nombreDuenoCompleto,
+            correoDueño: sesion.correo,
+            imagen: "",
+            estado: "pendiente",
+            estadoTexto: "Datos incompletos",
+            descripcion: "",
+            completo: false,
+        });
+
+        localStorage.setItem(
+            CLAVE_MASCOTAS,
+            JSON.stringify(mascotasGuardadas)
+        );
     }
 
 

@@ -27,10 +27,11 @@
                 <ul>
                     <li><a href="index.html">Inicio</a></li>
                     <li><a href="nosotros.html">Nosotros</a></li>
-                    <li><a href="mascotas.html" class="activo">Mascotas</a></li>
+                    <li class="nav-solo-sesion" id="nav-mascotas"><a href="mascotas.html" class="activo">Mascotas</a></li>
                     <li><a href="novedades.html">Novedades</a></li>
                     <li><a href="contacto.html">Contacto</a></li>
-                    <li><a href="login.html">Iniciar sesión</a></li>
+                    <li class="nav-solo-sesion" id="nav-perfil"><a href="perfil.html">Mi perfil</a></li>
+                    <li><a href="login.html" id="nav-cuenta">Iniciar sesión</a></li>
                     <li>
                         <a href="solicitar-cita.html" class="btn-cita">
                             <img src="../img/calendario.png" alt="" class="icono-calendario">
@@ -144,6 +145,7 @@
 
     <script src="../js/mascotas.js"></script>
     <script src="../js/clinico.js"></script>
+    <script src="../js/nav-sesion.js"></script>
 </body>
 
 </html>

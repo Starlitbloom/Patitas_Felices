@@ -42,6 +42,30 @@
                 <button type="button" class="boton-nuevo" id="boton-nueva-mascota">+ Nueva mascota</button>
             </div>
 
+            <div class="admin-titulo">
+                <div>
+                    <h2 id="titulo-solicitudes-mascotas">Solicitudes de cambio pendientes</h2>
+                    <p>Cambios que un dueño propuso sobre una mascota ya registrada.</p>
+                </div>
+            </div>
+
+            <div class="tabla-admin-contenedor">
+                <table class="tabla-admin">
+                    <thead>
+                        <tr>
+                            <th>Mascota</th>
+                            <th>Solicitado por</th>
+                            <th>Cambios propuestos</th>
+                            <th>Fecha</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpo-tabla-solicitudes-mascotas">
+                        <!-- Se genera dinámicamente desde js/admin-mascotas.js -->
+                    </tbody>
+                </table>
+            </div>
+
             <div class="tabla-admin-contenedor">
                 <table class="tabla-admin">
                     <thead>
