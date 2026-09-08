@@ -9,6 +9,11 @@
    validarPassword, marcarCampo, REGIONES).
 ========================================================= */
 
+/**
+ * Guardia de acceso: si no hay sesión o el usuario no es admin,
+ * redirige a login.html y corta la ejecución (return null).
+ * Se debe llamar SIEMPRE al inicio de cualquier init de una página del panel.
+ */
 function protegerRutaAdmin() {
     const sesion = obtenerSesion();
 
@@ -22,6 +27,12 @@ function protegerRutaAdmin() {
 
 /* ================= DASHBOARD ================= */
 
+/**
+ * Inicializa dashboard.html: nombre del admin, KPIs y tabla de últimos usuarios.
+ * Si los elementos del dashboard no existen en el DOM (ej. estamos en otra página
+ * del panel), cada getElementById devuelve null y el "if" correspondiente lo salta,
+ * por eso es seguro llamar esta función en todas las páginas admin sin romper nada.
+ */
 function initDashboardAdmin() {
     const sesion = protegerRutaAdmin();
     if (!sesion) return;
@@ -31,23 +42,27 @@ function initDashboardAdmin() {
 
     const usuarios = obtenerUsuarios();
 
+    // KPI: total de usuarios registrados
     const kpiTotal = document.getElementById('kpi-total-usuarios');
     if (kpiTotal) kpiTotal.textContent = usuarios.length;
 
+    // KPI: usuarios cuyo fechaRegistro cae dentro de los últimos 7 días
     const unaSemanaMs = 7 * 24 * 60 * 60 * 1000;
     const ahora = Date.now();
     const nuevosSemana = usuarios.filter((u) => {
-        if (!u.fechaRegistro) return false;
+        if (!u.fechaRegistro) return false; // usuarios antiguos sin esa fecha no cuentan como "nuevos"
         return ahora - new Date(u.fechaRegistro).getTime() <= unaSemanaMs;
     }).length;
     const kpiNuevos = document.getElementById('kpi-nuevos-semana');
     if (kpiNuevos) kpiNuevos.textContent = nuevosSemana;
 
+    // Mascotas y citas viven en sus propias claves de localStorage (fuera de usuarios.js),
+    // por eso se leen acá directamente en vez de con una función helper
     let mascotas = [];
     let citas = [];
     try {
         mascotas = JSON.parse(localStorage.getItem('patitasFelices_mascotas')) || [];
-    } catch { mascotas = []; }
+    } catch { mascotas = []; } // localStorage corrupto o vacío: se asume lista vacía en vez de romper la página
     try {
         citas = JSON.parse(localStorage.getItem('patitasFelices_citas')) || [];
     } catch { citas = []; }
@@ -61,6 +76,7 @@ function initDashboardAdmin() {
         kpiCitas.textContent = pendientes;
     }
 
+    // KPI: solicitudes de cambio de mascota pendientes de revisión (clave propia en localStorage)
     const kpiSolicitudesMascotas = document.getElementById('kpi-solicitudes-mascotas');
     if (kpiSolicitudesMascotas) {
         let solicitudesMascotas = [];
@@ -71,6 +87,9 @@ function initDashboardAdmin() {
         kpiSolicitudesMascotas.textContent = pendientesMascotas;
     }
 
+    // Tabla "Últimos usuarios registrados": toma los 5 más recientes del array
+    // (asumiendo que los usuarios nuevos se agregan al final del array) y los invierte
+    // para mostrar primero al más reciente
     const tbody = document.getElementById('admin-tabla-recientes');
     const vacia = document.getElementById('admin-tabla-vacia');
 
@@ -96,6 +115,10 @@ function initDashboardAdmin() {
     }
 }
 
+/**
+ * Conecta el botón "Cerrar sesión" del sidebar admin: limpia la sesión (usuarios.js)
+ * y redirige a login.html. Se usa preventDefault porque el <a> tiene href="#".
+ */
 function initBotonCerrarSesionAdmin() {
     const btn = document.getElementById('btn-cerrar-sesion-admin');
     if (!btn) return;
@@ -109,17 +132,24 @@ function initBotonCerrarSesionAdmin() {
 
 /* ================= GESTIÓN DE USUARIOS ================= */
 
+// Estado del módulo de usuarios.html, en variables de módulo (no en el DOM) para que
+// sobrevivan entre renders de la tabla sin tener que releerlos de los inputs cada vez
 let filtroTextoUsuarios = '';
 let filtroRolUsuarios = '';
 let ordenUsuarios = 'recientes';
-let correosSeleccionados = new Set();
+let correosSeleccionados = new Set(); // usa el correo como identificador único de cada fila marcada
 
+/**
+ * Inicializa usuarios.html: primer render de la tabla, listeners de los filtros,
+ * exportación de la selección, y los 3 modales (Ver / Editar / Crear).
+ */
 function initPaginaUsuarios() {
     const sesion = protegerRutaAdmin();
     if (!sesion) return;
 
     renderTablaUsuarios();
 
+    // Búsqueda libre: se re-renderiza la tabla en cada tecla (sin debounce)
     const buscador = document.getElementById('admin-buscador');
     if (buscador) {
         buscador.addEventListener('input', () => {
@@ -144,6 +174,7 @@ function initPaginaUsuarios() {
         });
     }
 
+    // "Limpiar": resetea tanto el estado en JS como los controles visuales del HTML
     const btnLimpiar = document.getElementById('admin-btn-limpiar');
     if (btnLimpiar) {
         btnLimpiar.addEventListener('click', () => {
@@ -157,6 +188,7 @@ function initPaginaUsuarios() {
         });
     }
 
+    // Exporta a Excel SOLO los usuarios marcados con checkbox (correosSeleccionados)
     const btnExportarSeleccion = document.getElementById('admin-btn-exportar-seleccion');
     if (btnExportarSeleccion) {
         btnExportarSeleccion.addEventListener('click', () => {
@@ -173,11 +205,17 @@ function initPaginaUsuarios() {
     initCheckTodos();
 }
 
+/**
+ * Aplica, en orden, el filtro de texto, el filtro de rol y el orden seleccionado
+ * sobre la lista completa de usuarios. No muta el array original de obtenerUsuarios().
+ */
 function obtenerUsuariosFiltradosYOrdenados() {
     let usuarios = obtenerUsuarios();
 
     if (filtroTextoUsuarios) {
         usuarios = usuarios.filter((u) => {
+            // concatena varios campos en un solo string buscable, así una sola búsqueda
+            // cubre RUN, nombre, apellidos y correo a la vez
             const texto = `${u.run || ''} ${u.nombre || ''} ${u.apellidos || ''} ${u.correo || ''}`.toLowerCase();
             return texto.includes(filtroTextoUsuarios);
         });
@@ -192,12 +230,19 @@ function obtenerUsuariosFiltradosYOrdenados() {
     } else if (ordenUsuarios === 'za') {
         usuarios = [...usuarios].sort((a, b) => (b.nombre || '').localeCompare(a.nombre || ''));
     } else {
+        // "recientes": como los usuarios nuevos se agregan al final del array,
+        // invertirlo deja primero a los más recientes
         usuarios = [...usuarios].reverse();
     }
 
     return usuarios;
 }
 
+/**
+ * Repinta por completo el <tbody> de la tabla de usuarios según los filtros/orden
+ * actuales, y vuelve a conectar los checkboxes de cada fila (porque el innerHTML
+ * nuevo borra los listeners anteriores).
+ */
 function renderTablaUsuarios() {
     const tbody = document.getElementById('admin-tabla-body');
     const vacia = document.getElementById('admin-tabla-vacia');
@@ -217,6 +262,8 @@ function renderTablaUsuarios() {
     tbody.innerHTML = usuarios.map((u) => {
         const rol = u.rol || 'cliente';
         const badgeClase = rol === 'admin' ? 'admin-badge--admin' : 'admin-badge--cliente';
+        // el admin no puede eliminar su propia cuenta mientras tiene sesión activa:
+        // se detecta comparando el correo de la fila con el correo de la sesión
         const esUnoMismo = sesion && u.correo.toLowerCase() === sesion.correo.toLowerCase();
         const marcado = correosSeleccionados.has(u.correo) ? 'checked' : '';
 
@@ -240,6 +287,8 @@ function renderTablaUsuarios() {
         `;
     }).join('');
 
+    // Los checkboxes se regeneran en cada render, así que hay que re-engancharles el evento
+    // y sincronizar el Set de seleccionados según su estado marcado/desmarcado
     tbody.querySelectorAll('.admin-check-fila').forEach((chk) => {
         chk.addEventListener('change', () => {
             if (chk.checked) {
@@ -254,6 +303,10 @@ function renderTablaUsuarios() {
     actualizarCheckTodos();
 }
 
+/**
+ * Sincroniza el checkbox "maestro" del encabezado: queda marcado solo si
+ * TODAS las filas visibles están marcadas (y sin filas, queda desmarcado).
+ */
 function actualizarCheckTodos() {
     const checkTodos = document.getElementById('admin-check-todos');
     if (!checkTodos) return;
@@ -266,6 +319,12 @@ function actualizarCheckTodos() {
     checkTodos.checked = Array.from(filas).every((f) => f.checked);
 }
 
+/**
+ * Conecta el checkbox maestro: al hacer clic, marca/desmarca todas las filas
+ * visibles en la tabla y actualiza correosSeleccionados en consecuencia.
+ * Nota: solo afecta a las filas actualmente renderizadas (según filtros aplicados),
+ * no a todos los usuarios del sistema.
+ */
 function initCheckTodos() {
     const checkTodos = document.getElementById('admin-check-todos');
     if (!checkTodos) return;
@@ -284,6 +343,11 @@ function initCheckTodos() {
 
 /* ================= EXPORTAR A EXCEL ================= */
 
+/**
+ * Convierte un array de usuarios a una hoja de Excel (vía SheetJS) y dispara la descarga.
+ * Los nombres de columna se escriben "bonitos" (con mayúscula, sin camelCase) porque
+ * son los que va a ver el admin al abrir el archivo.
+ */
 function exportarUsuariosComoExcel(usuarios, nombreArchivo) {
     const filas = usuarios.map((u) => ({
         RUN: u.run || '',
@@ -303,12 +367,21 @@ function exportarUsuariosComoExcel(usuarios, nombreArchivo) {
     XLSX.writeFile(libro, `${nombreArchivo}.xlsx`);
 }
 
+/**
+ * Atajo para exportar un solo usuario (usado desde el modal "Ver" → botón "Exportar").
+ * El nombre del archivo se arma con la parte del correo antes del "@".
+ */
 function exportarUsuarioComoExcel(usuario) {
     exportarUsuariosComoExcel([usuario], `usuario-${usuario.correo.split('@')[0]}`);
 }
 
 /* ================= MODAL VER + PANEL EDITAR ================= */
 
+/**
+ * Configura los 3 paneles de usuarios.html (modal "Ver", panel "Editar", panel "Crear"):
+ * abrir/cerrar, precarga de datos y el submit de cada formulario.
+ * Se llama una sola vez desde initPaginaUsuarios().
+ */
 function initModalesUsuarios(sesion) {
     const tbody = document.getElementById('admin-tabla-body');
 
@@ -327,20 +400,26 @@ function initModalesUsuarios(sesion) {
     const formCrear = document.getElementById('form-crear-usuario');
     const accesoNuevo = document.getElementById('acceso-nuevo');
 
-    if (!tbody) return;
+    if (!tbody) return; // si no estamos en usuarios.html, no tiene sentido seguir configurando estos paneles
 
+    // Delegación de eventos: un solo listener en el tbody captura los clics de
+    // Ver/Editar/Eliminar de TODAS las filas, incluidas las que se regeneran en cada render
     tbody.addEventListener('click', (e) => {
         const btn = e.target.closest('button[data-accion]');
         if (!btn) return;
         manejarAccionUsuario(btn.dataset.correo, btn.dataset.accion);
     });
 
+    // Mismo patrón de delegación, pero para los botones de acción DENTRO del modal "Ver"
+    // (editar/eliminar/exportar desde ahí mismo)
     modalVerContenido.addEventListener('click', (e) => {
         const btn = e.target.closest('button[data-accion]');
         if (!btn) return;
         manejarAccionUsuario(btn.dataset.correo, btn.dataset.accion);
     });
 
+    // Punto único que decide qué hacer según la acción clickeada, sin importar
+    // si el clic vino de la tabla o del modal "Ver"
     function manejarAccionUsuario(correo, accion) {
         const usuarios = obtenerUsuarios();
         const usuario = usuarios.find((u) => u.correo === correo);
@@ -349,7 +428,7 @@ function initModalesUsuarios(sesion) {
         if (accion === 'ver') {
             abrirModalVer(usuario);
         } else if (accion === 'editar') {
-            modalVerFondo.style.display = 'none';
+            modalVerFondo.style.display = 'none'; // si veníamos del modal Ver, lo cerramos antes de abrir Editar
             abrirPanelEditar(usuario);
         } else if (accion === 'eliminar') {
             modalVerFondo.style.display = 'none';
@@ -359,10 +438,12 @@ function initModalesUsuarios(sesion) {
         }
     }
 
+    // Arma el HTML de detalle del usuario dentro del modal "Ver"
     function abrirModalVer(usuario) {
         const rol = usuario.rol || 'cliente';
         const badgeRolClase = rol === 'admin' ? 'admin-badge--admin' : 'admin-badge--cliente';
         const avatarSrc = usuario.avatar || '';
+        // Fallback de iniciales cuando el usuario no tiene foto: primera letra de nombre + apellido
         const iniciales = `${(usuario.nombre || '?')[0]}${(usuario.apellidos || '')[0] || ''}`.toUpperCase();
 
         modalVerContenido.innerHTML = `
@@ -386,6 +467,8 @@ function initModalesUsuarios(sesion) {
                         Tel: ${usuario.telefono || 'No registrado'} · ${usuario.region || 'Sin región'}${usuario.comuna ? ' / ' + usuario.comuna : ''}
                     </p>
 
+                    <!-- Nota: este badge "Activo" está fijo/hardcodeado, no lee usuario.activo -->
+                    <!-- así que siempre se va a mostrar como activo aunque el usuario esté desactivado -->
                     <span class="admin-badge admin-badge--activo">Activo</span>
                 </div>
             </div>
@@ -399,24 +482,28 @@ function initModalesUsuarios(sesion) {
         modalVerFondo.style.display = 'flex';
     }
 
+    // Precarga el formulario de edición con los datos actuales del usuario.
+    // El campo RUN queda con el valor pero el input está "disabled" en el HTML (no editable).
     function abrirPanelEditar(usuario) {
-        document.getElementById('editar-correo-original').value = usuario.correo;
+        document.getElementById('editar-correo-original').value = usuario.correo; // clave para ubicar el registro al guardar
         document.getElementById('editar-run').value = usuario.run || '';
         document.getElementById('editar-correo').value = usuario.correo || '';
         document.getElementById('editar-nombre').value = usuario.nombre || '';
         document.getElementById('editar-apellidos').value = usuario.apellidos || '';
         document.getElementById('editar-telefono').value = usuario.telefono || '';
         document.getElementById('editar-direccion').value = usuario.direccion || '';
-        document.getElementById('editar-password').value = '';
+        document.getElementById('editar-password').value = ''; // siempre vacío: dejarlo así = "mantener la actual"
         document.getElementById('editar-password2').value = '';
         document.getElementById('editar-rol').value = usuario.rol || 'cliente';
-        document.getElementById('editar-activo').checked = usuario.activo !== false;
+        document.getElementById('editar-activo').checked = usuario.activo !== false; // por defecto activo si el campo no existe
 
         poblarRegionComuna('editar', usuario.region, usuario.comuna);
 
         panelEditar.style.display = 'flex';
     }
 
+    // Limpia y resetea el formulario de creación (a diferencia de editar, acá no hay
+    // datos previos que precargar) y quita cualquier marca de error de un intento anterior
     function abrirPanelCrear() {
         formCrear.reset();
         document.getElementById('crear-activo').checked = true;
@@ -430,6 +517,13 @@ function initModalesUsuarios(sesion) {
         panelCrear.style.display = 'flex';
     }
 
+    /**
+     * Llena dinámicamente los <select> de región y comuna de un formulario
+     * (usa el prefijo "editar-" o "crear-" para encontrar los ids correctos).
+     * Al elegir una región, vuelve a llenar el select de comuna con las comunas
+     * de esa región (sin comuna preseleccionada la segunda vez, por eso el
+     * onchange pasa `null` como comunaSeleccionada).
+     */
     function poblarRegionComuna(prefijo, regionGuardada, comunaGuardada) {
         const selectRegion = document.getElementById(`${prefijo}-region`);
         const selectComuna = document.getElementById(`${prefijo}-comuna`);
@@ -458,16 +552,18 @@ function initModalesUsuarios(sesion) {
         }
 
         selectRegion.value = regionGuardada || '';
-        llenarComunas(regionGuardada, comunaGuardada);
+        llenarComunas(regionGuardada, comunaGuardada); // primera carga: preselecciona la comuna guardada
 
-        selectRegion.onchange = () => llenarComunas(selectRegion.value, null);
+        selectRegion.onchange = () => llenarComunas(selectRegion.value, null); // cambios posteriores: sin preselección
     }
 
+    // --- Cierre del modal "Ver": por botón X, o haciendo clic fuera de la tarjeta (en el fondo oscuro) ---
     modalVerCerrar.addEventListener('click', () => modalVerFondo.style.display = 'none');
     modalVerFondo.addEventListener('click', (e) => {
         if (e.target === modalVerFondo) modalVerFondo.style.display = 'none';
     });
 
+    // --- Cierre del panel "Editar": mismo patrón (X, clic afuera, y botón "Cancelar") ---
     btnCerrarEditar.addEventListener('click', () => {
         panelEditar.style.display = 'none';
     });
@@ -479,6 +575,7 @@ function initModalesUsuarios(sesion) {
         panelEditar.style.display = 'none';
     });
 
+    // Guardar cambios del formulario de edición
     formEditar.addEventListener('submit', (e) => {
         e.preventDefault();
 
@@ -495,6 +592,7 @@ function initModalesUsuarios(sesion) {
         const nuevoRol = document.getElementById('editar-rol').value;
         const nuevoActivo = document.getElementById('editar-activo').checked;
 
+        // La contraseña solo se valida si el admin escribió algo (campo vacío = "no cambiar")
         const errores = {
             'campo-editar-nombre': validarRequerido(nuevoNombre, 50, 'El nombre'),
             'campo-editar-correo': validarCorreo(nuevoCorreo),
@@ -508,6 +606,7 @@ function initModalesUsuarios(sesion) {
 
         const usuarios = obtenerUsuarios();
 
+        // Verifica que el nuevo correo no choque con OTRO usuario (se excluye a sí mismo comparando con correoOriginal)
         const correoDuplicado = usuarios.some(
             (u) => u.correo.toLowerCase() === nuevoCorreo.toLowerCase() && u.correo.toLowerCase() !== correoOriginal.toLowerCase()
         );
@@ -519,7 +618,7 @@ function initModalesUsuarios(sesion) {
         const indice = usuarios.findIndex((u) => u.correo === correoOriginal);
         if (indice !== -1) {
             usuarios[indice] = {
-                ...usuarios[indice],
+                ...usuarios[indice], // conserva campos no editados aquí (ej. run, fechaRegistro, avatar)
                 nombre: nuevoNombre,
                 apellidos: nuevosApellidos,
                 correo: nuevoCorreo,
@@ -529,10 +628,13 @@ function initModalesUsuarios(sesion) {
                 direccion: nuevaDireccion,
                 rol: nuevoRol,
                 activo: nuevoActivo,
+                // si el admin no escribió contraseña nueva, se mantiene la que ya tenía el usuario
                 password: nuevaPassword.length > 0 ? nuevaPassword : usuarios[indice].password,
             };
             guardarUsuarios(usuarios);
 
+            // Si el admin se está editando a sí mismo, también hay que actualizar la sesión activa,
+            // o quedaría desincronizada (ej. mostrando el nombre viejo en el sidebar)
             const sesionActual = obtenerSesion();
             if (sesionActual && sesionActual.correo.toLowerCase() === correoOriginal.toLowerCase()) {
                 guardarSesion(usuarios[indice]);
@@ -543,11 +645,13 @@ function initModalesUsuarios(sesion) {
         renderTablaUsuarios();
     });
 
+    // El acceso rápido "Nuevo usuario" del HTML abre el panel de creación (en vez de navegar)
     accesoNuevo.addEventListener('click', (e) => {
         e.preventDefault();
         abrirPanelCrear();
     });
 
+    // --- Cierre del panel "Crear": mismo patrón que "Editar" ---
     btnCerrarCrear.addEventListener('click', () => {
         panelCrear.style.display = 'none';
     });
@@ -559,6 +663,7 @@ function initModalesUsuarios(sesion) {
         panelCrear.style.display = 'none';
     });
 
+    // Crear usuario nuevo desde el panel
     formCrear.addEventListener('submit', (e) => {
         e.preventDefault();
 
@@ -575,6 +680,7 @@ function initModalesUsuarios(sesion) {
         const nuevoRol = document.getElementById('crear-rol').value;
         const nuevoActivo = document.getElementById('crear-activo').checked;
 
+        // A diferencia de "editar", aquí RUN y contraseña son SIEMPRE obligatorios (usuario nuevo, sin valores previos)
         const errores = {
             'campo-crear-run': validarRun(nuevoRun),
             'campo-crear-correo': validarCorreo(nuevoCorreo),
@@ -596,6 +702,8 @@ function initModalesUsuarios(sesion) {
             return;
         }
 
+        // Normaliza el RUN quitando puntos/guion antes de comparar, así "19.011.022-K"
+        // y "19011022K" se detectan como el mismo RUN aunque estén escritos distinto
         const runLimpio = nuevoRun.replace(/\./g, '').replace(/-/g, '').toUpperCase();
         const runDuplicado = usuarios.some(
             (u) => (u.run || '').replace(/\./g, '').replace(/-/g, '').toUpperCase() === runLimpio
@@ -617,7 +725,7 @@ function initModalesUsuarios(sesion) {
             rol: nuevoRol,
             activo: nuevoActivo,
             password: nuevaPassword,
-            fechaRegistro: new Date().toISOString(),
+            fechaRegistro: new Date().toISOString(), // usado luego por el KPI "Nuevos esta semana" del dashboard
         });
         guardarUsuarios(usuarios);
 
@@ -626,6 +734,11 @@ function initModalesUsuarios(sesion) {
     });
 }
 
+/**
+ * Pide confirmación antes de eliminar un usuario. Bloquea la auto-eliminación
+ * (un admin no puede borrar su propia cuenta mientras tiene sesión activa),
+ * ya que eso dejaría al admin con una sesión "fantasma" apuntando a un usuario inexistente.
+ */
 function eliminarUsuarioConConfirmacion(usuario, sesion) {
     if (sesion && usuario.correo.toLowerCase() === sesion.correo.toLowerCase()) {
         alert('No puedes eliminar tu propia cuenta mientras tienes la sesión activa.');
@@ -640,6 +753,10 @@ function eliminarUsuarioConConfirmacion(usuario, sesion) {
     renderTablaUsuarios();
 }
 
+// Punto de entrada: se llaman las 3 funciones de inicialización en cada carga de página.
+// Cada una revisa internamente (con los "if (!elemento) return") si sus elementos existen
+// en el DOM actual, así que es seguro incluir admin.js en dashboard.html, usuarios.html
+// y reportes.html sin que una función "pise" a la otra.
 document.addEventListener('DOMContentLoaded', () => {
     initDashboardAdmin();
     initPaginaUsuarios();
