@@ -694,6 +694,77 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
+       DESHABILITAR HORARIOS YA RESERVADOS
+       Se ejecuta al elegir la fecha, para que el horario
+       ocupado no se pueda ni seleccionar.
+    ===================================================== */
+
+    function actualizarHorariosDisponibles() {
+
+        if (!horaCita) return;
+
+        const citasExistentes = obtenerCitas();
+        const horaSeleccionada = horaCita.value;
+
+        const horasOcupadas = citasExistentes
+            .filter(
+                (c) =>
+                    c.fecha === fechaCita.value &&
+                    (c.estado || "").toLowerCase() !== "cancelada"
+            )
+            .map((c) => c.hora);
+
+        Array.from(horaCita.options).forEach((opcion) => {
+            if (opcion.value === "") return;
+
+            const ocupada = horasOcupadas.includes(opcion.value);
+            opcion.disabled = ocupada;
+            opcion.textContent = ocupada ? `${opcion.value} (reservado)` : opcion.value;
+        });
+
+        if (horasOcupadas.includes(horaSeleccionada)) {
+            horaCita.value = "";
+        }
+    }
+
+
+    /* =====================================================
+       VALIDAR DISPONIBILIDAD DEL HORARIO
+       Un mismo día + hora no puede reservarse dos veces.
+    ===================================================== */
+
+    function validarDisponibilidadHorario() {
+
+        if (fechaCita.value === "" || horaCita.value === "") {
+            return true;
+        }
+
+        const citasExistentes = obtenerCitas();
+
+        const ocupado = citasExistentes.some(
+            (c) =>
+                c.fecha === fechaCita.value &&
+                c.hora === horaCita.value &&
+                (c.estado || "").toLowerCase() !== "cancelada"
+        );
+
+        if (ocupado) {
+
+            return mostrarError(
+                horaCita,
+                errorHoraCita,
+                "Ese horario ya está reservado. Elige otro horario u otra fecha."
+            );
+        }
+
+        return limpiarError(
+            horaCita,
+            errorHoraCita
+        );
+    }
+
+
+    /* =====================================================
        VALIDAR CONFIRMACIÓN
     ===================================================== */
 
@@ -794,7 +865,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         fechaCita.addEventListener(
             "change",
-            validarFecha
+            () => {
+                validarFecha();
+                actualizarHorariosDisponibles();
+                validarDisponibilidadHorario();
+            }
         );
     }
 
@@ -803,7 +878,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         horaCita.addEventListener(
             "change",
-            validarHora
+            () => {
+                validarHora();
+                validarDisponibilidadHorario();
+            }
         );
     }
 
@@ -1007,7 +1085,7 @@ document.addEventListener("DOMContentLoaded", () => {
             peso: "",
             dueno: nombreDuenoCompleto,
             correoDueño: sesion.correo,
-            imagen: "",
+            imagen: "../img/cuidado.png",
             estado: "pendiente",
             estadoTexto: "Datos incompletos",
             descripcion: "",
@@ -1072,6 +1150,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 validarFecha(),
 
                 validarHora(),
+
+                validarDisponibilidadHorario(),
 
                 validarConfirmacion()
             ];

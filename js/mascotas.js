@@ -332,6 +332,207 @@ function obtenerMascotaPorId(id) {
     return mascotas.find((m) => m.id === id) || null;
 }
 
+function obtenerSesionMascotas() {
+    try {
+        return JSON.parse(localStorage.getItem("patitasFelices_sesion"));
+    } catch {
+        return null;
+    }
+}
+
+
+/* =========================================================
+   FORMULARIO COMPARTIDO: completar / editar mascota
+   Lo usan tanto la ficha de detalle (detalle-mascota.html)
+   como la tarjeta "Mis mascotas" del perfil del cliente.
+========================================================= */
+
+function redimensionarImagenMascota(archivo, ladoMaximo) {
+    return new Promise((resolve, reject) => {
+        const lector = new FileReader();
+
+        lector.onload = (e) => {
+            const img = new Image();
+
+            img.onload = () => {
+                const lado = Math.min(img.width, img.height);
+                const offsetX = (img.width - lado) / 2;
+                const offsetY = (img.height - lado) / 2;
+
+                const canvas = document.createElement("canvas");
+                canvas.width = ladoMaximo;
+                canvas.height = ladoMaximo;
+
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, offsetX, offsetY, lado, lado, 0, 0, ladoMaximo, ladoMaximo);
+
+                resolve(canvas.toDataURL("image/jpeg", 0.8));
+            };
+
+            img.onerror = reject;
+            img.src = e.target.result;
+        };
+
+        lector.onerror = reject;
+        lector.readAsDataURL(archivo);
+    });
+}
+
+function marcarCampoMascota(id, mensajeError) {
+    const campo = document.getElementById(id);
+    if (!campo) return;
+    const errorEl = campo.querySelector(".campo__error");
+    campo.classList.remove("campo--invalido", "campo--valido");
+    if (mensajeError) {
+        campo.classList.add("campo--invalido");
+        if (errorEl) errorEl.textContent = mensajeError;
+    } else {
+        campo.classList.add("campo--valido");
+    }
+}
+
+function construirCamposFormularioMascota(mascota) {
+    const id = mascota.id;
+    return `
+        <div class="campo" id="campo-raza-${id}">
+            <label for="raza-${id}">Raza</label>
+            <input type="text" id="raza-${id}" maxlength="40" value="${mascota.raza || ""}">
+            <p class="campo__error">La raza es obligatoria.</p>
+        </div>
+        <div class="fila-campos">
+            <div class="campo">
+                <label for="sexo-${id}">Sexo</label>
+                <select id="sexo-${id}">
+                    <option value="" ${!mascota.sexo ? "selected" : ""}>Selecciona</option>
+                    <option value="Macho" ${mascota.sexo === "Macho" ? "selected" : ""}>Macho</option>
+                    <option value="Hembra" ${mascota.sexo === "Hembra" ? "selected" : ""}>Hembra</option>
+                </select>
+            </div>
+            <div class="campo">
+                <label for="peso-${id}">Peso</label>
+                <input type="text" id="peso-${id}" maxlength="20" value="${mascota.peso || ""}" placeholder="Ej: 4 kg">
+            </div>
+        </div>
+        <div class="campo">
+            <label>Foto de la mascota (opcional)</label>
+            <input type="hidden" id="imagen-${id}" value="${mascota.imagen || ""}">
+            <div class="mascota-foto-upload">
+                ${mascota.imagen
+                    ? `<img src="${mascota.imagen}" alt="Foto de ${mascota.nombre}" class="mascota-foto-preview" id="preview-${id}">`
+                    : `<span id="preview-${id}"></span>`}
+                <button type="button" class="boton-subir-foto" data-subir-foto="${id}">Subir foto</button>
+                <input type="file" id="archivo-${id}" accept="image/*" style="display:none;">
+            </div>
+        </div>
+        <div class="campo">
+            <label for="descripcion-${id}">Descripción (opcional)</label>
+            <input type="text" id="descripcion-${id}" maxlength="300" value="${mascota.descripcion || ""}">
+        </div>
+        <button type="submit" class="boton-principal">
+            <span>Guardar</span>
+            <span class="flecha-boton" aria-hidden="true">⟶</span>
+        </button>
+    `;
+}
+
+function renderBloqueCompletarMascota(mascota) {
+    const solicitudPendiente = obtenerSolicitudesMascotas()
+        .find((s) => s.mascotaId === mascota.id && s.estado === "pendiente");
+
+    let aviso = "";
+    let boton = "";
+
+    if (solicitudPendiente) {
+        aviso = `<p class="alerta-mascota alerta-mascota--info">🕒 Cambios enviados, pendiente de aprobación.</p>`;
+    } else if (!mascota.completo) {
+        aviso = `<p class="alerta-mascota">⚠️ Datos incompletos.</p>`;
+        boton = `<a href="#" class="enlace-completar" data-toggle-mascota="${mascota.id}">Completar datos →</a>`;
+    } else {
+        boton = `<a href="#" class="enlace-completar" data-toggle-mascota="${mascota.id}">Editar →</a>`;
+    }
+
+    return `
+        ${aviso}
+        ${boton}
+        <form class="formulario-mascota" data-mascota-id="${mascota.id}" style="display:none;" novalidate>
+            ${construirCamposFormularioMascota(mascota)}
+        </form>
+    `;
+}
+
+function initAccionesFormularioMascota(contenedor, sesion, alGuardar) {
+    if (!contenedor) return;
+
+    contenedor.addEventListener("click", (e) => {
+        const toggle = e.target.closest("[data-toggle-mascota]");
+        if (toggle) {
+            e.preventDefault();
+            const form = contenedor.querySelector(`form[data-mascota-id="${toggle.dataset.toggleMascota}"]`);
+            if (form) form.style.display = form.style.display === "none" ? "block" : "none";
+            return;
+        }
+
+        const botonSubir = e.target.closest("[data-subir-foto]");
+        if (botonSubir) {
+            e.preventDefault();
+            const archivo = contenedor.querySelector(`#archivo-${botonSubir.dataset.subirFoto}`);
+            if (archivo) archivo.click();
+        }
+    });
+
+    contenedor.addEventListener("change", (e) => {
+        const archivoInput = e.target.closest('input[type="file"]');
+        if (!archivoInput || !archivoInput.id.startsWith("archivo-")) return;
+
+        const id = archivoInput.id.replace("archivo-", "");
+        const archivo = archivoInput.files[0];
+        if (!archivo) return;
+
+        if (!archivo.type.startsWith("image/")) {
+            alert("Selecciona un archivo de imagen.");
+            return;
+        }
+
+        redimensionarImagenMascota(archivo, 300).then((base64) => {
+            document.getElementById(`imagen-${id}`).value = base64;
+            const preview = document.getElementById(`preview-${id}`);
+            if (preview) preview.outerHTML = `<img src="${base64}" alt="Foto" class="mascota-foto-preview" id="preview-${id}">`;
+        }).catch(() => alert("No se pudo procesar la imagen."));
+    });
+
+    contenedor.addEventListener("submit", (e) => {
+        const form = e.target.closest("form[data-mascota-id]");
+        if (!form) return;
+        e.preventDefault();
+
+        const id = form.dataset.mascotaId;
+        const raza = document.getElementById(`raza-${id}`).value.trim();
+        const sexo = document.getElementById(`sexo-${id}`).value;
+        const peso = document.getElementById(`peso-${id}`).value.trim();
+        const imagen = document.getElementById(`imagen-${id}`).value;
+        const descripcion = document.getElementById(`descripcion-${id}`).value.trim();
+
+        const errorRaza = raza ? null : "La raza es obligatoria.";
+        marcarCampoMascota(`campo-raza-${id}`, errorRaza);
+        if (errorRaza) return;
+
+        const cambios = { raza, sexo, peso, imagen, descripcion };
+        const mascota = obtenerMascotaPorId(id);
+
+        if (mascota && !mascota.completo) {
+            Object.assign(mascota, cambios);
+            mascota.completo = true;
+            mascota.estado = "al-dia";
+            mascota.estadoTexto = "Control al día";
+            guardarMascotas();
+        } else if (mascota) {
+            crearSolicitudCambio(id, sesion.correo, cambios);
+        }
+
+        alGuardar();
+    });
+}
+
 
 /* =========================================================
    RENDER: CATÁLOGO (mascotas.html)
@@ -358,9 +559,10 @@ function crearTarjetaMascota(mascota) {
                 </button>
                 <img src="${mascota.imagen}" alt="${mascota.nombre}, ${mascota.especie.toLowerCase()}">
             </div>
+            ${!mascota.completo ? `<div class="alerta-incompleta">⚠️ Datos incompletos — <a href="detalle-mascota.html?id=${mascota.id}">completar ficha →</a></div>` : ""}
             <div class="tarjeta-mascota-contenido">
                 <h3>${mascota.nombre}</h3>
-                <p class="raza-especie">${mascota.especie} · ${mascota.raza}</p>
+                <p class="raza-especie">${mascota.especie}${mascota.raza ? " · " + mascota.raza : ""}</p>
                 <p class="dueno">Dueño/a: ${mascota.dueno}</p>
                 <a href="detalle-mascota.html?id=${mascota.id}">Ver ficha completa →</a>
             </div>
@@ -372,19 +574,24 @@ function renderizarCatalogo(especieFiltro) {
     const contenedor = document.getElementById("grid-mascotas");
     if (!contenedor) return;
 
-    let lista = mascotas;
+    const sesion = obtenerSesionMascotas();
+    const propias = sesion ? mascotas.filter((m) => m.correoDueño === sesion.correo) : [];
+    let lista = propias;
 
     if (especieFiltro === "favoritos") {
         const favoritos = obtenerFavoritos();
-        lista = mascotas.filter((m) => favoritos.includes(m.id));
+        lista = propias.filter((m) => favoritos.includes(m.id));
     } else if (especieFiltro && especieFiltro !== "todas") {
-        lista = mascotas.filter((m) => m.especie === especieFiltro);
+        lista = propias.filter((m) => m.especie === especieFiltro);
     }
 
     if (lista.length === 0) {
-        const mensaje = especieFiltro === "favoritos"
-            ? `Aún no has marcado mascotas como favoritas. Usa el ícono ☆ en cada tarjeta.`
-            : `No hay mascotas registradas para este filtro.`;
+        let mensaje = `No hay mascotas registradas para este filtro.`;
+        if (especieFiltro === "favoritos") {
+            mensaje = `Aún no has marcado mascotas como favoritas. Usa el ícono ☆ en cada tarjeta.`;
+        } else if (propias.length === 0) {
+            mensaje = `Aún no tienes mascotas registradas. <a href="solicitar-cita.html">Solicita una cita →</a> para registrar la primera.`;
+        }
         contenedor.innerHTML = `<p class="grid-mascotas-vacio">${mensaje}</p>`;
         return;
     }
@@ -439,11 +646,12 @@ function renderizarDetalleMascota() {
     const contenedor = document.getElementById("detalle-mascota");
     if (!contenedor) return;
 
+    const sesion = obtenerSesionMascotas();
     const parametros = new URLSearchParams(window.location.search);
     const id = parametros.get("id");
     const mascota = obtenerMascotaPorId(id);
 
-    if (!mascota) {
+    if (!mascota || !sesion || mascota.correoDueño !== sesion.correo) {
         contenedor.innerHTML = `
             <div class="mascota-no-encontrada">
                 <h2>No encontramos esta mascota</h2>
@@ -486,17 +694,21 @@ function renderizarDetalleMascota() {
                         ${favorita ? "★ En favoritos" : "☆ Agregar a favoritos"}
                     </button>
                 </div>
-                <p class="raza-especie">${mascota.especie} · ${mascota.raza}</p>
+                <p class="raza-especie">${mascota.especie}${mascota.raza ? " · " + mascota.raza : ""}</p>
                 <span class="estado-badge ${claseEstado}">${mascota.estadoTexto}</span>
 
                 <ul class="lista-datos">
                     <li><strong>Edad</strong>${mascota.edad}</li>
-                    <li><strong>Sexo</strong>${mascota.sexo}</li>
-                    <li><strong>Peso</strong>${mascota.peso}</li>
+                    <li><strong>Sexo</strong>${mascota.sexo || "No especificado"}</li>
+                    <li><strong>Peso</strong>${mascota.peso || "No especificado"}</li>
                     <li><strong>Dueño/a</strong>${mascota.dueno}</li>
                 </ul>
 
                 <p class="detalle-mascota-descripcion">${mascota.descripcion}</p>
+
+                <div id="detalle-mascota-completar">
+                    ${renderBloqueCompletarMascota(mascota)}
+                </div>
             </div>
 
         </div>
@@ -537,6 +749,11 @@ function renderizarDetalleMascota() {
             botonFavoritoDetalle.setAttribute("aria-label", ahoraEsFavorita ? "Quitar de favoritos" : "Agregar a favoritos");
         });
     }
+
+    const contenedorCompletar = document.getElementById("detalle-mascota-completar");
+    initAccionesFormularioMascota(contenedorCompletar, sesion, () => {
+        renderizarDetalleMascota();
+    });
 }
 
 
@@ -547,6 +764,12 @@ function renderizarDetalleMascota() {
 document.addEventListener("DOMContentLoaded", () => {
     asegurarMascotasSeed();
     cargarMascotasDesdeStorage();
+
+    const requiereSesion = document.getElementById("grid-mascotas") || document.getElementById("detalle-mascota");
+    if (requiereSesion && !obtenerSesionMascotas()) {
+        window.location.href = "login.html";
+        return;
+    }
 
     renderizarCatalogo("todas");
     initFiltrosMascotas();
