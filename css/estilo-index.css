@@ -602,26 +602,38 @@ body {
 .estadistica:nth-child(3) { border-top-color: var(--morado); }
 .estadistica:nth-child(4) { border-top-color: var(--rosa); }
 
-.estadistica-icono-circulo {
-    width: 62px;
-    height: 62px;
+/* =========================================================
+   ICONOS PERSONALIZADOS DE LAS ESTADÍSTICAS
+   Las imágenes PNG ya incluyen su propio fondo pastel.
+========================================================= */
 
-    margin: 0 auto 16px;
+.estadistica-icono {
+    width: 82px;
+    height: 82px;
+
+    margin: 0 auto 14px;
 
     display: flex;
     align-items: center;
     justify-content: center;
-
-    border-radius: 50%;
-
-    font-size: 26px;
-
-    background-color: var(--rosa);
 }
 
-.estadistica:nth-child(2) .estadistica-icono-circulo { background-color: var(--celeste); }
-.estadistica:nth-child(3) .estadistica-icono-circulo { background-color: var(--morado); }
-.estadistica:nth-child(4) .estadistica-icono-circulo { background-color: var(--rosa); }
+.estadistica-icono img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+    object-fit: contain;
+
+    transition:
+        transform 0.3s ease,
+        filter 0.3s ease;
+}
+
+.estadistica:hover .estadistica-icono img {
+    transform: translateY(-4px) scale(1.06);
+    filter: drop-shadow(0 6px 8px rgba(46, 46, 56, 0.10));
+}
 
 .estadistica-numero {
     display: block;
@@ -808,18 +820,30 @@ body {
 .faq-icono-tema {
     flex-shrink: 0;
 
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
 
     display: flex;
     align-items: center;
     justify-content: center;
+}
 
-    border-radius: 50%;
+/* PNG personalizados de las preguntas frecuentes */
+.faq-icono-tema img {
+    width: 100%;
+    height: 100%;
 
-    background-color: var(--beige);
+    display: block;
+    object-fit: contain;
 
-    font-size: 18px;
+    transition:
+        transform 0.3s ease,
+        filter 0.3s ease;
+}
+
+.faq-item:hover .faq-icono-tema img {
+    transform: scale(1.08);
+    filter: drop-shadow(0 5px 7px rgba(46, 46, 56, 0.10));
 }
 
 .faq-pregunta-texto {
