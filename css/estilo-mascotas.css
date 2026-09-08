@@ -489,7 +489,7 @@
 
 
 /* =========================================================
-   FILTROS
+FILTROS
 ========================================================= */
 
 .filtros-mascotas {
@@ -552,7 +552,7 @@
 
 
 /* =========================================================
-   GRID DE TARJETAS
+GRID DE TARJETAS
 ========================================================= */
 
 .grid-mascotas {
@@ -582,7 +582,11 @@
 
 
 /* =========================================================
+<<<<<<< HEAD
    TARJETA DE MASCOTA — DISEÑO MEJORADO
+=======
+TARJETA DE MASCOTA
+>>>>>>> b36ac79 (Cambios)
 ========================================================= */
 
 .tarjeta-mascota {
@@ -1053,7 +1057,7 @@
 
 
 /* =========================================================
-   RESPONSIVE
+RESPONSIVE
 ========================================================= */
 
 @media (max-width: 1000px) {
@@ -1171,6 +1175,7 @@
 }
 
 /* =========================================================
+<<<<<<< HEAD
    FAVORITO EN TARJETAS — CORAZÓN FLOTANTE
    Solo afecta el catálogo de mascotas.
 ========================================================= */
@@ -1185,10 +1190,44 @@
     width: 42px;
     height: 42px;
 
+=======
+SECCIÓN: CUIDADOS BÁSICOS POR ESPECIE (infografías)
+========================================================= */
+
+/* Colores por especie, a juego con cada infografía */
+:root {
+    --perro-color: #8B5CF6;   /* morado, como la infografía de perro */
+    --perro-color-suave: #9629d1;
+    --gato-color: #EC6BA5;    /* rosa/magenta, como la de gato */
+    --gato-color-suave: #ff99c2;
+    --conejo-color: #4FB6A6;     /* verde-azulado */
+    --conejo-color-suave: #84ebd6;
+    --ave-color: #F0A94E;  /* durazno/naranjo cálido */
+    --ave-color-suave: #ffe139;
+}
+
+.seccion-cuidados {
+    padding: 20px 0 90px;
+}
+
+/* 2 columnas -> 2 imágenes arriba, 2 abajo, con espacio entre ellas */
+.grid-cuidados,
+.grid-embebido {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 36px 40px;
+
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.tarjeta-cuidado {
+>>>>>>> b36ac79 (Cambios)
     display: flex;
     align-items: center;
     justify-content: center;
 
+<<<<<<< HEAD
     padding: 0;
 
     border: 1px solid rgba(255, 255, 255, 0.82);
@@ -1243,3 +1282,80 @@
     outline-offset: 3px;
 }
 
+=======
+    background-color: var(--blanco);
+
+    padding: 8px;
+
+    border-radius: 22px;
+    border: 3px solid var(--gris-suave);
+
+    box-shadow: 0 8px 25px rgba(46, 46, 56, 0.07);
+
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tarjeta-cuidado:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 30px rgba(46, 46, 56, 0.1);
+}
+
+/* Color de marco por especie, según el orden de las tarjetas:
+   1° Perro, 2° Gato, 3° Conejo, 4° Aves */
+.grid-embebido .tarjeta-cuidado:nth-child(1) {
+    border-color: var(--perro-color);
+    background-color: var(--perro-color-suave);
+}
+
+.grid-embebido .tarjeta-cuidado:nth-child(2) {
+    border-color: var(--gato-color);
+    background-color: var(--gato-color-suave);
+}
+
+.grid-embebido .tarjeta-cuidado:nth-child(3) {
+    border-color: var(--conejo-color);
+    background-color: var(--conejo-color-suave);
+}
+
+.grid-embebido .tarjeta-cuidado:nth-child(4) {
+    border-color: var(--ave-color);
+    background-color: var(--ave-color-suave);
+}
+
+/* Controla el tamaño real de cada infografía dentro de su tarjeta */
+.img-cuidados {
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    max-width: 380px;
+
+    margin: 0 auto;
+
+    border-radius: 16px;
+}
+
+@media (max-width: 900px) {
+    .grid-cuidados,
+    .grid-embebido {
+        gap: 28px;
+    }
+
+    .img-cuidados {
+        max-width: 320px;
+    }
+}
+
+@media (max-width: 600px) {
+    .grid-cuidados,
+    .grid-embebido {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .img-cuidados {
+        max-width: 280px;
+    }
+}
+>>>>>>> b36ac79 (Cambios)
